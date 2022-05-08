@@ -115,13 +115,8 @@ exports.invoice_update_post = [
         let infoArray = JSON.parse(req.body.product_info);
         foundInvoice.product_info = infoArray;
       }
-      if (req.body.buyer) {
-        foundInvoice.buyer = req.body.buyer;
-        foundInvoice.buyer_name = req.body.buyer_name;
-      }
-      if (req.body.details) {
-        foundInvoice.details = req.body.details;
-      }
+      foundInvoice.name = req.body.name ? req.body.name : foundInvoice.name;
+      foundInvoice.price_range = req.body.price_range ? req.body.price_range : foundInvoice.price_range;
       foundInvoice.save(function (err) {
         if (err) {
           next(err);
