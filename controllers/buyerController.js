@@ -22,9 +22,7 @@ exports.buyer_detail = function (req, res, next) {
   Buyer.findById(req.params.buyerId).exec(function (err, buyer) {
     if (err) {
       if (buyer == null) {
-        const err = new Error("Buyer not found");
-        err.status = 404;
-        return next(err);
+        return res.status(404).send("Buyer not found");
       }
       return next(err);
     }
@@ -84,22 +82,29 @@ exports.buyer_create_post = [
 //   };
 //handle product delete, DEL
 exports.buyer_delete_del = function (req, res, next) {
-  ProductPrice.find({ buyer: req.params.buyerId }).exec(function (err, results) {
+  Buyer.findOne({ _id: req.params.buyerId }).exec(function (err, results) {
     if (err) {
       return next(err);
     }
-    if (results.productPrice > 0) {
-      const err = new Error("This buyer is still used in prices, delete all associated prices first.");
-      err.status = 405;
-      return next(err);
-    } else {
-      Buyer.findByIdAndDelete(req.params.buyerId, (err) => {
-        if (err) {
-          return next(err);
-        }
-        res.sendStatus(204);
-      });
+    if (results == null) {
+      return res.status(404).send("Buyer not found");
     }
+    ProductPrice.find({ buyer: req.params.buyerId }).exec(function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      console.log(results);
+      if (results.length > 0) {
+        return res.status(405).send("This buyer is still used in prices, delete all associated prices first.");
+      } else {
+        Buyer.findByIdAndDelete(req.params.buyerId, (err) => {
+          if (err) {
+            return next(err);
+          }
+          res.sendStatus(204);
+        });
+      }
+    });
   });
 };
 
@@ -111,9 +116,7 @@ exports.buyer_update_post = [
     Buyer.findOne({ _id: req.params.buyerId }, function (err, foundBuyer) {
       if (err) {
         if (foundBuyer == null) {
-          const err = new Error("Buyer not found");
-          err.status = 404;
-          return next(err);
+          return res.status(404).send("Buyer not found");
         }
         return next(err);
       }

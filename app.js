@@ -8,6 +8,7 @@ const cors = require("cors");
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/product");
 const buyerRouter = require("./routes/buyer");
+const productPriceRouter = require("./routes/productPrice");
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/product", productRouter);
 app.use("/buyer", buyerRouter);
+app.use("/productprice", productPriceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

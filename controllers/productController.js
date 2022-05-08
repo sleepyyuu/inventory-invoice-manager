@@ -20,9 +20,7 @@ exports.product_detail = function (req, res, next) {
   Product.findById(req.params.productId).exec(function (err, product) {
     if (err) {
       if (product == null) {
-        const err = new Error("Product not found");
-        err.status = 404;
-        return next(err);
+        return res.status(404).send("Product not found");
       }
       return next(err);
     }
@@ -41,7 +39,7 @@ exports.product_create_post = [
     const errors = validationResult(req);
     let product = new Product({
       name: req.body.name,
-      price_range: req.body.price_range ? req.body.price_range : "" + req.body.price,
+      price_range: req.body.price_range ? req.body.price_range : "",
     });
     if (!errors.isEmpty()) {
       return res.send({ product: req.body, errors: errors.array() });
@@ -61,14 +59,20 @@ exports.product_create_post = [
 
 //handle product delete, DEL
 exports.product_delete_del = function (req, res, next) {
+  Product.findOne({ _id: req.params.productId }).exec(function (err, results) {
+    if (err) {
+      return next(err);
+    }
+    if (results == null) {
+      return res.status(404).send("Product not found");
+    }
+  });
   ProductPrice.find({ product: req.params.productId }).exec(function (err, results) {
     if (err) {
       return next(err);
     }
-    if (results.productPrice > 0) {
-      const err = new Error("This product is still used in prices, delete all associated prices first.");
-      err.status = 405;
-      return next(err);
+    if (results.length > 0) {
+      return res.status(405).send("This product is still used in prices, delete all associated prices first.");
     } else {
       Product.findByIdAndDelete(req.params.productId, (err) => {
         if (err) {
@@ -88,9 +92,7 @@ exports.product_update_post = [
     Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
       if (err) {
         if (foundProduct == null) {
-          const err = new Error("Product not found");
-          err.status = 404;
-          return next(err);
+          return res.status(404).send("Product not found");
         }
         return next(err);
       }
