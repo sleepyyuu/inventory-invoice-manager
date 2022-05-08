@@ -35,13 +35,11 @@ exports.product_detail = function (req, res, next) {
 //handle product creation, POST
 exports.product_create_post = [
   body("name").trim().isLength({ min: 1 }).withMessage("Product name is required").escape(),
-  body("price").trim().isLength({ min: 1 }).withMessage("Price is required").escape().isNumeric(),
   (req, res, next) => {
     //extract validation errors
     const errors = validationResult(req);
     let product = new Product({
       name: req.body.name,
-      price: req.body.price,
       price_range: req.body.price_range ? req.body.price_range : "" + req.body.price,
     });
     if (!errors.isEmpty()) {
@@ -86,7 +84,6 @@ exports.product_update_post = [
         return next(err);
       }
       foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
-      foundProduct.price = req.body.price ? req.body.price : foundProduct.price;
       foundProduct.price_range = req.body.price_range ? req.body.price_range : foundProduct.price_range;
       foundProduct.save(function (err) {
         if (err) {
