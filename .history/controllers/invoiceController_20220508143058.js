@@ -26,6 +26,7 @@ exports.invoice_detail = function (req, res, next) {
       }
       return next(err);
     }
+
     return res.send(invoice);
   });
 };
@@ -33,38 +34,33 @@ exports.invoice_detail = function (req, res, next) {
 //display product creation form, GET, (not needed since using react as frontend)
 
 //handle product creation, POST
-exports.invoice_create_post = [
-  body("details").trim().escape(),
+exports.product_create_post = [
+  body("name").trim().isLength({ min: 1 }).withMessage("Product name is required").escape(),
   (req, res, next) => {
     //extract validation errors
     const errors = validationResult(req);
-    Invoice.count({}, function (err, count) {
-      let invoice = new Invoice({
-        invoice_number: count,
-        buyer: req.body.buyer,
-        //product prices should be an array of productprice objects
-        product_prices: JSON.parse(req.body.product_prices),
-        details: req.body.details,
-      });
-      if (!errors.isEmpty()) {
-        return res.send({ invoice: req.body, errors: errors.array() });
-      } else {
-        invoice.save(function (err) {
-          if (err) {
-            return next(err);
-          }
-          //success
-          res.send(invoice);
-        });
-      }
+    let product = new Product({
+      name: req.body.name,
+      price_range: req.body.price_range ? req.body.price_range : "",
     });
+    if (!errors.isEmpty()) {
+      return res.send({ product: req.body, errors: errors.array() });
+    } else {
+      product.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        //success
+        res.send(product);
+      });
+    }
   },
 ];
 
 //display product delete form, GET (do you need this?)
 
 //handle product delete, DEL
-exports.invoice_delete_del = function (req, res, next) {
+exports.product_delete_del = function (req, res, next) {
   Product.findOne({ _id: req.params.productId }).exec(function (err, results) {
     if (err) {
       return next(err);
@@ -93,7 +89,7 @@ exports.invoice_delete_del = function (req, res, next) {
 //display product update form, GET (do you need this?)
 
 //handle product update, POST
-exports.invoice_update_post = [
+exports.product_update_post = [
   (req, res, next) => {
     Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
       if (err) {

@@ -47,14 +47,14 @@ exports.invoice_create_post = [
         details: req.body.details,
       });
       if (!errors.isEmpty()) {
-        return res.send({ invoice: req.body, errors: errors.array() });
+        return res.send({ product: req.body, errors: errors.array() });
       } else {
-        invoice.save(function (err) {
+        product.save(function (err) {
           if (err) {
             return next(err);
           }
           //success
-          res.send(invoice);
+          res.send(product);
         });
       }
     });
@@ -64,7 +64,7 @@ exports.invoice_create_post = [
 //display product delete form, GET (do you need this?)
 
 //handle product delete, DEL
-exports.invoice_delete_del = function (req, res, next) {
+exports.product_delete_del = function (req, res, next) {
   Product.findOne({ _id: req.params.productId }).exec(function (err, results) {
     if (err) {
       return next(err);
@@ -93,7 +93,7 @@ exports.invoice_delete_del = function (req, res, next) {
 //display product update form, GET (do you need this?)
 
 //handle product update, POST
-exports.invoice_update_post = [
+exports.product_update_post = [
   (req, res, next) => {
     Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
       if (err) {
