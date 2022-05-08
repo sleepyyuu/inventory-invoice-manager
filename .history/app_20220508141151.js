@@ -9,7 +9,6 @@ const indexRouter = require("./routes/index");
 const productRouter = require("./routes/product");
 const buyerRouter = require("./routes/buyer");
 const productPriceRouter = require("./routes/productPrice");
-const invoiceRouter = require("./routes/invoice");
 
 var app = express();
 
@@ -33,10 +32,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 app.use("/", indexRouter);
-app.use("/products", productRouter);
-app.use("/buyers", buyerRouter);
-app.use("/productprices", productPriceRouter);
-app.use("/invoices", invoiceRouter);
+app.use("/product", productRouter);
+app.use("/buyer", buyerRouter);
+app.use("/productprice", productPriceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
