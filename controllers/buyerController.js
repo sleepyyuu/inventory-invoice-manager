@@ -62,30 +62,45 @@ exports.buyer_create_post = [
 
 //display product delete form, GET (do you need this?)
 
+//this handles deleting all associated buyer prices, make super confirmation page for this
+// exports.buyer_delete_del = function (req, res, next) {
+//     async.parallel(
+//       {
+//         buyer: function (callback) {
+//           Buyer.findByIdAndRemove(req.params.buyerId, callback);
+//         },
+//         productPrice: function (callback) {
+//           ProductPrice.deleteMany({ buyer: req.params.buyerId }).exec(callback);
+//         },
+//       },
+//       function (err, results) {
+//         if (err) {
+//           return next(err);
+//         } else {
+//           res.sendStatus(204);
+//         }
+//       }
+//     );
+//   };
 //handle product delete, DEL
 exports.buyer_delete_del = function (req, res, next) {
-  async.parallel(
-    {
-      buyer: function (callback) {
-        Buyer.findByIdAndRemove(req.params.buyerId, callback);
-      },
-      productPrice: function (callback) {
-        ProductPrice.deleteMany({ buyer: req.params.buyerId }).exec(callback);
-      },
-    },
-    function (err, results) {
-      if (err) {
-        if (results.buyer == null) {
-          const err = new Error("Buyer not found");
-          err.status = 404;
+  ProductPrice.find({ buyer: req.params.buyerId }).exec(function (err, results) {
+    if (err) {
+      return next(err);
+    }
+    if (results.productPrice > 0) {
+      const err = new Error("This buyer is still used in prices, delete all associated prices first.");
+      err.status = 405;
+      return next(err);
+    } else {
+      Buyer.findByIdAndDelete(req.params.buyerId, (err) => {
+        if (err) {
           return next(err);
         }
-        next(err);
-      } else {
         res.sendStatus(204);
-      }
+      });
     }
-  );
+  });
 };
 
 //display product update form, GET (do you need this?)
