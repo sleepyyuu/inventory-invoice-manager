@@ -18,13 +18,14 @@ exports.product_list = function (req, res, next) {
 exports.product_detail = function (req, res, next) {
   Product.findById(req.params.productId).exec(function (err, product) {
     if (err) {
+      if (product == null) {
+        const err = new Error("Product not found");
+        err.status = 404;
+        return next(err);
+      }
       return next(err);
     }
-    if (product == null) {
-      const err = new Error("Product not found");
-      err.status = 404;
-      return next(err);
-    }
+
     return res.send(product);
   });
 };
@@ -44,8 +45,7 @@ exports.product_create_post = [
       price_range: req.body.price_range ? req.body.price_range : "" + req.body.price,
     });
     if (!errors.isEmpty()) {
-      res.send({ product: req.body, errors: errors.array() });
-      return;
+      return res.send({ product: req.body, errors: errors.array() });
     } else {
       product.save(function (err) {
         if (err) {
@@ -74,4 +74,26 @@ exports.product_delete_del = function (req, res, next) {
 //display product update form, GET (do you need this?)
 
 //handle product update, POST
-exports.product_update_post = function (req, res, next) {};
+exports.product_update_post = [
+  (req, res, next) => {
+    Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
+      if (err) {
+        if (foundProduct == null) {
+          const err = new Error("Product not found");
+          err.status = 404;
+          return next(err);
+        }
+        return next(err);
+      }
+      foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
+      foundProduct.price = req.body.price ? req.body.price : foundProduct.price;
+      foundProduct.price_range = req.body.price_range ? req.body.price_range : foundProduct.price_range;
+      foundProduct.save(function (err) {
+        if (err) {
+          next(err);
+        }
+        res.send(foundProduct);
+      });
+    });
+  },
+];
