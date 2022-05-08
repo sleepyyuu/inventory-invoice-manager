@@ -39,8 +39,8 @@ exports.invoice_create_post = [
     //extract validation errors
     const errors = validationResult(req);
     Invoice.count({}, function (err, count) {
-      let productArray = JSON.parse(req.body.product_prices);
-      let infoArray = JSON.parse(req.body.product_info_prices);
+        let productArray = JSON.parse(req.body.product_prices);
+        let infoArray = JSON.parse(req.body.product_info_prices)
       let invoice = new Invoice({
         invoice_number: count,
         //buyer is buyer id
@@ -48,7 +48,7 @@ exports.invoice_create_post = [
         buyer_name: req.body.buyer_name,
         //product prices should be an array of productprice objects id
         product_prices: productArray,
-        product_info: infoArray,
+        product_info: ,
         details: req.body.details,
       });
       if (!errors.isEmpty()) {

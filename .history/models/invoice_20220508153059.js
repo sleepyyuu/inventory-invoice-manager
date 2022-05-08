@@ -9,7 +9,7 @@ const InvoiceSchema = new Schema({
   product_prices: [{ type: Schema.Types.ObjectId, ref: "ProductPrice" }],
   //hardcode values to save record even if product/buyer deleted
   buyer_name: { type: String, required: true },
-  product_info: [{ product: String, price: Number }],
+  product_info: [{ type: Object, required: true }],
   details: { type: String },
 });
 
