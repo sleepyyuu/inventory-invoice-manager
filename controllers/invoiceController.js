@@ -94,19 +94,6 @@ exports.invoice_update_post = [
         }
         return next(err);
       }
-
-      //   let productArray = JSON.parse(req.body.product_prices);
-      //   let infoArray = JSON.parse(req.body.product_info_prices);
-      //   let invoice = new Invoice({
-      //     invoice_number: count,
-      //     //buyer is buyer id
-      //     buyer: req.body.buyer,
-      //     buyer_name: req.body.buyer_name,
-      //     //product prices should be an array of productprice objects id
-      //     product_prices: productArray,
-      //     product_info: infoArray,
-      //     details: req.body.details,
-
       if (req.body.product_prices) {
         let productArray = JSON.parse(req.body.product_prices);
         foundInvoice.product_prices = productArray;
