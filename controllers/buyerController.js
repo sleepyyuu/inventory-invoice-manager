@@ -1,5 +1,8 @@
 const Buyer = require("../models/buyer");
+const Invoice = require("../models/invoice");
+const ProductPrice = require("../models/productPrice");
 const { body, validationResult } = require("express-validator");
+const async = require("async");
 
 //display all products
 exports.buyer_list = function (req, res, next) {
@@ -61,13 +64,28 @@ exports.buyer_create_post = [
 
 //handle product delete, DEL
 exports.buyer_delete_del = function (req, res, next) {
-  //implement disallow buyer delete if used in **invoice later
-  Buyer.findByIdAndRemove(req.params.buyerId, (err) => {
-    if (err) {
-      next(err);
+  async.parallel(
+    {
+      buyer: function (callback) {
+        Buyer.findByIdAndRemove(req.params.buyerId, callback);
+      },
+      productPrice: function (callback) {
+        ProductPrice.deleteMany({ buyer: req.params.buyerId }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        if (results.buyer == null) {
+          const err = new Error("Buyer not found");
+          err.status = 404;
+          return next(err);
+        }
+        next(err);
+      } else {
+        res.sendStatus(204);
+      }
     }
-    res.sendStatus(204);
-  });
+  );
 };
 
 //display product update form, GET (do you need this?)
