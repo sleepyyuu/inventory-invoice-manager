@@ -3,11 +3,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const InvoiceSchema = new Schema({
-  //invoice number can be based on num of collections in invoice document
-  invoice_number: { type: Number, required: true },
-  date_created: { type: Date, required: true },
+  invoice_number: { type: Number },
+  date_created: { type: Date },
   buyer: { type: Schema.Types.ObjectId, ref: "Buyer", required: true },
-  product_prices: [{ type: Schema.Types.ObjectId, ref: "ProductPrice" }],
+  products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   details: { type: String },
 });
 
