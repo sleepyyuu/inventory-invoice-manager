@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const ProductPrice = require("../models/productPrice");
 const { body, validationResult } = require("express-validator");
 
 //display all products
@@ -60,12 +61,22 @@ exports.product_create_post = [
 
 //handle product delete, DEL
 exports.product_delete_del = function (req, res, next) {
-  //implement disallow product delete if used in **invoice later
-  Product.findByIdAndRemove(req.params.productId, (err) => {
+  ProductPrice.find({ product: req.params.productId }).exec(function (err, results) {
     if (err) {
-      next(err);
+      return next(err);
     }
-    res.sendStatus(204);
+    if (results.productPrice > 0) {
+      const err = new Error("This product is still used in prices, delete all associated prices first.");
+      err.status = 405;
+      return next(err);
+    } else {
+      Product.findByIdAndDelete(req.params.productId, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.sendStatus(204);
+      });
+    }
   });
 };
 
