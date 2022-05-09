@@ -59,7 +59,6 @@ exports.invoice_create_post = [
             return next(err);
           }
           //success
-          console.log(invoice.padded_invoice_number);
           res.send(invoice);
         });
       }
@@ -78,7 +77,7 @@ exports.invoice_delete_del = function (req, res, next) {
       }
       return next(err);
     }
-    res.sendStatus(204);
+    res.status(200).send("Success");
   });
 };
 

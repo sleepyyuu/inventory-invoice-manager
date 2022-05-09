@@ -78,7 +78,7 @@ exports.product_price_delete_del = function (req, res, next) {
       }
       return next(err);
     }
-    res.sendStatus(204);
+    res.status(200).send("Success");
   });
 };
 
