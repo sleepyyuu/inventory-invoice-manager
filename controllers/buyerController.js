@@ -101,7 +101,7 @@ exports.buyer_delete_del = function (req, res, next) {
           if (err) {
             return next(err);
           }
-          res.status(201).send("Success");
+          res.status(200).send("Success");
         });
       }
     });

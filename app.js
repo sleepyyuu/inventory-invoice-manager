@@ -4,12 +4,14 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const passport = require("passport");
 
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/product");
 const buyerRouter = require("./routes/buyer");
 const productPriceRouter = require("./routes/productPrice");
 const invoiceRouter = require("./routes/invoice");
+const authRouter = require("./routes/auth");
 
 var app = express();
 
@@ -32,11 +34,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
+require("./passport");
+app.use(passport.initialize());
+
 app.use("/", indexRouter);
-app.use("/products", productRouter);
-app.use("/buyers", buyerRouter);
-app.use("/productprices", productPriceRouter);
-app.use("/invoices", invoiceRouter);
+app.use("/products", passport.authenticate("jwt", { session: false }), productRouter);
+app.use("/buyers", passport.authenticate("jwt", { session: false }), buyerRouter);
+app.use("/productprices", passport.authenticate("jwt", { session: false }), productPriceRouter);
+app.use("/invoices", passport.authenticate("jwt", { session: false }), invoiceRouter);
+app.use("/users", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
