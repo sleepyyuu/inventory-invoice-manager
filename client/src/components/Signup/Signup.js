@@ -4,16 +4,24 @@ import { signup } from "../../api/api";
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const signupUser = async (e) => {
     e.preventDefault();
     const response = await signup(username, password);
-    console.log(response);
+    if (response.error != null) {
+      //error so do something
+      setError(response.error);
+    } else {
+      setError(null);
+      //not error, setstate to success, router link to dashboard
+    }
   };
 
   return (
     <div>
       <h2>Signup</h2>
+      {error ? <div>{error}</div> : <div></div>}
       <form onSubmit={signupUser}>
         <label htmlFor="username">Username:</label>
         <input
