@@ -19,7 +19,7 @@ passport.use(
       }
       bcryptjs.hash(password, 10, (err, hashedPass) => {
         if (err) {
-          return next(err);
+          return done(err);
         }
         let user = new User({
           username: username,
@@ -27,7 +27,7 @@ passport.use(
         });
         user.save(function (err) {
           if (err) {
-            return next(err);
+            return done(err);
           }
           return done(null, user, { message: "Signup success" });
         });
