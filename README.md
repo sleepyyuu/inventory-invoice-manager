@@ -1,1 +1,1 @@
-express webapp for produce inventory management
+MERN fullstack invoicing and inventory management webapp
