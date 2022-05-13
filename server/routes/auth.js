@@ -26,9 +26,9 @@ router.post("/", function (req, res, next) {
     }
     req.login(user, { sessions: false }, function (err) {
       if (err) {
-        return res.json({ message: info.message });
+        return res.status(400).json({ message: info.message });
       }
-      return res.json({ message: info.message });
+      return res.status(200).json({ message: info.message });
     });
   })(req, res, next);
 });
