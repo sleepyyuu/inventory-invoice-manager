@@ -43,12 +43,11 @@ passport.deserializeUser(function (user, done) {
 });
 app.use(passport.initialize());
 
-app.use("/", indexRouter);
-app.use("/products", passport.authenticate("jwt", { session: false }), productRouter);
-app.use("/buyers", passport.authenticate("jwt", { session: false }), buyerRouter);
-app.use("/productprices", passport.authenticate("jwt", { session: false }), productPriceRouter);
-app.use("/invoices", passport.authenticate("jwt", { session: false }), invoiceRouter);
-app.use("/users", authRouter);
+app.use("/api/products", passport.authenticate("jwt", { session: false }), productRouter);
+app.use("/api/buyers", passport.authenticate("jwt", { session: false }), buyerRouter);
+app.use("/api/productprices", passport.authenticate("jwt", { session: false }), productPriceRouter);
+app.use("/api/invoices", passport.authenticate("jwt", { session: false }), invoiceRouter);
+app.use("/api/users", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

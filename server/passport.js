@@ -44,7 +44,7 @@ passport.use(
         return done(err);
       }
       if (!user) {
-        return done(null, false, { message: "Incorrect username" });
+        return done(null, false, { message: "Username not found" });
       }
       bcryptjs.compare(password, user.password, (err, res) => {
         if (res) {
