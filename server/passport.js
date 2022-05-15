@@ -59,12 +59,13 @@ passport.use(
 
 passport.use(
   new JWTstrategy(
-    { secretOrKey: process.env.JWT_TOKEN, jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token") },
-    (token, done) => {
+    { jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_TOKEN },
+    (jwt_payload, done) => {
+      console.log("test");
       if (err) {
         return done(err);
       }
-      return done(null, token.username);
+      return done(null, jwt_payload.username);
     }
   )
 );

@@ -13,6 +13,7 @@ const productPriceRouter = require("./routes/productPrice");
 const invoiceRouter = require("./routes/invoice");
 const authRouter = require("./routes/auth");
 const refreshRouter = require("./routes/refresh");
+const verifyToken = require("./middleware/verifyToken");
 
 var app = express();
 const allowedOrigins = ["http://localhost:4000", "http://localhost:3000"];
@@ -64,12 +65,13 @@ passport.deserializeUser(function (user, done) {
 });
 app.use(passport.initialize());
 
-app.use("/api/products", passport.authenticate("jwt", { session: false }), productRouter);
-app.use("/api/buyers", passport.authenticate("jwt", { session: false }), buyerRouter);
-app.use("/api/productprices", passport.authenticate("jwt", { session: false }), productPriceRouter);
-app.use("/api/invoices", passport.authenticate("jwt", { session: false }), invoiceRouter);
 app.use("/api/users", authRouter);
 app.use("/api/refresh", refreshRouter);
+app.use(verifyToken);
+app.use("/api/products", productRouter);
+app.use("/api/buyers", buyerRouter);
+app.use("/api/productprices", productPriceRouter);
+app.use("/api/invoices", invoiceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
