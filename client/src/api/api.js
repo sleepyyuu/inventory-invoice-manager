@@ -2,6 +2,12 @@ import axios from "axios";
 
 const url = "http://localhost:4000/api";
 axios.defaults.baseURL = url;
+axios.defaults.withCredentials = true;
+export const axiosPrivate = axios.create({
+  baseURL: url,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
+});
 
 export const userRequest = async (username, password, route) => {
   let apiResponse = {};
@@ -9,7 +15,7 @@ export const userRequest = async (username, password, route) => {
   params.append("username", username);
   params.append("password", password);
   await axios
-    .post(route, params)
+    .post(route, params, { withCredentials: true })
     .then((response) => {
       apiResponse = { response };
     })
@@ -20,4 +26,9 @@ export const userRequest = async (username, password, route) => {
       }
     });
   return apiResponse;
+};
+
+export const refreshToken = async () => {
+  const response = await axios.get("/refresh", { withCredentials: true });
+  return response;
 };

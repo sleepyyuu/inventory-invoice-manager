@@ -5,6 +5,7 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import RequireAuth from "./components/RequireAuth";
+import PersistAuth from "./components/PersistAuth";
 
 //useeffect check localstorage for jwt, validate token. if valid then render dashboard, otherwise show login page
 function App() {
@@ -20,8 +21,10 @@ function App() {
         ></Route>
         <Route path="/signup" element={<Signup loginSuccess={loginSuccess}></Signup>}></Route>
         {/* protected routes */}
-        <Route element={<RequireAuth></RequireAuth>}>
-          <Route path="/dashboard" element={<Dashboard loginSuccess={loginSuccess}></Dashboard>}></Route>
+        <Route element={<PersistAuth></PersistAuth>}>
+          <Route element={<RequireAuth></RequireAuth>}>
+            <Route path="/dashboard" element={<Dashboard loginSuccess={loginSuccess}></Dashboard>}></Route>
+          </Route>
         </Route>
 
         <Route path="*" element={<div>404page</div>}></Route>

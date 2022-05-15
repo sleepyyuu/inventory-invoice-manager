@@ -1,6 +1,8 @@
+import useAuth from "../../hooks/useAuth";
+
 export default function Dashboard(props) {
-  const { loginSuccess, auth } = props;
-  return loginSuccess ? (
+  const { auth } = useAuth();
+  return auth.accessToken ? (
     <div>
       <div>login success</div>
       <div>user : {auth.username}</div>
