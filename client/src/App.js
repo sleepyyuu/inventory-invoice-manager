@@ -4,22 +4,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
+import RequireAuth from "./components/RequireAuth";
 
 //useeffect check localstorage for jwt, validate token. if valid then render dashboard, otherwise show login page
 function App() {
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [auth, setAuth] = useState();
+
   return (
     <BrowserRouter>
       <Routes>
+        {/* pubic routes */}
         <Route
           path="/login"
-          element={
-            <Login loginSuccess={loginSuccess} setLoginSuccess={setLoginSuccess} auth={auth} setAuth={setAuth}></Login>
-          }
+          element={<Login loginSuccess={loginSuccess} setLoginSuccess={setLoginSuccess}></Login>}
         ></Route>
         <Route path="/signup" element={<Signup loginSuccess={loginSuccess}></Signup>}></Route>
-        <Route path="/dashboard" element={<Dashboard loginSuccess={loginSuccess} auth={auth}></Dashboard>}></Route>
+        {/* protected routes */}
+        <Route element={<RequireAuth></RequireAuth>}>
+          <Route path="/dashboard" element={<Dashboard loginSuccess={loginSuccess}></Dashboard>}></Route>
+        </Route>
+
+        <Route path="*" element={<div>404page</div>}></Route>
       </Routes>
     </BrowserRouter>
   );

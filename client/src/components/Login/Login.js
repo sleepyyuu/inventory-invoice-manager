@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { userRequest } from "../../api/api";
 export default function Login(props) {
+  const { setAuth } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { loginSuccess, setLoginSuccess, auth, setAuth } = props;
+  const { loginSuccess, setLoginSuccess } = props;
 
   const loginUser = async (e) => {
     e.preventDefault();
