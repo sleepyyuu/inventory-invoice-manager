@@ -31,7 +31,7 @@ exports.refresh_token_get = async function (req, res) {
       foundUser.refreshToken = [...newRefreshTokenArray];
       await foundUser.save();
     }
-    if (err || foundUser.username !== token.username) {
+    if (err || foundUser.username !== decoded.username) {
       return res.sendStatus(403);
     }
     const accessToken = jwt.sign({ username: decoded.username }, process.env.JWT_TOKEN, { expiresIn: "10m" });
