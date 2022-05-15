@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { signup } from "../../api/api";
+import { userRequest } from "../../api/api";
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -8,7 +8,7 @@ export default function Signup() {
 
   const signupUser = async (e) => {
     e.preventDefault();
-    const response = await signup(username, password);
+    const response = await userRequest(username, password, "/users");
     if (response.error != null) {
       //error so do something
       setError(response.error);
@@ -22,7 +22,7 @@ export default function Signup() {
     <div>
       <h2>Signup</h2>
       {error ? <div>{error}</div> : <div></div>}
-      <form onSubmit={signupUser}>
+      <form className="signupForm" onSubmit={signupUser}>
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -45,6 +45,7 @@ export default function Signup() {
         ></input>
         <input type="submit" value="Signup"></input>
       </form>
+      <div className="loginLink">Have an account? Log in</div>
     </div>
   );
 }
