@@ -9,10 +9,29 @@ exports.login_post = function (req, res, next) {
     }
     req.login(user, { sessions: false }, function (err) {
       if (err) {
-        return res.status(400).json({ message: info.message });
+        console.log(err);
+        return res.status(400).json();
       }
-      const token = jwt.sign({ _id: user._id, username: user.username }, process.env.JWT_TOKEN);
-      return res.status(200).send({ token });
+      const cookies = req.cookies;
+      const accessToken = jwt.sign({ username: user.username }, process.env.JWT_TOKEN, { expiresIn: "10m" });
+      const newRefreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: "10d",
+      });
+
+      const newRefreshTokenArray = !cookies?.jwt
+        ? user.refreshToken
+        : user.refreshToken.filter((token) => token !== cookies.jwt);
+      if (cookies.jwt) {
+        res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
+      }
+      user.refreshToken = [newRefreshTokenArray, newRefreshToken];
+      res.cookie("jwt", newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Lax",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      return res.status(200).send({ accessToken });
     });
   })(req, res, next);
 };
