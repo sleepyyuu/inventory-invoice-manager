@@ -33,7 +33,7 @@ exports.login_post = function (req, res, next) {
         sameSite: "Lax",
         maxAge: 24 * 60 * 60 * 1000,
       });
-      return res.status(200).send({ accessToken });
+      return res.status(200).send({ username: dbUser.username, accessToken });
     });
   })(req, res, next);
 };

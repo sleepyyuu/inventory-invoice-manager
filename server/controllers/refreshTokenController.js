@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const handleRefreshToken = async (req, res) => {
+exports.refresh_token_get = async function (req, res) {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
     return res.sendStatus(401);
@@ -13,7 +13,7 @@ const handleRefreshToken = async (req, res) => {
 
   //if duplicate refresh token use attempted, ie old refresh token/expired/used
   if (!foundUser) {
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
         return res.sendStatus(403);
       }

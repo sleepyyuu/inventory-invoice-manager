@@ -12,6 +12,7 @@ const buyerRouter = require("./routes/buyer");
 const productPriceRouter = require("./routes/productPrice");
 const invoiceRouter = require("./routes/invoice");
 const authRouter = require("./routes/auth");
+const refreshRouter = require("./routes/refresh");
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.use("/api/buyers", passport.authenticate("jwt", { session: false }), buyerRo
 app.use("/api/productprices", passport.authenticate("jwt", { session: false }), productPriceRouter);
 app.use("/api/invoices", passport.authenticate("jwt", { session: false }), invoiceRouter);
 app.use("/api/users", authRouter);
+app.use("/api/refresh", refreshRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
