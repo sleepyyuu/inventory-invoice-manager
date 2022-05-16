@@ -5,10 +5,12 @@ const useRefreshToken = () => {
   const { setAuth } = useAuth();
   const refresh = async () => {
     const refreshTokenResponse = await refreshToken();
-    setAuth((prev) => {
-      return { ...prev, accessToken: refreshTokenResponse.data.accessToken };
-    });
-    return refreshTokenResponse.data.accessToken;
+    if (refreshTokenResponse == null) {
+    } else {
+      setAuth((prev) => {
+        return { ...prev, accessToken: refreshTokenResponse.data.accessToken };
+      });
+    }
   };
   return refresh;
 };

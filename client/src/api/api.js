@@ -29,6 +29,19 @@ export const userRequest = async (username, password, route) => {
 };
 
 export const refreshToken = async () => {
-  const response = await axios.get("/refresh", { withCredentials: true });
+  const response = await axios.get("/refresh", { withCredentials: true }).catch((error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
+  return response;
+};
+
+export const logoutEndpoint = async () => {
+  const response = await axios.get("/auth/logout").catch((error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
   return response;
 };
