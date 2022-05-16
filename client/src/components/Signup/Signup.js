@@ -8,7 +8,7 @@ export default function Signup() {
 
   const signupUser = async (e) => {
     e.preventDefault();
-    const response = await userRequest(username, password, "/users");
+    const response = await userRequest(username, password, "/auth/signup");
     if (response.error != null) {
       //error so do something
       setError(response.error);

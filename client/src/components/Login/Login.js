@@ -12,7 +12,7 @@ export default function Login(props) {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    const response = await userRequest(username, password, "/users/session");
+    const response = await userRequest(username, password, "/auth/login");
     if (response.error != null) {
       //error so do something
       setError(response.error);
@@ -52,7 +52,7 @@ export default function Login(props) {
           }}
           value={password}
         ></input>
-        <input type="submit" value="Signup"></input>
+        <input type="submit" value="Login"></input>
       </form>
       <div className="signupLink">Need an account? Sign up</div>
     </div>
