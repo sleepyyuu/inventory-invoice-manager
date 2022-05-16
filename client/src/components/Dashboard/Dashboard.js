@@ -19,7 +19,7 @@ export default function Dashboard(props) {
       <Link to="/products">products</Link>
       <Link to="/buyers">buyers</Link>
       <Link to="/productprices">productprices</Link>
-      <Link to="/invoicec">invoices</Link>
+      <Link to="/invoices">invoices</Link>
     </div>
   ) : (
     <div>please login</div>

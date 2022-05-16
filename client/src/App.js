@@ -7,7 +7,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Products from "./components/Dashboard/Products/Products";
 import Buyers from "./components/Dashboard/Buyers/Buyers";
 import Productprices from "./components/Dashboard/Productprices/Productprices";
-import Invoice from "./components/Dashboard/Invoices/Invoices";
+import Invoices from "./components/Dashboard/Invoices/Invoices";
 import RequireAuth from "./components/RequireAuth";
 import PersistAuth from "./components/PersistAuth";
 
@@ -26,7 +26,7 @@ function App() {
             <Route path="/products" element={<Products></Products>}></Route>
             <Route path="/buyers" element={<Buyers></Buyers>}></Route>
             <Route path="/productprices" element={<Productprices></Productprices>}></Route>
-            <Route path="/invoices" element={<Invoice></Invoice>}></Route>
+            <Route path="/invoices" element={<Invoices></Invoices>}></Route>
           </Route>
         </Route>
 

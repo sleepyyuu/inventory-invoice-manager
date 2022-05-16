@@ -4,6 +4,7 @@ import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 export default function useAxiosPrivate() {
+  //handes attaching accesstoken to request to server
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 

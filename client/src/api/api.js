@@ -11,11 +11,11 @@ export const axiosPrivate = axios.create({
 
 export const userRequest = async (username, password, route) => {
   let apiResponse = {};
-  const params = new URLSearchParams();
-  params.append("username", username);
-  params.append("password", password);
   await axios
-    .post(route, params, { withCredentials: true })
+    .post(route, JSON.stringify({ username, password }), {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
     .then((response) => {
       apiResponse = { response };
     })
