@@ -7,7 +7,7 @@ exports.refresh_token_get = async function (req, res) {
     return res.sendStatus(401);
   }
   const refreshToken = cookies.jwt;
-  res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
 
   const foundUser = await User.findOne({ refreshToken }).exec();
   //if duplicate refresh token use attempted, ie old refresh token/expired/used
@@ -42,7 +42,7 @@ exports.refresh_token_get = async function (req, res) {
     res.cookie("jwt", newRefreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "Lax",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.json({ accessToken });

@@ -23,14 +23,14 @@ exports.login_post = function (req, res, next) {
         ? dbUser.refreshToken
         : dbUser.refreshToken.filter((token) => token !== cookies.jwt);
       if (cookies.jwt) {
-        res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
+        res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
       }
       dbUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       await dbUser.save();
       res.cookie("jwt", newRefreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "Lax",
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
       });
       return res.status(200).send({ username: dbUser.username, accessToken });
