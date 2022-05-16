@@ -65,7 +65,7 @@ passport.deserializeUser(function (user, done) {
 });
 app.use(passport.initialize());
 
-app.use("/api/users", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/refresh", refreshRouter);
 app.use(verifyToken);
 app.use("/api/products", productRouter);
