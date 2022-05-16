@@ -54,6 +54,7 @@ exports.signup_post = function (req, res, next) {
 
 exports.logout_get = async function (req, res, next) {
   const cookies = req.cookies;
+  console.log(cookies);
   if (!cookies?.jwt) {
     //no jwt in cookies
     return res.sendStatus(401);

@@ -14,11 +14,11 @@ exports.refresh_token_get = async function (req, res) {
   if (!foundUser) {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        return res.sendStatus(403);
+      } else {
+        const hackedUser = await User.findOne({ username: decoded.username }).exec();
+        hackedUser.refreshToken = []; //clear refresh tokens for hacked user
+        await hackedUser.save();
       }
-      const hackedUser = await User.findOne({ username: decoded.username }).exec();
-      hackedUser.refreshToken = []; //clear refresh tokens for hacked user
-      await hackedUser.save();
     });
     return res.sendStatus(403);
   }
