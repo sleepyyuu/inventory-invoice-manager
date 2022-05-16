@@ -10,7 +10,6 @@ exports.refresh_token_get = async function (req, res) {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
 
   const foundUser = await User.findOne({ refreshToken }).exec();
-
   //if duplicate refresh token use attempted, ie old refresh token/expired/used
   if (!foundUser) {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {

@@ -51,3 +51,24 @@ exports.signup_post = function (req, res, next) {
     });
   })(req, res, next);
 };
+
+exports.logout_get = async function (req, res, next) {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) {
+    //no jwt in cookies
+    return res.sendStatus(401);
+  }
+  const refreshToken = cookies.jwt;
+  const user = await User.findOne({ refreshToken }).exec();
+  if (user == null) {
+    res.clearCookie("jwt", { httpOnly: true });
+    return res.sendStatus(204);
+  }
+  const newRefreshTokenArray = user.refreshToken.filter((token) => {
+    return token !== refreshToken;
+  });
+  user.refreshToken = newRefreshTokenArray;
+  await user.save();
+  res.clearCookie("jwt", { httpOnly: true });
+  return res.sendStatus(204);
+};
