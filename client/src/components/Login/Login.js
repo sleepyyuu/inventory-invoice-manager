@@ -3,12 +3,11 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { userRequest } from "../../api/api";
 export default function Login(props) {
-  const { setAuth } = useAuth();
+  const { setAuth, auth } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { loginSuccess, setLoginSuccess } = props;
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -22,7 +21,7 @@ export default function Login(props) {
       const username = response.response.data.username;
       const accessToken = response.response.data.accessToken;
       setAuth({ accessToken });
-      setLoginSuccess(true);
+
       navigate("/dashboard");
     }
   };

@@ -4,28 +4,29 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
-import Invoice from "./components/Invoice/Invoice";
+import Products from "./components/Dashboard/Products/Products";
+import Buyers from "./components/Dashboard/Buyers/Buyers";
+import Productprices from "./components/Dashboard/Productprices/Productprices";
+import Invoice from "./components/Dashboard/Invoices/Invoices";
 import RequireAuth from "./components/RequireAuth";
 import PersistAuth from "./components/PersistAuth";
 
 //useeffect check localstorage for jwt, validate token. if valid then render dashboard, otherwise show login page
 function App() {
-  const [loginSuccess, setLoginSuccess] = useState(false);
-
   return (
     <BrowserRouter>
       <Routes>
         {/* pubic routes */}
-        <Route
-          path="/login"
-          element={<Login loginSuccess={loginSuccess} setLoginSuccess={setLoginSuccess}></Login>}
-        ></Route>
-        <Route path="/signup" element={<Signup loginSuccess={loginSuccess}></Signup>}></Route>
+        <Route path="/login" element={<Login></Login>}></Route>
+        <Route path="/signup" element={<Signup></Signup>}></Route>
         {/* protected routes */}
         <Route element={<PersistAuth></PersistAuth>}>
           <Route element={<RequireAuth></RequireAuth>}>
-            <Route path="/dashboard" element={<Dashboard loginSuccess={loginSuccess}></Dashboard>}></Route>
-            <Route path="/invoice" element={<Invoice loginSuccess={loginSuccess}></Invoice>}></Route>
+            <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
+            <Route path="/products" element={<Products></Products>}></Route>
+            <Route path="/buyers" element={<Buyers></Buyers>}></Route>
+            <Route path="/productprices" element={<Productprices></Productprices>}></Route>
+            <Route path="/invoices" element={<Invoice></Invoice>}></Route>
           </Route>
         </Route>
 
