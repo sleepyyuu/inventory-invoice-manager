@@ -1,5 +1,5 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Invoices() {
   const verify = useVerifyForEndpointAction();
@@ -14,11 +14,14 @@ export default function Invoices() {
     };
     getInvoices();
   }, []);
+  //make functions for button onclicks, post method, setInvices to after change
+
   //make loading first, then call route in useeffect
   return loading ? (
     <div>loading..</div>
   ) : (
     <div>
+      <div>invoices</div>
       {invoices.map((invoice, counter) => {
         return (
           <div key={counter}>
