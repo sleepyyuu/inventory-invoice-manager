@@ -5,18 +5,27 @@ export default function Invoices() {
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
+  const [buyers, setBuyers] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
+  const isInitialMount = useRef(true);
+  const getDB = async () => {
+    const [responseInvoices, responseBuyers, responseProducts] = await Promise.all([
+      verify("get", "/invoices"),
+      verify("get", "/buyers"),
+      verify("get", "/products"),
+    ]);
+    setInvoices(responseInvoices);
+    setBuyers(responseBuyers);
+    setProducts(responseProducts);
+    setLoading(false);
+  };
   useEffect(() => {
-    const getInvoices = async () => {
-      const response = await verify("get", "/invoices");
-      console.log(response);
-      setInvoices(response);
-      setLoading(false);
-    };
-    getInvoices();
+    getDB();
   }, []);
-  //make functions for button onclicks, post method, setInvices to after change
 
-  //make loading first, then call route in useeffect
+  //make functions for button onclicks, post method, setInvices to after change
+  const handleAdd = () => {};
   return loading ? (
     <div>loading..</div>
   ) : (
@@ -32,6 +41,39 @@ export default function Invoices() {
           </div>
         );
       })}
+      <button
+        onClick={() => {
+          setShowMenu(true);
+        }}
+      >
+        add an invoice
+      </button>
+      {showMenu ? (
+        <div>
+          <form>
+            <label htmlFor="Buyer">Buyer</label>
+            <select id="Buyer">
+              {buyers.map((buyer, counter) => {
+                return (
+                  <option key={counter} name={buyer.company_name}>
+                    {buyer.company_name}
+                  </option>
+                );
+              })}
+            </select>
+            <label htmlFor="Product">Product</label>
+            <select id="Product">
+              {products.map((product, counter) => {
+                return (
+                  <option key={counter} name={product.company_name}>
+                    {product.name}
+                  </option>
+                );
+              })}
+            </select>
+          </form>
+        </div>
+      ) : null}
     </div>
   );
 }
