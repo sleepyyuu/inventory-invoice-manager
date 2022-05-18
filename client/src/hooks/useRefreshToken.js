@@ -8,7 +8,7 @@ const useRefreshToken = () => {
     if (refreshTokenResponse == null) {
     } else {
       setAuth((prev) => {
-        return { ...prev, accessToken: refreshTokenResponse.data.accessToken };
+        return { ...prev, accessToken: refreshTokenResponse.data.accessToken, username: refreshTokenResponse.data.username };
       });
       return refreshTokenResponse.data.accessToken;
     }

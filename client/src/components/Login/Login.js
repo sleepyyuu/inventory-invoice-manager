@@ -20,8 +20,7 @@ export default function Login(props) {
       //not error, setstate to success, router link to dashboard
       const username = response.response.data.username;
       const accessToken = response.response.data.accessToken;
-      setAuth({ accessToken });
-
+      setAuth({ username, accessToken });
       navigate("/dashboard");
     }
   };

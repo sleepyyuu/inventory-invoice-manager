@@ -22,11 +22,12 @@ function App() {
         {/* protected routes */}
         <Route element={<PersistAuth></PersistAuth>}>
           <Route element={<RequireAuth></RequireAuth>}>
-            <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
-            <Route path="/products" element={<Products></Products>}></Route>
-            <Route path="/buyers" element={<Buyers></Buyers>}></Route>
-            <Route path="/productprices" element={<Productprices></Productprices>}></Route>
-            <Route path="/invoices" element={<Invoices></Invoices>}></Route>
+            <Route path="/dashboard" element={<Dashboard></Dashboard>}>
+              <Route path="/dashboard/products" element={<Products></Products>}></Route>
+              <Route path="/dashboard/buyers" element={<Buyers></Buyers>}></Route>
+              <Route path="/dashboard/productprices" element={<Productprices></Productprices>}></Route>
+              <Route path="/dashboard/invoices" element={<Invoices></Invoices>}></Route>
+            </Route>
           </Route>
         </Route>
 
