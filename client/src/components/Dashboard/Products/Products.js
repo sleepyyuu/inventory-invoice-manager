@@ -7,7 +7,9 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
+  const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [newProductName, setNewProductName] = useState("");
+  const [newProductId, setNewProductId] = useState("");
   const [newProductPriceMin, setNewProductPriceMin] = useState(0);
   const [newProductPriceMax, setNewProductPriceMax] = useState(0);
   const [error, setError] = useState();
@@ -22,10 +24,26 @@ export default function Products() {
     getDB();
   }, []);
 
-  const handleCreate = async (e) => {
+  const handlePostAction = async (e) => {
     e.preventDefault();
-    const body = { name: newProductName, price_range_min: newProductPriceMin, price_range_max: newProductPriceMax };
-    const response = await verify("create", route, body);
+    if (newProductName === "") {
+      setError([{ msg: "Name is required" }]);
+      return;
+    }
+    let response;
+    if (menuStateCreate) {
+      const body = { name: newProductName, price_range_min: newProductPriceMin, price_range_max: newProductPriceMax };
+      response = await verify("create", route, body);
+    } else {
+      const body = {
+        name: newProductName,
+        price_range_min: newProductPriceMin,
+        price_range_max: newProductPriceMax,
+        productId: newProductId,
+      };
+      response = await verify("update", route + "/" + newProductId, body);
+    }
+    console.log(response);
     if (response.status === 200) {
       getDB();
       setShowMenu(false);
@@ -33,9 +51,23 @@ export default function Products() {
       setNewProductName("");
       setNewProductPriceMin(0);
       setNewProductPriceMax(0);
+      setNewProductId("");
     } else {
       setError(response);
     }
+  };
+
+  const handleEdit = async (product) => {
+    setError(null);
+    setNewProductId(product._id);
+    setNewProductName(product.name);
+    if (product.price_range_min) {
+      setNewProductPriceMin(product.price_range_min);
+    }
+    if (product.price_range_max) {
+      setNewProductPriceMax(product.price_range_max);
+    }
+    setShowMenu(true);
   };
 
   const handleDelete = async (id) => {
@@ -65,6 +97,14 @@ export default function Products() {
               Name: {product.name} ||| product ID : {product._id}
               <button
                 onClick={() => {
+                  handleEdit(product);
+                  setmenuStateCreate(false);
+                }}
+              >
+                edit
+              </button>
+              <button
+                onClick={() => {
                   handleDelete(product._id);
                 }}
               >
@@ -78,6 +118,7 @@ export default function Products() {
       <button
         onClick={() => {
           setError(null);
+          setmenuStateCreate(true);
           setShowMenu(true);
         }}
       >
@@ -101,6 +142,7 @@ export default function Products() {
               ) : null}
               <label htmlFor="name">Name</label>
               <input
+                required
                 type="text"
                 id="name"
                 name="name"
@@ -138,7 +180,13 @@ export default function Products() {
                 value={newProductPriceMax}
               ></input>
             </div>
-            <button onClick={handleCreate}>add product</button>
+            <button
+              onClick={(e) => {
+                handlePostAction(e);
+              }}
+            >
+              {menuStateCreate ? "add product" : "update product"}
+            </button>
           </form>
         </div>
       ) : null}

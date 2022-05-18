@@ -19,9 +19,12 @@ export default function useVerifyForEndpointAction() {
         const response = await axiosPrivate.post(route, body).catch((err) => {
           return err.response.data.errors;
         });
-
         return response;
       } else if (action === "update") {
+        const response = await axiosPrivate.post(route, body).catch((err) => {
+          return err.response.data.errors;
+        });
+        return response;
       } else if (action === "delete") {
         const response = await axiosPrivate.delete(route, body).catch((err) => {
           //error as array
