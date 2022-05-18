@@ -11,9 +11,9 @@ export default function Invoices() {
   const isInitialMount = useRef(true);
   const getDB = async () => {
     const [responseInvoices, responseBuyers, responseProducts] = await Promise.all([
-      verify("get", "/invoices"),
-      verify("get", "/buyers"),
-      verify("get", "/products"),
+      verify("readAll", "/invoices"),
+      verify("readAll", "/buyers"),
+      verify("readAll", "/products"),
     ]);
     setInvoices(responseInvoices);
     setBuyers(responseBuyers);
