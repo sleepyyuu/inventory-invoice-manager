@@ -39,7 +39,8 @@ exports.product_create_post = [
     const errors = validationResult(req);
     let product = new Product({
       name: req.body.name,
-      price_range: req.body.price_range ? req.body.price_range : "",
+      price_range_min: req.body.price_range_min ? req.body.price_range_min : "",
+      price_range_max: req.body.price_range_max ? req.body.price_range_max : "",
     });
     if (!errors.isEmpty()) {
       return res.send({ product: req.body, errors: errors.array() });
@@ -97,7 +98,8 @@ exports.product_update_post = [
         return next(err);
       }
       foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
-      foundProduct.price_range = req.body.price_range ? req.body.price_range : foundProduct.price_range;
+      foundProduct.price_range_min = req.body.price_range_min ? req.body.price_range_min : foundProduct.price_range_min;
+      foundProduct.price_range_max = req.body.price_range_max ? req.body.price_range_max : foundProduct.price_range_max;
       foundProduct.save(function (err) {
         if (err) {
           next(err);
