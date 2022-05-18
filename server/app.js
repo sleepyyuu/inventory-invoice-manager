@@ -58,10 +58,10 @@ app.use(cookieParser());
 
 require("./passport");
 passport.serializeUser(function (user, done) {
-  done(null, user);
+  done(null, user._id);
 });
-passport.deserializeUser(function (user, done) {
-  done(null, user);
+passport.deserializeUser(function (userid, done) {
+  done(null, userid);
 });
 app.use(passport.initialize());
 

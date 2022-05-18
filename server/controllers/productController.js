@@ -17,7 +17,7 @@ exports.product_list = function (req, res, next) {
 
 //display detail page for a product
 exports.product_detail = function (req, res, next) {
-  Product.findById(req.params.productId).exec(function (err, product) {
+  Product.findById(req.body.productId).exec(function (err, product) {
     if (err) {
       if (product == null) {
         return res.status(404).send("Product not found");
@@ -43,14 +43,14 @@ exports.product_create_post = [
       price_range_max: req.body.price_range_max ? req.body.price_range_max : "",
     });
     if (!errors.isEmpty()) {
-      return res.send({ product: req.body, errors: errors.array() });
+      return res.status(400).send({ errors: errors.array() });
     } else {
       product.save(function (err) {
         if (err) {
           return next(err);
         }
         //success
-        res.send(product);
+        res.status(200).send("Success");
       });
     }
   },
@@ -59,21 +59,18 @@ exports.product_create_post = [
 //display product delete form, GET (do you need this?)
 
 //handle product delete, DEL
-exports.product_delete_del = function (req, res, next) {
-  Product.findOne({ _id: req.params.productId }).exec(function (err, results) {
-    if (err) {
-      return next(err);
-    }
-    if (results == null) {
-      return res.status(404).send("Product not found");
-    }
-  });
+exports.product_delete_del = async function (req, res, next) {
+  const product = await Product.findOne({ _id: req.params.productId }).exec();
+  if (product === null) {
+    return res.status(404).send("Product not found");
+  }
+
   ProductPrice.find({ product: req.params.productId }).exec(function (err, results) {
     if (err) {
       return next(err);
     }
     if (results.length > 0) {
-      return res.status(405).send("This product is still used in prices, delete all associated prices first.");
+      return res.status(400).send("This product is still used in prices, delete all associated prices first.");
     } else {
       Product.findByIdAndDelete(req.params.productId, (err) => {
         if (err) {
@@ -90,7 +87,7 @@ exports.product_delete_del = function (req, res, next) {
 //handle product update, POST
 exports.product_update_post = [
   (req, res, next) => {
-    Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
+    Product.findOne({ _id: req.body.productId }, function (err, foundProduct) {
       if (err) {
         if (foundProduct == null) {
           return res.status(404).send("Product not found");

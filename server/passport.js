@@ -56,16 +56,3 @@ passport.use(
     });
   })
 );
-
-passport.use(
-  new JWTstrategy(
-    { jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_TOKEN },
-    (jwt_payload, done) => {
-      console.log("test");
-      if (err) {
-        return done(err);
-      }
-      return done(null, jwt_payload.username);
-    }
-  )
-);

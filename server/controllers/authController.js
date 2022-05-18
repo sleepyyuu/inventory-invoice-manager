@@ -8,7 +8,7 @@ exports.login_post = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    req.login(user, { sessions: false }, async function (err) {
+    req.logIn(user, { sessions: false }, async function (err) {
       if (err) {
         return res.status(400).json({ message: info.message });
       }
@@ -19,9 +19,7 @@ exports.login_post = function (req, res, next) {
         expiresIn: "10d",
       });
 
-      const newRefreshTokenArray = !cookies?.jwt
-        ? dbUser.refreshToken
-        : dbUser.refreshToken.filter((token) => token !== cookies.jwt);
+      const newRefreshTokenArray = !cookies?.jwt ? dbUser.refreshToken : dbUser.refreshToken.filter((token) => token !== cookies.jwt);
       if (cookies.jwt) {
         res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
       }
@@ -54,7 +52,6 @@ exports.signup_post = function (req, res, next) {
 
 exports.logout_get = async function (req, res, next) {
   const cookies = req.cookies;
-  console.log(cookies);
   if (!cookies?.jwt) {
     //no jwt in cookies
     return res.sendStatus(401);
