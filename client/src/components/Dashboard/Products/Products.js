@@ -1,5 +1,6 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import { useEffect, useState, useRef } from "react";
+import uniqid from "uniqid";
 
 export default function Products() {
   const verify = useVerifyForEndpointAction();
@@ -21,32 +22,54 @@ export default function Products() {
     getDB();
   }, []);
 
-  //make functions for button onclicks, post method, setInvices to after change
   const handleCreate = async (e) => {
     e.preventDefault();
     const body = { name: newProductName, price_range_min: newProductPriceMin, price_range_max: newProductPriceMax };
     const response = await verify("create", route, body);
     if (response.status === 200) {
+      getDB();
       setShowMenu(false);
       setError(null);
       setNewProductName("");
       setNewProductPriceMin(0);
       setNewProductPriceMax(0);
-      getDB();
     } else {
       setError(response);
     }
   };
+
+  const handleDelete = async (id) => {
+    let originalArray = products;
+    let filteredArray = products.filter((product) => {
+      return product._id !== id;
+    });
+    setProducts(filteredArray);
+    const response = await verify("delete", route + "/" + id, { productId: id });
+    if (response.status === 200) {
+    } else {
+      setProducts(originalArray);
+      setError(response);
+    }
+  };
+
   return loading ? (
     <div>loading..</div>
   ) : (
     <div>
       <div>products</div>
-      {products.map((product, counter) => {
+      {error && !showMenu ? <div>{error}</div> : null}
+      {products.map((product) => {
         return (
-          <div key={counter}>
+          <div key={uniqid()}>
             <div>
               Name: {product.name} ||| product ID : {product._id}
+              <button
+                onClick={() => {
+                  handleDelete(product._id);
+                }}
+              >
+                delete
+              </button>
             </div>
             <br></br>
           </div>
@@ -54,6 +77,7 @@ export default function Products() {
       })}
       <button
         onClick={() => {
+          setError(null);
           setShowMenu(true);
         }}
       >
@@ -65,9 +89,9 @@ export default function Products() {
             <div>
               {error ? (
                 <div>
-                  {error.map((err, counter) => {
+                  {error.map((err) => {
                     return (
-                      <div key={counter}>
+                      <div key={uniqid()}>
                         <div>{err.msg}</div>
                         <br></br>
                       </div>
