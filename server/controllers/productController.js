@@ -41,6 +41,7 @@ exports.product_create_post = [
       name: req.body.name,
       price_range_min: req.body.price_range_min ? req.body.price_range_min : "",
       price_range_max: req.body.price_range_max ? req.body.price_range_max : "",
+      quantity: req.body.quantity ? req.body.quantity : 0,
     });
     if (!errors.isEmpty()) {
       return res.status(400).send({ errors: errors.array() });
@@ -97,11 +98,12 @@ exports.product_update_post = [
       foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
       foundProduct.price_range_min = req.body.price_range_min ? req.body.price_range_min : foundProduct.price_range_min;
       foundProduct.price_range_max = req.body.price_range_max ? req.body.price_range_max : foundProduct.price_range_max;
+      foundProduct.quantity = req.body.quantity ? req.body.quantity : foundProduct.quantity;
       foundProduct.save(function (err) {
         if (err) {
           next(err);
         }
-        res.send(foundProduct);
+        res.status(200).send("Success");
       });
     });
   },
