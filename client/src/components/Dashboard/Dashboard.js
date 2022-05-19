@@ -24,12 +24,11 @@ export default function Dashboard(props) {
       <div>
         <Link to="/dashboard/products">Products</Link>
         <Link to="/dashboard/buyers">buyers</Link>
-        <Link to="/dashboard/Productprices">productprices</Link>
         <Link to="/dashboard/invoices">invoices</Link>
       </div>
 
       <div>
-        <Outlet></Outlet>{" "}
+        <Outlet></Outlet>
       </div>
     </div>
   ) : (

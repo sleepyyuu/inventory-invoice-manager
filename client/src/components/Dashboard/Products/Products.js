@@ -12,6 +12,7 @@ export default function Products() {
   const [newProductId, setNewProductId] = useState("");
   const [newProductPriceMin, setNewProductPriceMin] = useState(0);
   const [newProductPriceMax, setNewProductPriceMax] = useState(0);
+  const [newProductQuantity, setNewProductQuantity] = useState(0);
   const [error, setError] = useState();
   const route = "/products";
   const getDB = async () => {
@@ -32,7 +33,12 @@ export default function Products() {
     }
     let response;
     if (menuStateCreate) {
-      const body = { name: newProductName, price_range_min: newProductPriceMin, price_range_max: newProductPriceMax };
+      const body = {
+        name: newProductName,
+        price_range_min: newProductPriceMin,
+        price_range_max: newProductPriceMax,
+        quantity: newProductQuantity,
+      };
       response = await verify("create", route, body);
     } else {
       const body = {
@@ -40,6 +46,7 @@ export default function Products() {
         price_range_min: newProductPriceMin,
         price_range_max: newProductPriceMax,
         productId: newProductId,
+        quantity: newProductQuantity,
       };
       response = await verify("update", route + "/" + newProductId, body);
     }
@@ -61,12 +68,9 @@ export default function Products() {
     setError(null);
     setNewProductId(product._id);
     setNewProductName(product.name);
-    if (product.price_range_min) {
-      setNewProductPriceMin(product.price_range_min);
-    }
-    if (product.price_range_max) {
-      setNewProductPriceMax(product.price_range_max);
-    }
+    setNewProductQuantity(product.quantity);
+    setNewProductPriceMin(product.price_range_min);
+    setNewProductPriceMax(product.price_range_max);
     setShowMenu(true);
   };
 
@@ -150,6 +154,17 @@ export default function Products() {
                   setNewProductName(e.target.value);
                 }}
                 value={newProductName}
+              ></input>
+              <label htmlFor="quantity">Quantity</label>
+              <input
+                required
+                type="text"
+                id="quantity"
+                name="quantity"
+                onChange={(e) => {
+                  setNewProductQuantity(e.target.value);
+                }}
+                value={newProductQuantity}
               ></input>
             </div>
             <div>
