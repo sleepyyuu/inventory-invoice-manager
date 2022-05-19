@@ -17,7 +17,6 @@ export default function Products() {
   const route = "/products";
   const getDB = async () => {
     const responseProducts = await verify("readAll", route);
-    console.log(responseProducts);
     setProducts(responseProducts);
     setLoading(false);
   };
@@ -32,25 +31,18 @@ export default function Products() {
       return;
     }
     let response;
+    let body = {
+      name: newProductName,
+      price_range_min: newProductPriceMin,
+      price_range_max: newProductPriceMax,
+      quantity: newProductQuantity,
+    };
     if (menuStateCreate) {
-      const body = {
-        name: newProductName,
-        price_range_min: newProductPriceMin,
-        price_range_max: newProductPriceMax,
-        quantity: newProductQuantity,
-      };
       response = await verify("create", route, body);
     } else {
-      const body = {
-        name: newProductName,
-        price_range_min: newProductPriceMin,
-        price_range_max: newProductPriceMax,
-        productId: newProductId,
-        quantity: newProductQuantity,
-      };
+      body.productId = newProductId;
       response = await verify("update", route + "/" + newProductId, body);
     }
-    console.log(response);
     if (response.status === 200) {
       getDB();
       setShowMenu(false);
@@ -98,7 +90,7 @@ export default function Products() {
         return (
           <div key={uniqid()}>
             <div>
-              Name: {product.name} ||| product ID : {product._id}
+              Name: {product.name} ||| Quantity: {product.quantity} ||| product ID : {product._id}
               <button
                 onClick={() => {
                   handleEdit(product);
