@@ -42,6 +42,7 @@ exports.product_create_post = [
       price_range_min: req.body.price_range_min ? req.body.price_range_min : 0,
       price_range_max: req.body.price_range_max ? req.body.price_range_max : 0,
       quantity: req.body.quantity ? req.body.quantity : 0,
+      buyer_prices: req.body.buyer_prices ? req.body.buyer_prices : [],
     });
     if (!errors.isEmpty()) {
       return res.status(400).send({ errors: errors.array() });
@@ -99,6 +100,7 @@ exports.product_update_post = [
       foundProduct.price_range_min = req.body.price_range_min ? req.body.price_range_min : foundProduct.price_range_min;
       foundProduct.price_range_max = req.body.price_range_max ? req.body.price_range_max : foundProduct.price_range_max;
       foundProduct.quantity = req.body.quantity ? req.body.quantity : foundProduct.quantity;
+      foundProduct.buyer_prices = req.body.buyer_prices ? req.body.buyer_prices : foundProduct.buyer_prices;
       foundProduct.save(function (err) {
         if (err) {
           next(err);
