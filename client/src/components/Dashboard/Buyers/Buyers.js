@@ -111,6 +111,10 @@ export default function Buyers() {
       <button
         onClick={() => {
           setError(null);
+          setNewBuyerName("");
+          setNewBuyerPhoneNumber("");
+          setNewBuyerAddress("");
+          setNewBuyerId("");
           setmenuStateCreate(true);
           setShowMenu(true);
         }}

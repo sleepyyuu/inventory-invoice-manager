@@ -6,6 +6,7 @@ export default function Products() {
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [buyers, setBuyers] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [newProductName, setNewProductName] = useState("");
@@ -13,15 +14,24 @@ export default function Products() {
   const [newProductPriceMin, setNewProductPriceMin] = useState(0);
   const [newProductPriceMax, setNewProductPriceMax] = useState(0);
   const [newProductQuantity, setNewProductQuantity] = useState(0);
+  const [newProductPriceArray, setNewProductPriceArray] = useState([]);
+  const [newProductBuyerName, setNewProductBuyerName] = useState("");
+  const [newProductBuyerPrice, setNewProductBuyerPrice] = useState(0);
   const [error, setError] = useState();
   const route = "/products";
+  const getInitialDB = async () => {
+    const [responseBuyers, responseProducts] = await Promise.all([verify("readAll", "/buyers"), verify("readAll", "/products")]);
+    setBuyers(responseBuyers);
+    setProducts(responseProducts);
+    setLoading(false);
+  };
   const getDB = async () => {
     const responseProducts = await verify("readAll", route);
     setProducts(responseProducts);
     setLoading(false);
   };
   useEffect(() => {
-    getDB();
+    getInitialDB();
   }, []);
 
   const handlePostAction = async (e) => {
@@ -36,6 +46,7 @@ export default function Products() {
       price_range_min: newProductPriceMin,
       price_range_max: newProductPriceMax,
       quantity: newProductQuantity,
+      buyer_prices: newProductPriceArray,
     };
     if (menuStateCreate) {
       response = await verify("create", route, body);
@@ -63,6 +74,7 @@ export default function Products() {
     setNewProductQuantity(product.quantity);
     setNewProductPriceMin(product.price_range_min);
     setNewProductPriceMax(product.price_range_max);
+    setNewProductPriceArray(product.buyer_prices);
     setShowMenu(true);
   };
 
@@ -78,6 +90,16 @@ export default function Products() {
       setProducts(originalArray);
       setError(response);
     }
+  };
+
+  const handlePriceArrayAdd = (e) => {
+    e.preventDefault();
+    const buyerPrice = { buyer: newProductBuyerName, price: newProductBuyerPrice };
+    setNewProductPriceArray((newProductPriceArray) => {
+      return [...newProductPriceArray, buyerPrice];
+    });
+    setNewProductBuyerName("");
+    setNewProductBuyerPrice(0);
   };
 
   return loading ? (
@@ -115,6 +137,11 @@ export default function Products() {
         onClick={() => {
           setError(null);
           setmenuStateCreate(true);
+          setNewProductName("");
+          setNewProductPriceMin(0);
+          setNewProductPriceMax(0);
+          setNewProductId("");
+          setNewProductPriceArray([]);
           setShowMenu(true);
         }}
       >
@@ -186,6 +213,47 @@ export default function Products() {
                 }}
                 value={newProductPriceMax}
               ></input>
+              <div>
+                Buyer prices
+                {newProductPriceArray.map((buyerPrice) => {
+                  return (
+                    <div key={uniqid()}>
+                      Buyer: {buyerPrice.buyer}
+                      <br></br>
+                      Price: {buyerPrice.price}
+                    </div>
+                  );
+                })}
+                <label htmlFor="productBuyerName">Buyer name</label>
+                <input
+                  type="text"
+                  id="productBuyerName"
+                  name="productBuyerName"
+                  onChange={(e) => {
+                    setNewProductBuyerName(e.target.value);
+                  }}
+                  value={newProductBuyerName}
+                ></input>
+                <label htmlFor="productBuyerPrice">Buyer price</label>
+                <input
+                  type="number"
+                  id="productBuyerPrice"
+                  min="0"
+                  step=".01"
+                  name="productBuyerPrice"
+                  onChange={(e) => {
+                    setNewProductBuyerPrice(e.target.value);
+                  }}
+                  value={newProductBuyerPrice}
+                ></input>
+                <button
+                  onClick={(e) => {
+                    handlePriceArrayAdd(e);
+                  }}
+                >
+                  Add buyer price to product
+                </button>
+              </div>
             </div>
             <button
               onClick={(e) => {
