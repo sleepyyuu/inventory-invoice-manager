@@ -16,6 +16,11 @@ export default function Invoices() {
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
   const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState(0);
+  const [newInvoiceCurrentProductPrice, setNewInvoiceCurrentProductPrice] = useState(0);
+  const [newInvoiceCurrentProductEdit, setNewInvoiceCurrentProductEdit] = useState("");
+  const [newInvoiceCurrentProductQuantityEdit, setnewInvoiceCurrentProductQuantityEdit] = useState(0);
+  const [newInvoiceCurrentProductPriceEdit, setNewInvoiceCurrentProductPriceEdit] = useState(0);
+  const [newInvoiceEdit, setNewInvoiceEdit] = useState(null);
   const [invoiceNumber, setInvoiceNumber] = useState(0);
   const [customError, setCustomError] = useState();
   const route = "/invoices";
@@ -184,48 +189,161 @@ export default function Invoices() {
                 <div>Items</div>
                 <div>
                   {newInvoiceProducts.map((product) => {
-                    return <div></div>;
+                    return (
+                      <div key={uniqid()}>
+                        {product.name === newInvoiceEdit ? (
+                          <div>
+                            <label htmlFor="invoiceProductEdit">Product</label>
+                            <select
+                              id="invoiceProductEdit"
+                              name="invoiceProductEdit"
+                              onChange={(e) => {
+                                setNewInvoiceCurrentProductEdit(e.target.value);
+                                if (products[e.target.value].quantity < newInvoiceCurrentProductQuantityEdit) {
+                                  setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
+                                }
+                              }}
+                              value={newInvoiceCurrentProductEdit}
+                            >
+                              {products.map((prod, index) => {
+                                return (
+                                  <option value={index} key={uniqid()}>
+                                    {prod.name}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                            <label htmlFor="invoiceQuantityEdit">Quantity</label>
+                            <input
+                              type="number"
+                              id="invoiceQuantityEdit"
+                              name="invoiceQuantityEdit"
+                              max={products[newInvoiceCurrentProductEdit].quantity}
+                              onChange={(e) => {
+                                if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
+                                  setnewInvoiceCurrentProductQuantityEdit(products[newInvoiceCurrentProduct].quantity);
+                                } else {
+                                  setnewInvoiceCurrentProductQuantityEdit(e.target.value);
+                                }
+                              }}
+                              value={newInvoiceCurrentProductQuantity}
+                            ></input>
+                            <label htmlFor="invoicePriceEdit">Price</label>
+                            <input
+                              type="text"
+                              id="invoicePriceEdit"
+                              name="invoicePriceEdit"
+                              value={newInvoiceCurrentProductPriceEdit}
+                              onChange={(e) => {
+                                setNewInvoiceCurrentProductPriceEdit(e.target.value);
+                              }}
+                            ></input>
+
+                            <button>submit changes</button>
+                          </div>
+                        ) : (
+                          <div>
+                            <div>{product.name}</div>
+                            <div>{product.quantity}</div>
+                            <div>{product.price}</div>
+                          </div>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            let index = 0;
+                            newInvoiceProducts.forEach((temp, i) => {
+                              if (temp.name === product.name) {
+                                index = i;
+                              }
+                            });
+                            setNewInvoiceEdit(product.name);
+                            setNewInvoiceCurrentProductEdit(index);
+                            setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
+                            setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
+                          }}
+                        >
+                          edit this listing
+                        </button>
+                      </div>
+                    );
                   })}
-                  <button>add another product</button>
-                  <div>
-                    <label htmlFor="invoiceProduct">Product</label>
-                    <select
-                      id="invoiceProduct"
-                      name="invoiceProduct"
-                      onChange={(e) => {
-                        setNewInvoiceCurrentProduct(e.target.value);
-                        if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
-                          setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
-                        }
-                      }}
-                      value={newInvoiceCurrentProduct}
-                    >
-                      {products.map((prod, index) => {
-                        return (
-                          <option value={index} key={uniqid()}>
-                            {prod.name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <label htmlFor="invoiceQuantity">Quantity</label>
-                    <input
-                      type="number"
-                      id="invoiceQuantity"
-                      name="invoiceQuantity"
-                      max={products[newInvoiceCurrentProduct].quantity}
-                      onChange={(e) => {
-                        if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
-                          setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
-                        } else {
-                          setnewInvoiceCurrentProductQuantity(e.target.value);
-                        }
-                      }}
-                      value={newInvoiceCurrentProductQuantity}
-                    ></input>
-                    <label htmlFor="invoicePrice">Price</label>
-                    <input type="text" id="invoicePrice" name="invoicePrice"></input>
-                  </div>
+                  {newInvoiceCurrentProduct === products.length ? (
+                    <div>no more products</div>
+                  ) : (
+                    <div>
+                      <label htmlFor="invoiceProduct">Product</label>
+                      <select
+                        id="invoiceProduct"
+                        name="invoiceProduct"
+                        onChange={(e) => {
+                          setNewInvoiceCurrentProduct(e.target.value);
+                          if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
+                            setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
+                          }
+                        }}
+                        value={newInvoiceCurrentProduct}
+                      >
+                        {products.map((prod, index) => {
+                          let showItem = true;
+                          newInvoiceProducts.forEach((temp) => {
+                            if (temp.name === prod.name) {
+                              showItem = false;
+                            } else {
+                            }
+                          });
+                          return showItem ? (
+                            <option value={index} key={uniqid()}>
+                              {prod.name}
+                            </option>
+                          ) : null;
+                        })}
+                      </select>
+                      <label htmlFor="invoiceQuantity">Quantity</label>
+                      <input
+                        type="number"
+                        id="invoiceQuantity"
+                        name="invoiceQuantity"
+                        max={products[newInvoiceCurrentProduct].quantity}
+                        onChange={(e) => {
+                          if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
+                            setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
+                          } else {
+                            setnewInvoiceCurrentProductQuantity(e.target.value);
+                          }
+                        }}
+                        value={newInvoiceCurrentProductQuantity}
+                      ></input>
+                      <label htmlFor="invoicePrice">Price</label>
+                      <input
+                        type="text"
+                        id="invoicePrice"
+                        name="invoicePrice"
+                        value={newInvoiceCurrentProductPrice}
+                        onChange={(e) => {
+                          setNewInvoiceCurrentProductPrice(e.target.value);
+                        }}
+                      ></input>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          //an array with object with id, quantity, and price
+                          const newProductObject = {
+                            product: products[newInvoiceCurrentProduct]._id,
+                            quantity: newInvoiceCurrentProductQuantity,
+                            price: newInvoiceCurrentProductPrice,
+                            name: products[newInvoiceCurrentProduct].name,
+                          };
+                          setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
+                          setNewInvoiceCurrentProduct((newInvoiceCurrentProduct) => {
+                            return newInvoiceCurrentProduct + 1;
+                          });
+                        }}
+                      >
+                        add another product
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
