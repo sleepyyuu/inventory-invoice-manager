@@ -18,11 +18,14 @@ export default function Invoices() {
   const [customError, setCustomError] = useState();
   const route = "/invoices";
   const getInitialDB = async () => {
-    const [responseInvoices, responseBuyers, responseProducts] = await Promise.all([
-      verify("readAll", route, {}, true),
-      verify("readAll", "/buyers", {}, true),
-      verify("readAll", "/products", {}, true),
-    ]);
+    // const [responseInvoices, responseBuyers, responseProducts] = await Promise.all([
+    //   verify("readAll", route, {}, true),
+    //   verify("readAll", "/buyers", {}, true),
+    //   verify("readAll", "/products", {}, true),
+    // ]);
+    const responseInvoices = await verify("readAll", route);
+    const responseBuyers = await verify("readAll", "/buyers");
+    const responseProducts = await verify("readAll", "/products");
     setInvoices(responseInvoices);
     setBuyers(responseBuyers);
     setProducts(responseProducts);

@@ -6,7 +6,7 @@ export default function useVerifyForEndpointAction() {
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
   const navigate = useNavigate();
-  const verify = async (action, route, body = {}, allFlag) => {
+  const verify = async (action, route, body = {}) => {
     if (!auth?.accessToken) {
       return navigate("/login");
     } else {

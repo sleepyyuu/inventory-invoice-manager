@@ -20,10 +20,9 @@ export default function Products() {
   const [customError, setCustomError] = useState();
   const route = "/products";
   const getInitialDB = async () => {
-    const [responseBuyers, responseProducts] = await Promise.all([
-      verify("readAll", "/buyers", {}, true),
-      verify("readAll", "/products", {}, true),
-    ]);
+    // const [responseBuyers, responseProducts] = await Promise.all([verify("readAll", "/buyers"), verify("readAll", "/products")]);
+    const responseBuyers = await verify("readAll", "/buyers");
+    const responseProducts = await verify("readAll", "/products");
     setBuyers(responseBuyers);
     setProducts(responseProducts);
     setLoading(false);
