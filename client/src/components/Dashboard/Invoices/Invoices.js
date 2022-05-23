@@ -194,6 +194,9 @@ export default function Invoices() {
                       name="invoiceProduct"
                       onChange={(e) => {
                         setNewInvoiceCurrentProduct(e.target.value);
+                        if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
+                          setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
+                        }
                       }}
                       value={newInvoiceCurrentProduct}
                     >
