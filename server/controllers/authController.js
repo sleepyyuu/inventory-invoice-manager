@@ -14,7 +14,7 @@ exports.login_post = function (req, res, next) {
       }
       const dbUser = await User.findOne({ username: user.username }).exec();
       const cookies = req.cookies;
-      const accessToken = jwt.sign({ username: dbUser.username }, process.env.JWT_TOKEN, { expiresIn: "10m" });
+      const accessToken = jwt.sign({ username: dbUser.username }, process.env.JWT_TOKEN, { expiresIn: "2s" });
       const newRefreshToken = jwt.sign({ username: dbUser.username }, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: "10d",
       });
