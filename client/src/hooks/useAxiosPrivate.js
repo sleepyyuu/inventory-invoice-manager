@@ -6,14 +6,16 @@ import useAuth from "./useAuth";
 export default function useAxiosPrivate() {
   //handes attaching accesstoken to request to server
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
-        if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
-        }
+        // if (!config.headers["Authorization"]) {
+        //   config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
+        // }
+        //consider cases where auth has nothing in it
+        config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         return config;
       },
       (error) => {

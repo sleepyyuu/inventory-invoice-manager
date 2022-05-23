@@ -17,10 +17,13 @@ export default function Products() {
   const [newProductPriceArray, setNewProductPriceArray] = useState([]);
   const [newProductBuyerName, setNewProductBuyerName] = useState("");
   const [newProductBuyerPrice, setNewProductBuyerPrice] = useState(0);
-  const [error, setError] = useState();
+  const [customError, setCustomError] = useState();
   const route = "/products";
   const getInitialDB = async () => {
-    const [responseBuyers, responseProducts] = await Promise.all([verify("readAll", "/buyers"), verify("readAll", "/products")]);
+    const [responseBuyers, responseProducts] = await Promise.all([
+      verify("readAll", "/buyers", {}, true),
+      verify("readAll", "/products", {}, true),
+    ]);
     setBuyers(responseBuyers);
     setProducts(responseProducts);
     setLoading(false);
@@ -37,7 +40,7 @@ export default function Products() {
   const handlePostAction = async (e) => {
     e.preventDefault();
     if (newProductName === "") {
-      setError([{ msg: "Name is required" }]);
+      setCustomError([{ msg: "Name is required" }]);
       return;
     }
     let response;
@@ -57,18 +60,18 @@ export default function Products() {
     if (response.status === 200) {
       getDB();
       setShowMenu(false);
-      setError(null);
+      setCustomError(null);
       setNewProductName("");
       setNewProductPriceMin(0);
       setNewProductPriceMax(0);
       setNewProductId("");
     } else {
-      setError(response);
+      setCustomError(response);
     }
   };
 
   const handleEdit = async (product) => {
-    setError(null);
+    setCustomError(null);
     setNewProductId(product._id);
     setNewProductName(product.name);
     setNewProductQuantity(product.quantity);
@@ -88,7 +91,7 @@ export default function Products() {
     if (response.status === 200) {
     } else {
       setProducts(originalArray);
-      setError(response);
+      setCustomError(response);
     }
   };
 
@@ -107,7 +110,7 @@ export default function Products() {
   ) : (
     <div>
       <div>products</div>
-      {error && !showMenu ? <div>{error}</div> : null}
+      {customError && !showMenu ? <div>{customError}</div> : null}
       {products.map((product) => {
         return (
           <div key={uniqid()}>
@@ -135,7 +138,7 @@ export default function Products() {
       })}
       <button
         onClick={() => {
-          setError(null);
+          setCustomError(null);
           setmenuStateCreate(true);
           setNewProductName("");
           setNewProductPriceMin(0);
@@ -151,9 +154,9 @@ export default function Products() {
         <div>
           <form>
             <div>
-              {error ? (
+              {customError ? (
                 <div>
-                  {error.map((err) => {
+                  {customError.map((err) => {
                     return (
                       <div key={uniqid()}>
                         <div>{err.msg}</div>
@@ -218,9 +221,17 @@ export default function Products() {
                 {newProductPriceArray.map((buyerPrice) => {
                   return (
                     <div key={uniqid()}>
-                      Buyer: {buyerPrice.buyer}
-                      <br></br>
-                      Price: {buyerPrice.price}
+                      <label htmlFor="productBuyerName">Buyer name</label>
+                      <input type="text" id="productBuyerName" name="productBuyerName" defaultValue={buyerPrice.buyer}></input>
+                      <label htmlFor="productBuyerPrice">Buyer price</label>
+                      <input
+                        type="number"
+                        id="productBuyerPrice"
+                        min="0"
+                        step=".01"
+                        name="productBuyerPrice"
+                        defaultValue={buyerPrice.price}
+                      ></input>
                     </div>
                   );
                 })}

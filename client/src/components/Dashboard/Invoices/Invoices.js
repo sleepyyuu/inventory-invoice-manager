@@ -15,13 +15,13 @@ export default function Invoices() {
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState(0);
-  const [error, setError] = useState();
+  const [customError, setCustomError] = useState();
   const route = "/invoices";
   const getInitialDB = async () => {
     const [responseInvoices, responseBuyers, responseProducts] = await Promise.all([
-      verify("readAll", route),
-      verify("readAll", "/buyers"),
-      verify("readAll", "/products"),
+      verify("readAll", route, {}, true),
+      verify("readAll", "/buyers", {}, true),
+      verify("readAll", "/products", {}, true),
     ]);
     setInvoices(responseInvoices);
     setBuyers(responseBuyers);
@@ -40,11 +40,11 @@ export default function Invoices() {
   const handlePostAction = async (e) => {
     e.preventDefault();
     if (newInvoiceBuyer === "") {
-      setError([{ msg: "A buyer is required" }]);
+      setCustomError([{ msg: "A buyer is required" }]);
       return;
     }
     if (newInvoiceProducts === []) {
-      setError([{ msg: "Products are required" }]);
+      setCustomError([{ msg: "Products are required" }]);
       return;
     }
     let response;
@@ -65,18 +65,18 @@ export default function Invoices() {
     if (response.status === 200) {
       getDB();
       setShowMenu(false);
-      setError(null);
+      setCustomError(null);
       setNewInvoiceBuyer("");
       setNewInvoiceProducts([]);
       setNewInvoiceDetails("");
       setNewInvoiceId("");
     } else {
-      setError(response);
+      setCustomError(response);
     }
   };
 
   const handleEdit = async (invoice) => {
-    setError(null);
+    setCustomError(null);
     setNewInvoiceId(invoice._id);
     setNewInvoiceBuyer(invoice.buyer);
     setNewInvoiceDetails(invoice.details);
@@ -95,7 +95,7 @@ export default function Invoices() {
     if (response.status === 200) {
     } else {
       setInvoices(originalArray);
-      setError(response);
+      setCustomError(response);
     }
   };
 
@@ -104,7 +104,7 @@ export default function Invoices() {
   ) : (
     <div>
       <div>Invoices</div>
-      {error && !showMenu ? <div>{error}</div> : null}
+      {customError && !showMenu ? <div>{customError}</div> : null}
       {invoices.map((invoice) => {
         let paddedInvoiceString = "" + invoice.invoice_number;
         paddedInvoiceString = paddedInvoiceString.padStart(5, "0");
@@ -134,7 +134,7 @@ export default function Invoices() {
       })}
       <button
         onClick={() => {
-          setError(null);
+          setCustomError(null);
           setmenuStateCreate(true);
           setNewInvoiceBuyer("");
           setNewInvoiceProducts([]);
@@ -150,9 +150,9 @@ export default function Invoices() {
         <div>
           <form>
             <div>
-              {error ? (
+              {customError ? (
                 <div>
-                  {error.map((err) => {
+                  {customError.map((err) => {
                     return (
                       <div key={uniqid()}>
                         <div>{err.msg}</div>
