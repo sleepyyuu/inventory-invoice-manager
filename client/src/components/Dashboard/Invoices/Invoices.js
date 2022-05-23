@@ -14,6 +14,8 @@ export default function Invoices() {
   const [newInvoiceBuyer, setNewInvoiceBuyer] = useState("");
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
+  const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
+  const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState(0);
   const [invoiceNumber, setInvoiceNumber] = useState(0);
   const [customError, setCustomError] = useState();
   const route = "/invoices";
@@ -145,6 +147,7 @@ export default function Invoices() {
           setNewInvoiceId("");
           setInvoiceNumber((invoices.length + "").padStart(5, "0"));
           setShowMenu(true);
+          setNewInvoiceCurrentProduct(0);
         }}
       >
         add a invoice
@@ -181,8 +184,45 @@ export default function Invoices() {
                 <div>Items</div>
                 <div>
                   {newInvoiceProducts.map((product) => {
-                    return product.name;
+                    return <div></div>;
                   })}
+                  <button>add another product</button>
+                  <div>
+                    <label htmlFor="invoiceProduct">Product</label>
+                    <select
+                      id="invoiceProduct"
+                      name="invoiceProduct"
+                      onChange={(e) => {
+                        setNewInvoiceCurrentProduct(e.target.value);
+                      }}
+                      value={newInvoiceCurrentProduct}
+                    >
+                      {products.map((prod, index) => {
+                        return (
+                          <option value={index} key={uniqid()}>
+                            {prod.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <label htmlFor="invoiceQuantity">Quantity</label>
+                    <input
+                      type="number"
+                      id="invoiceQuantity"
+                      name="invoiceQuantity"
+                      max={products[newInvoiceCurrentProduct].quantity}
+                      onChange={(e) => {
+                        if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
+                          setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
+                        } else {
+                          setnewInvoiceCurrentProductQuantity(e.target.value);
+                        }
+                      }}
+                      value={newInvoiceCurrentProductQuantity}
+                    ></input>
+                    <label htmlFor="invoicePrice">Price</label>
+                    <input type="text" id="invoicePrice" name="invoicePrice"></input>
+                  </div>
                 </div>
               </div>
             </div>
