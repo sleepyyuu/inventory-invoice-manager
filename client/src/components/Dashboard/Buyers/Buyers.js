@@ -2,8 +2,10 @@ import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointActio
 import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import "./Buyers.css";
+import Header from "../Header/Header";
 
 export default function Buyers(props) {
+  const { setSelectedCategory } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [buyers, setBuyers] = useState([]);
@@ -21,6 +23,7 @@ export default function Buyers(props) {
     setLoading(false);
   };
   useEffect(() => {
+    setSelectedCategory("Buyers");
     getDB();
   }, []);
 
@@ -78,110 +81,115 @@ export default function Buyers(props) {
     }
   };
 
-  return loading ? (
-    <div>loading..</div>
-  ) : (
+  return (
     <div>
-      <div>buyers</div>
-      {error && !showMenu ? <div>{error}</div> : null}
-      {buyers.map((buyer) => {
-        return (
-          <div key={uniqid()}>
-            <div>
-              Name: {buyer.company_name} ||| phone number: {buyer.phone_number} ||| address: {buyer.address} ||| buyer ID : {buyer._id}
-              <button
-                onClick={() => {
-                  handleEdit(buyer);
-                  setmenuStateCreate(false);
-                }}
-              >
-                edit
-              </button>
-              <button
-                onClick={() => {
-                  handleDelete(buyer._id);
-                }}
-              >
-                delete
-              </button>
-            </div>
-            <br></br>
-          </div>
-        );
-      })}
-      <button
-        onClick={() => {
-          setError(null);
-          setNewBuyerName("");
-          setNewBuyerPhoneNumber("");
-          setNewBuyerAddress("");
-          setNewBuyerId("");
-          setmenuStateCreate(true);
-          setShowMenu(true);
-        }}
-      >
-        add a buyer
-      </button>
-      {showMenu ? (
+      <Header title="Buyers"></Header>
+      {loading ? (
+        <div>loading..</div>
+      ) : (
         <div>
-          <form>
-            <div>
-              {error ? (
+          <div>buyers</div>
+          {error && !showMenu ? <div>{error}</div> : null}
+          {buyers.map((buyer) => {
+            return (
+              <div key={uniqid()}>
                 <div>
-                  {error.map((err) => {
-                    return (
-                      <div key={uniqid()}>
-                        <div>{err.msg}</div>
-                        <br></br>
-                      </div>
-                    );
-                  })}
+                  Name: {buyer.company_name} ||| phone number: {buyer.phone_number} ||| address: {buyer.address} ||| buyer ID : {buyer._id}
+                  <button
+                    onClick={() => {
+                      handleEdit(buyer);
+                      setmenuStateCreate(false);
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDelete(buyer._id);
+                    }}
+                  >
+                    delete
+                  </button>
                 </div>
-              ) : null}
-              <label htmlFor="name">Name</label>
-              <input
-                required
-                type="text"
-                id="name"
-                name="name"
-                onChange={(e) => {
-                  setNewBuyerName(e.target.value);
-                }}
-                value={newBuyerName}
-              ></input>
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <input
-                required
-                type="text"
-                id="phoneNumber"
-                name="phoneNumber"
-                onChange={(e) => {
-                  setNewBuyerPhoneNumber(e.target.value);
-                }}
-                value={newBuyerPhoneNumber}
-              ></input>
-              <label htmlFor="adddress">Address</label>
-              <input
-                required
-                type="text"
-                id="adddress"
-                name="adddress"
-                onChange={(e) => {
-                  setNewBuyerAddress(e.target.value);
-                }}
-                value={newBuyerAddress}
-              ></input>
+                <br></br>
+              </div>
+            );
+          })}
+          <button
+            onClick={() => {
+              setError(null);
+              setNewBuyerName("");
+              setNewBuyerPhoneNumber("");
+              setNewBuyerAddress("");
+              setNewBuyerId("");
+              setmenuStateCreate(true);
+              setShowMenu(true);
+            }}
+          >
+            add a buyer
+          </button>
+          {showMenu ? (
+            <div>
+              <form>
+                <div>
+                  {error ? (
+                    <div>
+                      {error.map((err) => {
+                        return (
+                          <div key={uniqid()}>
+                            <div>{err.msg}</div>
+                            <br></br>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                  <label htmlFor="name">Name</label>
+                  <input
+                    required
+                    type="text"
+                    id="name"
+                    name="name"
+                    onChange={(e) => {
+                      setNewBuyerName(e.target.value);
+                    }}
+                    value={newBuyerName}
+                  ></input>
+                  <label htmlFor="phoneNumber">Phone Number</label>
+                  <input
+                    required
+                    type="text"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    onChange={(e) => {
+                      setNewBuyerPhoneNumber(e.target.value);
+                    }}
+                    value={newBuyerPhoneNumber}
+                  ></input>
+                  <label htmlFor="adddress">Address</label>
+                  <input
+                    required
+                    type="text"
+                    id="adddress"
+                    name="adddress"
+                    onChange={(e) => {
+                      setNewBuyerAddress(e.target.value);
+                    }}
+                    value={newBuyerAddress}
+                  ></input>
+                </div>
+                <button
+                  onClick={(e) => {
+                    handlePostAction(e);
+                  }}
+                >
+                  {menuStateCreate ? "add buyer" : "update buyer"}
+                </button>
+              </form>
             </div>
-            <button
-              onClick={(e) => {
-                handlePostAction(e);
-              }}
-            >
-              {menuStateCreate ? "add buyer" : "update buyer"}
-            </button>
-          </form>
+          ) : null}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import { useEffect, useState, useRef } from "react";
 import uniqid from "uniqid";
+import Header from "../Header/Header";
 
-export default function Products() {
+export default function Products(props) {
+  const { setSelectedCategory } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -33,6 +35,7 @@ export default function Products() {
     setLoading(false);
   };
   useEffect(() => {
+    setSelectedCategory("Products");
     getInitialDB();
   }, []);
 
@@ -104,177 +107,182 @@ export default function Products() {
     setNewProductBuyerPrice(0);
   };
 
-  return loading ? (
-    <div>loading..</div>
-  ) : (
+  return (
     <div>
-      <div>products</div>
-      {customError && !showMenu ? <div>{customError}</div> : null}
-      {products.map((product) => {
-        return (
-          <div key={uniqid()}>
-            <div>
-              Name: {product.name} ||| Quantity: {product.quantity} ||| product ID : {product._id}
-              <button
-                onClick={() => {
-                  handleEdit(product);
-                  setmenuStateCreate(false);
-                }}
-              >
-                edit
-              </button>
-              <button
-                onClick={() => {
-                  handleDelete(product._id);
-                }}
-              >
-                delete
-              </button>
-            </div>
-            <br></br>
-          </div>
-        );
-      })}
-      <button
-        onClick={() => {
-          setCustomError(null);
-          setmenuStateCreate(true);
-          setNewProductName("");
-          setNewProductPriceMin(0);
-          setNewProductPriceMax(0);
-          setNewProductId("");
-          setNewProductPriceArray([]);
-          setShowMenu(true);
-        }}
-      >
-        add a product
-      </button>
-      {showMenu ? (
+      <Header title="Products"></Header>
+      {loading ? (
+        <div>loading..</div>
+      ) : (
         <div>
-          <form>
-            <div>
-              {customError ? (
+          <div>products</div>
+          {customError && !showMenu ? <div>{customError}</div> : null}
+          {products.map((product) => {
+            return (
+              <div key={uniqid()}>
                 <div>
-                  {customError.map((err) => {
-                    return (
-                      <div key={uniqid()}>
-                        <div>{err.msg}</div>
-                        <br></br>
-                      </div>
-                    );
-                  })}
+                  Name: {product.name} ||| Quantity: {product.quantity} ||| product ID : {product._id}
+                  <button
+                    onClick={() => {
+                      handleEdit(product);
+                      setmenuStateCreate(false);
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDelete(product._id);
+                    }}
+                  >
+                    delete
+                  </button>
                 </div>
-              ) : null}
-              <label htmlFor="name">Name</label>
-              <input
-                required
-                type="text"
-                id="name"
-                name="name"
-                onChange={(e) => {
-                  setNewProductName(e.target.value);
-                }}
-                value={newProductName}
-              ></input>
-              <label htmlFor="quantity">Quantity</label>
-              <input
-                required
-                type="text"
-                id="quantity"
-                name="quantity"
-                onChange={(e) => {
-                  setNewProductQuantity(e.target.value);
-                }}
-                value={newProductQuantity}
-              ></input>
-            </div>
+                <br></br>
+              </div>
+            );
+          })}
+          <button
+            onClick={() => {
+              setCustomError(null);
+              setmenuStateCreate(true);
+              setNewProductName("");
+              setNewProductPriceMin(0);
+              setNewProductPriceMax(0);
+              setNewProductId("");
+              setNewProductPriceArray([]);
+              setShowMenu(true);
+            }}
+          >
+            add a product
+          </button>
+          {showMenu ? (
             <div>
-              <div>Price range</div>
-              <label htmlFor="priceRangeMin"></label>
-              <input
-                type="number"
-                id="priceRangeMin"
-                name="priceRangeMin"
-                min="0"
-                step=".01"
-                onChange={(e) => {
-                  setNewProductPriceMin(e.target.value);
-                }}
-                value={newProductPriceMin}
-              ></input>
-              <div>-</div>
-              <label htmlFor="priceRangeMax"></label>
-              <input
-                type="number"
-                id="priceRangeMax"
-                name="priceRangeMax"
-                min="0"
-                step=".01"
-                onChange={(e) => {
-                  setNewProductPriceMax(e.target.value);
-                }}
-                value={newProductPriceMax}
-              ></input>
-              <div>
-                Buyer prices
-                {newProductPriceArray.map((buyerPrice) => {
-                  return (
-                    <div key={uniqid()}>
-                      <label htmlFor="productBuyerName">Buyer name</label>
-                      <input type="text" id="productBuyerName" name="productBuyerName" defaultValue={buyerPrice.buyer}></input>
-                      <label htmlFor="productBuyerPrice">Buyer price</label>
-                      <input
-                        type="number"
-                        id="productBuyerPrice"
-                        min="0"
-                        step=".01"
-                        name="productBuyerPrice"
-                        defaultValue={buyerPrice.price}
-                      ></input>
+              <form>
+                <div>
+                  {customError ? (
+                    <div>
+                      {customError.map((err) => {
+                        return (
+                          <div key={uniqid()}>
+                            <div>{err.msg}</div>
+                            <br></br>
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-                <label htmlFor="productBuyerName">Buyer name</label>
-                <input
-                  type="text"
-                  id="productBuyerName"
-                  name="productBuyerName"
-                  onChange={(e) => {
-                    setNewProductBuyerName(e.target.value);
-                  }}
-                  value={newProductBuyerName}
-                ></input>
-                <label htmlFor="productBuyerPrice">Buyer price</label>
-                <input
-                  type="number"
-                  id="productBuyerPrice"
-                  min="0"
-                  step=".01"
-                  name="productBuyerPrice"
-                  onChange={(e) => {
-                    setNewProductBuyerPrice(e.target.value);
-                  }}
-                  value={newProductBuyerPrice}
-                ></input>
+                  ) : null}
+                  <label htmlFor="name">Name</label>
+                  <input
+                    required
+                    type="text"
+                    id="name"
+                    name="name"
+                    onChange={(e) => {
+                      setNewProductName(e.target.value);
+                    }}
+                    value={newProductName}
+                  ></input>
+                  <label htmlFor="quantity">Quantity</label>
+                  <input
+                    required
+                    type="text"
+                    id="quantity"
+                    name="quantity"
+                    onChange={(e) => {
+                      setNewProductQuantity(e.target.value);
+                    }}
+                    value={newProductQuantity}
+                  ></input>
+                </div>
+                <div>
+                  <div>Price range</div>
+                  <label htmlFor="priceRangeMin"></label>
+                  <input
+                    type="number"
+                    id="priceRangeMin"
+                    name="priceRangeMin"
+                    min="0"
+                    step=".01"
+                    onChange={(e) => {
+                      setNewProductPriceMin(e.target.value);
+                    }}
+                    value={newProductPriceMin}
+                  ></input>
+                  <div>-</div>
+                  <label htmlFor="priceRangeMax"></label>
+                  <input
+                    type="number"
+                    id="priceRangeMax"
+                    name="priceRangeMax"
+                    min="0"
+                    step=".01"
+                    onChange={(e) => {
+                      setNewProductPriceMax(e.target.value);
+                    }}
+                    value={newProductPriceMax}
+                  ></input>
+                  <div>
+                    Buyer prices
+                    {newProductPriceArray.map((buyerPrice) => {
+                      return (
+                        <div key={uniqid()}>
+                          <label htmlFor="productBuyerName">Buyer name</label>
+                          <input type="text" id="productBuyerName" name="productBuyerName" defaultValue={buyerPrice.buyer}></input>
+                          <label htmlFor="productBuyerPrice">Buyer price</label>
+                          <input
+                            type="number"
+                            id="productBuyerPrice"
+                            min="0"
+                            step=".01"
+                            name="productBuyerPrice"
+                            defaultValue={buyerPrice.price}
+                          ></input>
+                        </div>
+                      );
+                    })}
+                    <label htmlFor="productBuyerName">Buyer name</label>
+                    <input
+                      type="text"
+                      id="productBuyerName"
+                      name="productBuyerName"
+                      onChange={(e) => {
+                        setNewProductBuyerName(e.target.value);
+                      }}
+                      value={newProductBuyerName}
+                    ></input>
+                    <label htmlFor="productBuyerPrice">Buyer price</label>
+                    <input
+                      type="number"
+                      id="productBuyerPrice"
+                      min="0"
+                      step=".01"
+                      name="productBuyerPrice"
+                      onChange={(e) => {
+                        setNewProductBuyerPrice(e.target.value);
+                      }}
+                      value={newProductBuyerPrice}
+                    ></input>
+                    <button
+                      onClick={(e) => {
+                        handlePriceArrayAdd(e);
+                      }}
+                    >
+                      Add buyer price to product
+                    </button>
+                  </div>
+                </div>
                 <button
                   onClick={(e) => {
-                    handlePriceArrayAdd(e);
+                    handlePostAction(e);
                   }}
                 >
-                  Add buyer price to product
+                  {menuStateCreate ? "add product" : "update product"}
                 </button>
-              </div>
+              </form>
             </div>
-            <button
-              onClick={(e) => {
-                handlePostAction(e);
-              }}
-            >
-              {menuStateCreate ? "add product" : "update product"}
-            </button>
-          </form>
+          ) : null}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -3,12 +3,12 @@ import useLogout from "../../hooks/useLogout";
 import { NavLink, Outlet } from "react-router-dom";
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
-import { FaFileInvoiceDollar, FaProductHunt, FaHome, FaStore } from "react-icons/fa";
+import { FaFileInvoiceDollar, FaHome, FaStore, FaProductHunt } from "react-icons/fa";
 
 export default function Dashboard(props) {
   const { auth } = useAuth();
   const logout = useLogout();
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const { selectedCategory, setSelectedCategory } = props;
 
   return auth.accessToken ? (
     <div className="dashboardPage">
@@ -20,7 +20,13 @@ export default function Dashboard(props) {
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navBuyersButton"
         >
-          <FaHome></FaHome>
+          <FaHome
+            className="sidebarIcon"
+            size={30}
+            onClick={() => {
+              setSelectedCategory("Overview");
+            }}
+          ></FaHome>
         </NavLink>
         <NavLink
           to="/dashboard/products"
@@ -28,7 +34,7 @@ export default function Dashboard(props) {
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navProductsButton"
         >
-          <FaProductHunt></FaProductHunt>
+          <FaProductHunt className="sidebarIcon" size={30}></FaProductHunt>
         </NavLink>
         <NavLink
           to="/dashboard/buyers"
@@ -36,7 +42,7 @@ export default function Dashboard(props) {
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navBuyersButton"
         >
-          <FaStore></FaStore>
+          <FaStore className="sidebarIcon" size={30}></FaStore>
         </NavLink>
         <NavLink
           to="/dashboard/invoices"
@@ -44,16 +50,17 @@ export default function Dashboard(props) {
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navInvoicesButton"
         >
-          <FaFileInvoiceDollar></FaFileInvoiceDollar>
+          <FaFileInvoiceDollar className="sidebarIcon" size={30}></FaFileInvoiceDollar>
         </NavLink>
-      </div>
-      <div className="infoContainer">
-        <div>login success</div>
-        <div>user : {auth.username}</div>
-        <div>accesstoken : {auth.accessToken}</div>
         <button onClick={logout}>Logout</button>
-        <div>
-          <Outlet></Outlet>
+      </div>
+      <div className="dashboardInfoContainer">
+        <div className="dashboardInfoPage">
+          <div className="infoPagePadding">
+            <div className="infoContainer">
+              <Outlet></Outlet>
+            </div>
+          </div>
         </div>
       </div>
     </div>
