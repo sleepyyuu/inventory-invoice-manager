@@ -1,8 +1,9 @@
 import useAuth from "../../hooks/useAuth";
 import useLogout from "../../hooks/useLogout";
-import { NavLink, Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
+import { FaFileInvoiceDollar, FaProductHunt, FaHome, FaStore } from "react-icons/fa";
 
 export default function Dashboard(props) {
   const { auth } = useAuth();
@@ -12,27 +13,38 @@ export default function Dashboard(props) {
   return auth.accessToken ? (
     <div className="dashboardPage">
       <div className="sidebarContainer">
-        <NavLink to="/dashboard" exact="true"></NavLink>
         <NavLink
-          to="/dashboard/products"
-          className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
-          id="navProductsButton"
-        >
-          Products
-        </NavLink>
-        <NavLink
-          to="/dashboard/buyers"
+          to="/dashboard"
+          exact="true"
+          end
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navBuyersButton"
         >
-          buyers
+          <FaHome></FaHome>
+        </NavLink>
+        <NavLink
+          to="/dashboard/products"
+          exact="true"
+          className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
+          id="navProductsButton"
+        >
+          <FaProductHunt></FaProductHunt>
+        </NavLink>
+        <NavLink
+          to="/dashboard/buyers"
+          exact="true"
+          className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
+          id="navBuyersButton"
+        >
+          <FaStore></FaStore>
         </NavLink>
         <NavLink
           to="/dashboard/invoices"
+          exact="true"
           className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
           id="navInvoicesButton"
         >
-          invoices
+          <FaFileInvoiceDollar></FaFileInvoiceDollar>
         </NavLink>
       </div>
       <div className="infoContainer">
