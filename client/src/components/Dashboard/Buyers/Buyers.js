@@ -1,8 +1,9 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import { useEffect, useState } from "react";
 import uniqid from "uniqid";
+import "./Buyers.css";
 
-export default function Buyers() {
+export default function Buyers(props) {
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [buyers, setBuyers] = useState([]);

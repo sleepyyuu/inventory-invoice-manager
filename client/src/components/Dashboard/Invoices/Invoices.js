@@ -1,8 +1,9 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import { useEffect, useState } from "react";
 import uniqid from "uniqid";
+import "./Invoices.css";
 
-export default function Invoices() {
+export default function Invoices(props) {
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
