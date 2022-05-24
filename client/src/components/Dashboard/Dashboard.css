@@ -82,10 +82,60 @@ h3.infoPageTitle {
   margin: 0;
   padding: 20px 0 20px 0;
   font-size: 1.7rem;
-
   color: rgb(32, 40, 134);
 }
 
 .infoPagePadding {
   padding: 5px 20px 5px 20px;
+}
+
+.searchbar {
+  padding: 9px 5px 9px 5px;
+  border-bottom: 3px solid #edf0f1;
+}
+
+#searchBar {
+  width: 300px;
+  height: 1.3rem;
+  border: 2px solid #d1d2d3;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: #f1f4f7;
+}
+
+.dashboardButtons {
+  display: flex;
+  align-items: center;
+}
+
+.addNewButton {
+  border: none;
+  background-color: rgb(32, 40, 134);
+  color: white;
+  font-size: 1rem;
+  padding: 10px 8px 10px 8px;
+  border-radius: 6px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+thead {
+  padding: 10px 7px 10px 7px;
+  border-bottom: 3px solid #edf0f1;
+}
+
+th {
+  padding: 5px;
+}
+
+td {
+  padding: 10px 0 10px 0;
+  text-align: center;
+}
+
+tbody > tr:hover {
+  background-color: whitesmoke;
 }

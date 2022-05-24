@@ -4,10 +4,13 @@ export default function Header(props) {
     <div className="dashboardInfoHeaderContainer">
       <div className="dashboardInfoHeader">
         <h3 className="infoPageTitle">{title}</h3>
-        <div className="dashboardButtons">
-          <button>add thing button</button>
-          <button>other button</button>
-        </div>
+        {title === "Summary" ? (
+          <div className="dashboardButtons"></div>
+        ) : (
+          <div className="dashboardButtons">
+            <button className="addNewButton">+ New {title.slice(0, title.length - 1)}</button>
+          </div>
+        )}
       </div>
       <div className="searchbar">
         <label htmlFor="searchBar"></label>
