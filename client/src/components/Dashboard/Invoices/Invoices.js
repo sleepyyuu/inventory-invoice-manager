@@ -10,6 +10,7 @@ export default function Invoices() {
   const [products, setProducts] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
+  const [productsLeft, setProductsLeft] = useState([]);
   const [newInvoiceId, setNewInvoiceId] = useState("");
   const [newInvoiceBuyer, setNewInvoiceBuyer] = useState("");
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
@@ -93,6 +94,12 @@ export default function Invoices() {
     setNewInvoiceProducts(invoice.product);
     setInvoiceNumber((invoice.invoice_number + "").padStart(5, "0"));
     setShowMenu(true);
+    setNewInvoiceCurrentProduct(0);
+    let indexArray = [];
+    for (let i = 0; i < products.length; i++) {
+      indexArray.push(i);
+    }
+    setProductsLeft(indexArray);
   };
 
   const handleDelete = async (id) => {
@@ -108,6 +115,7 @@ export default function Invoices() {
       setCustomError(response);
     }
   };
+  console.log(productsLeft);
 
   return loading ? (
     <div>loading..</div>
@@ -153,6 +161,11 @@ export default function Invoices() {
           setInvoiceNumber((invoices.length + "").padStart(5, "0"));
           setShowMenu(true);
           setNewInvoiceCurrentProduct(0);
+          let indexArray = [];
+          for (let i = 0; i < products.length; i++) {
+            indexArray.push(i);
+          }
+          setProductsLeft(indexArray);
         }}
       >
         add a invoice
@@ -268,7 +281,7 @@ export default function Invoices() {
                       </div>
                     );
                   })}
-                  {newInvoiceCurrentProduct === products.length ? (
+                  {0 === productsLeft.length ? (
                     <div>no more products</div>
                   ) : (
                     <div>
@@ -284,19 +297,12 @@ export default function Invoices() {
                         }}
                         value={newInvoiceCurrentProduct}
                       >
-                        {products.map((prod, index) => {
-                          let showItem = true;
-                          newInvoiceProducts.forEach((temp) => {
-                            if (temp.name === prod.name) {
-                              showItem = false;
-                            } else {
-                            }
-                          });
-                          return showItem ? (
-                            <option value={index} key={uniqid()}>
-                              {prod.name}
+                        {productsLeft.map((temp) => {
+                          return (
+                            <option value={temp} key={uniqid()}>
+                              {products[temp].name}
                             </option>
-                          ) : null;
+                          );
                         })}
                       </select>
                       <label htmlFor="invoiceQuantity">Quantity</label>
@@ -335,8 +341,13 @@ export default function Invoices() {
                             name: products[newInvoiceCurrentProduct].name,
                           };
                           setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
-                          setNewInvoiceCurrentProduct((newInvoiceCurrentProduct) => {
-                            return newInvoiceCurrentProduct + 1;
+                          //set to non used product in dropdownlist. set to next usable number
+                          setProductsLeft(() => {
+                            let newProductsLeft = productsLeft.filter((temp) => {
+                              return products[temp].name !== products[newInvoiceCurrentProduct].name;
+                            });
+                            setNewInvoiceCurrentProduct([newProductsLeft[0]]);
+                            return newProductsLeft;
                           });
                         }}
                       >
