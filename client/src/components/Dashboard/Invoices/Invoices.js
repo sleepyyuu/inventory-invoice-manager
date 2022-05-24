@@ -115,7 +115,6 @@ export default function Invoices() {
       setCustomError(response);
     }
   };
-  console.log(productsLeft);
 
   return loading ? (
     <div>loading..</div>
@@ -201,83 +200,66 @@ export default function Invoices() {
               <div>
                 <div>Items</div>
                 <div>
-                  {newInvoiceProducts.map((product) => {
+                  {newInvoiceProducts.map((product, index) => {
                     return (
-                      <div key={uniqid()}>
-                        {product.name === newInvoiceEdit ? (
-                          <div>
-                            <label htmlFor="invoiceProductEdit">Product</label>
-                            <select
-                              id="invoiceProductEdit"
-                              name="invoiceProductEdit"
-                              onChange={(e) => {
-                                setNewInvoiceCurrentProductEdit(e.target.value);
-                                if (products[e.target.value].quantity < newInvoiceCurrentProductQuantityEdit) {
-                                  setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
-                                }
-                              }}
-                              value={newInvoiceCurrentProductEdit}
-                            >
-                              {products.map((prod, index) => {
-                                return (
-                                  <option value={index} key={uniqid()}>
-                                    {prod.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                            <label htmlFor="invoiceQuantityEdit">Quantity</label>
-                            <input
-                              type="number"
-                              id="invoiceQuantityEdit"
-                              name="invoiceQuantityEdit"
-                              max={products[newInvoiceCurrentProductEdit].quantity}
-                              onChange={(e) => {
-                                if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
-                                  setnewInvoiceCurrentProductQuantityEdit(products[newInvoiceCurrentProduct].quantity);
-                                } else {
-                                  setnewInvoiceCurrentProductQuantityEdit(e.target.value);
-                                }
-                              }}
-                              value={newInvoiceCurrentProductQuantity}
-                            ></input>
-                            <label htmlFor="invoicePriceEdit">Price</label>
-                            <input
-                              type="text"
-                              id="invoicePriceEdit"
-                              name="invoicePriceEdit"
-                              value={newInvoiceCurrentProductPriceEdit}
-                              onChange={(e) => {
-                                setNewInvoiceCurrentProductPriceEdit(e.target.value);
-                              }}
-                            ></input>
+                      <div key={index}>
+                        <div>
+                          {product.name === newInvoiceEdit ? (
+                            <div>
+                              <div>{product.name}</div>
+                              <label htmlFor="invoiceQuantityEdit">Quantity</label>
+                              <input
+                                type="number"
+                                id="invoiceQuantityEdit"
+                                name="invoiceQuantityEdit"
+                                max={products[newInvoiceCurrentProductEdit].quantity}
+                                onChange={(e) => {
+                                  if (e.target.value > products[newInvoiceCurrentProductEdit].quantity) {
+                                    setnewInvoiceCurrentProductQuantityEdit(products[newInvoiceCurrentProductEdit].quantity);
+                                  } else {
+                                    setnewInvoiceCurrentProductQuantityEdit(e.target.value);
+                                  }
+                                }}
+                                value={newInvoiceCurrentProductQuantityEdit}
+                              ></input>
+                              <label htmlFor="invoicePriceEdit">Price</label>
+                              <input
+                                type="text"
+                                id="invoicePriceEdit"
+                                name="invoicePriceEdit"
+                                value={newInvoiceCurrentProductPriceEdit}
+                                onChange={(e) => {
+                                  setNewInvoiceCurrentProductPriceEdit(e.target.value);
+                                }}
+                              ></input>
 
-                            <button>submit changes</button>
-                          </div>
-                        ) : (
-                          <div>
-                            <div>{product.name}</div>
-                            <div>{product.quantity}</div>
-                            <div>{product.price}</div>
-                          </div>
-                        )}
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            let index = 0;
-                            newInvoiceProducts.forEach((temp, i) => {
-                              if (temp.name === product.name) {
-                                index = i;
-                              }
-                            });
-                            setNewInvoiceEdit(product.name);
-                            setNewInvoiceCurrentProductEdit(index);
-                            setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
-                            setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
-                          }}
-                        >
-                          edit this listing
-                        </button>
+                              <button>submit changes</button>
+                            </div>
+                          ) : (
+                            <div>
+                              <div>{product.name}</div>
+                              <div>{product.quantity}</div>
+                              <div>{product.price}</div>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  let index = 0;
+                                  newInvoiceProducts.forEach((temp, i) => {
+                                    if (temp.name === product.name) {
+                                      index = i;
+                                    }
+                                  });
+                                  setNewInvoiceEdit(product.name);
+                                  setNewInvoiceCurrentProductEdit(index);
+                                  setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
+                                  setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
+                                }}
+                              >
+                                edit this listing
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
@@ -341,12 +323,14 @@ export default function Invoices() {
                             name: products[newInvoiceCurrentProduct].name,
                           };
                           setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
-                          //set to non used product in dropdownlist. set to next usable number
                           setProductsLeft(() => {
                             let newProductsLeft = productsLeft.filter((temp) => {
                               return products[temp].name !== products[newInvoiceCurrentProduct].name;
                             });
                             setNewInvoiceCurrentProduct([newProductsLeft[0]]);
+                            if (newInvoiceCurrentProductQuantity > products[[newProductsLeft[0]]].quantity) {
+                              setnewInvoiceCurrentProductQuantity(products[newProductsLeft[0]].quantity);
+                            }
                             return newProductsLeft;
                           });
                         }}
