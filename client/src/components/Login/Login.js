@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { userRequest } from "../../api/api";
+import "./Login.css";
 export default function Login(props) {
   const { setAuth, auth } = useAuth();
   const [username, setUsername] = useState("");
@@ -26,33 +27,39 @@ export default function Login(props) {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error ? <div>{error}</div> : <div></div>}
-      <form className="loginForm" onSubmit={loginUser}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-          value={username}
-        ></input>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          value={password}
-        ></input>
-        <input type="submit" value="Login"></input>
-      </form>
-      <div className="signupLink">Need an account? Sign up</div>
+    <div className="loginPage">
+      <div className="loginContainer">
+        <h2>Login</h2>
+        {error ? <div className="errorContainer">{error}</div> : <div className="errorContainer">&nbsp;</div>}
+        <form className="loginForm" onSubmit={loginUser}>
+          <label htmlFor="username"></label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Username"
+            className="loginInput"
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+            value={username}
+          ></input>
+          <label htmlFor="password"></label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            className="loginInput"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            value={password}
+          ></input>
+          <input type="submit" value="Login" className="submitButton"></input>
+        </form>
+        <div className="signupLink">Need an account? Sign up</div>
+      </div>
     </div>
   );
 }
