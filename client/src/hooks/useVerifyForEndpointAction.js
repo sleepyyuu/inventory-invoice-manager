@@ -18,12 +18,12 @@ export default function useVerifyForEndpointAction() {
         return response.data;
       } else if (action === "readDetail") {
       } else if (action === "create") {
-        const response = await axiosPrivate.post(route, body).catch((err) => {
+        const response = await axiosPrivate.post(route, JSON.stringify(body)).catch((err) => {
           return err.response.data.errors;
         });
         return response;
       } else if (action === "update") {
-        const response = await axiosPrivate.post(route, body).catch((err) => {
+        const response = await axiosPrivate.post(route, JSON.stringify(body)).catch((err) => {
           return err.response.data.errors;
         });
         return response;

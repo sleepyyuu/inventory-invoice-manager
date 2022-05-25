@@ -15,7 +15,8 @@ export default function Invoices(props) {
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [productsLeft, setProductsLeft] = useState([]);
   const [newInvoiceId, setNewInvoiceId] = useState("");
-  const [newInvoiceBuyer, setNewInvoiceBuyer] = useState("");
+  const [newInvoiceBuyer, setNewInvoiceBuyer] = useState({});
+  const [newInvoiceBuyerName, setNewInvoiceBuyerName] = useState("");
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
@@ -67,11 +68,13 @@ export default function Invoices(props) {
       buyer: newInvoiceBuyer,
       //array of product id's
       product: newInvoiceProducts,
+      buyer_name: newInvoiceBuyer.company_name,
     };
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
     }
     if (menuStateCreate) {
+      body.buyer = newInvoiceBuyer._id;
       response = await verify("create", route, body);
     } else {
       body.invoiceId = newInvoiceId;
@@ -94,6 +97,7 @@ export default function Invoices(props) {
     setCustomError(null);
     setNewInvoiceId(invoice._id);
     setNewInvoiceBuyer(invoice.buyer);
+    setNewInvoiceBuyerName(invoice.buyer_name);
     setNewInvoiceDetails(invoice.details);
     setNewInvoiceProducts(invoice.product);
     setInvoiceNumber((invoice.invoice_number + "").padStart(5, "0"));
@@ -164,7 +168,12 @@ export default function Invoices(props) {
               setNewInvoiceProducts([]);
               setNewInvoiceDetails("");
               setNewInvoiceId("");
-              setInvoiceNumber((invoices.length + "").padStart(5, "0"));
+              if (invoices.length === 0) {
+                setInvoiceNumber("00000");
+              } else {
+                setInvoiceNumber((invoices[0].invoice_number + 1 + "").padStart(5, "0"));
+              }
+              setNewInvoiceBuyerName("");
               setShowMenu(true);
               setNewInvoiceCurrentProduct(0);
               let indexArray = [];
@@ -194,7 +203,19 @@ export default function Invoices(props) {
                   ) : null}
                   <div>Invoice Number : {invoiceNumber}</div>
                   <label htmlFor="invoiceBuyer">To :</label>
-                  <select id="invoiceBuyer" name="invoiceBuyer">
+                  <select
+                    id="invoiceBuyer"
+                    name="invoiceBuyer"
+                    onChange={(e) => {
+                      setNewInvoiceBuyerName(e.target.value);
+                      setNewInvoiceBuyer(
+                        buyers.find((element) => {
+                          return element.company_name === e.target.value;
+                        })
+                      );
+                    }}
+                    value={newInvoiceBuyerName}
+                  >
                     {buyers.map((buyer) => {
                       return (
                         <option value={buyer.company_name} key={uniqid()}>
