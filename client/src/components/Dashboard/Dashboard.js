@@ -2,6 +2,7 @@ import useAuth from "../../hooks/useAuth";
 import useLogout from "../../hooks/useLogout";
 import { NavLink, Outlet } from "react-router-dom";
 import "./Dashboard.css";
+import "./Popup.css";
 import { useEffect, useState } from "react";
 import { FaFileInvoiceDollar, FaHome, FaStore, FaProductHunt, FaSignOutAlt } from "react-icons/fa";
 

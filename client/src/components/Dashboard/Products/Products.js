@@ -1,32 +1,27 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import uniqid from "uniqid";
-import Header from "../Header/Header";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
 
 export default function Products(props) {
   const { setSelectedCategory } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [buyers, setBuyers] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [newProductName, setNewProductName] = useState("");
   const [newProductId, setNewProductId] = useState("");
-  const [newProductPriceMin, setNewProductPriceMin] = useState(0);
-  const [newProductPriceMax, setNewProductPriceMax] = useState(0);
+  const [newProductPrice, setNewProductPrice] = useState(0);
   const [newProductQuantity, setNewProductQuantity] = useState(0);
-  const [newProductPriceArray, setNewProductPriceArray] = useState([]);
-  const [newProductBuyerName, setNewProductBuyerName] = useState("");
-  const [newProductBuyerPrice, setNewProductBuyerPrice] = useState(0);
   const [customError, setCustomError] = useState();
   const route = "/products";
+  const title = "Products";
   const getInitialDB = async () => {
     // const [responseBuyers, responseProducts] = await Promise.all([verify("readAll", "/buyers"), verify("readAll", "/products")]);
-    const responseBuyers = await verify("readAll", "/buyers");
     const responseProducts = await verify("readAll", "/products");
-    setBuyers(responseBuyers);
     setProducts(responseProducts);
     setLoading(false);
   };
@@ -49,10 +44,8 @@ export default function Products(props) {
     let response;
     let body = {
       name: newProductName,
-      price_range_min: newProductPriceMin,
-      price_range_max: newProductPriceMax,
+      price: newProductPrice,
       quantity: newProductQuantity,
-      buyer_prices: newProductPriceArray,
     };
     if (menuStateCreate) {
       response = await verify("create", route, body);
@@ -65,8 +58,7 @@ export default function Products(props) {
       setShowMenu(false);
       setCustomError(null);
       setNewProductName("");
-      setNewProductPriceMin(0);
-      setNewProductPriceMax(0);
+      setNewProductPrice(0);
       setNewProductId("");
     } else {
       setCustomError(response);
@@ -78,20 +70,17 @@ export default function Products(props) {
     setNewProductId(product._id);
     setNewProductName(product.name);
     setNewProductQuantity(product.quantity);
-    setNewProductPriceMin(product.price_range_min);
-    setNewProductPriceMax(product.price_range_max);
-    setNewProductPriceArray(product.buyer_prices);
+    setNewProductPrice(product.price);
     setShowMenu(true);
   };
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     setCustomError(null);
     setmenuStateCreate(true);
     setNewProductName("");
-    setNewProductPriceMin(0);
-    setNewProductPriceMax(0);
+    setNewProductPrice(0);
     setNewProductId("");
-    setNewProductPriceArray([]);
+    setNewProductQuantity(0);
     setShowMenu(true);
   };
 
@@ -109,19 +98,124 @@ export default function Products(props) {
     }
   };
 
-  const handlePriceArrayAdd = (e) => {
-    e.preventDefault();
-    const buyerPrice = { buyer: newProductBuyerName, price: newProductBuyerPrice };
-    setNewProductPriceArray((newProductPriceArray) => {
-      return [...newProductPriceArray, buyerPrice];
-    });
-    setNewProductBuyerName("");
-    setNewProductBuyerPrice(0);
-  };
-
   return (
     <div>
-      <Header title="Products" handleAdd={handleAdd}></Header>
+      <div className="dashboardInfoHeaderContainer">
+        <div className="dashboardInfoHeader">
+          <h3 className="infoPageTitle">{title}</h3>
+          <div className="dashboardButtons">
+            <button
+              className="addNewButton"
+              onClick={() => {
+                handleAdd();
+                setShowMenu(true);
+              }}
+            >
+              + New {title.slice(0, title.length - 1)}
+            </button>
+            <Popup
+              overlayStyle={{ background: "rgba(0,0,0,0.5)" }}
+              modal
+              open={showMenu}
+              closeOnDocumentClick
+              onClose={() => {
+                setShowMenu(false);
+              }}
+            >
+              {(close) => {
+                return (
+                  <div className="modal">
+                    <button
+                      className="modalClose"
+                      onClick={() => {
+                        setShowMenu(false);
+                      }}
+                    >
+                      &times;
+                    </button>
+                    <div className="modalHeader"> {menuStateCreate ? "Add product" : "Update product"} </div>
+                    <div className="modalContent">
+                      <form>
+                        <div>
+                          {customError ? (
+                            <div>
+                              {customError.map((err) => {
+                                return (
+                                  <div key={uniqid()}>
+                                    <div>{err.msg}</div>
+                                    <br></br>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : null}
+                          <fieldset>
+                            <legend>Name</legend>
+                            <label htmlFor="name"></label>
+                            <input
+                              required
+                              type="text"
+                              id="name"
+                              name="name"
+                              onChange={(e) => {
+                                setNewProductName(e.target.value);
+                              }}
+                              value={newProductName}
+                            ></input>
+                          </fieldset>
+                          <div className="numberValues">
+                            <fieldset>
+                              <legend>Quantity</legend>
+                              <label htmlFor="quantity"></label>
+                              <input
+                                required
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                onChange={(e) => {
+                                  setNewProductQuantity(e.target.value);
+                                }}
+                                value={newProductQuantity}
+                              ></input>
+                            </fieldset>
+                            <fieldset>
+                              <legend>Price</legend>
+                              <label htmlFor="price"></label>
+                              <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                min="0"
+                                step=".01"
+                                onChange={(e) => {
+                                  setNewProductPrice(e.target.value);
+                                }}
+                                value={newProductPrice}
+                              ></input>
+                            </fieldset>
+                          </div>
+                        </div>
+                        <button
+                          className="postActionButton"
+                          onClick={(e) => {
+                            handlePostAction(e);
+                          }}
+                        >
+                          {menuStateCreate ? "Add product" : "Update product"}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                );
+              }}
+            </Popup>
+          </div>
+        </div>
+        <div className="searchbar">
+          <label htmlFor="searchBar"></label>
+          <input type="text" name="searchBar" id="searchBar" placeholder={`Search ${title}`}></input>
+        </div>
+      </div>
       {loading ? (
         <div>loading..</div>
       ) : (
@@ -141,7 +235,7 @@ export default function Products(props) {
                   <tr key={uniqid()}>
                     <td>{product.name}</td>
                     <td>{product.quantity}</td>
-                    <td>price here</td>
+                    <td>{"$" + product.price}</td>
                     <td>
                       <div className="actionButtonContainer">
                         <FaRegEdit
@@ -167,132 +261,6 @@ export default function Products(props) {
             </tbody>
           </table>
           {customError && !showMenu ? <div>{customError}</div> : null}
-          {showMenu ? (
-            <div>
-              <form>
-                <div>
-                  {customError ? (
-                    <div>
-                      {customError.map((err) => {
-                        return (
-                          <div key={uniqid()}>
-                            <div>{err.msg}</div>
-                            <br></br>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : null}
-                  <label htmlFor="name">Name</label>
-                  <input
-                    required
-                    type="text"
-                    id="name"
-                    name="name"
-                    onChange={(e) => {
-                      setNewProductName(e.target.value);
-                    }}
-                    value={newProductName}
-                  ></input>
-                  <label htmlFor="quantity">Quantity</label>
-                  <input
-                    required
-                    type="text"
-                    id="quantity"
-                    name="quantity"
-                    onChange={(e) => {
-                      setNewProductQuantity(e.target.value);
-                    }}
-                    value={newProductQuantity}
-                  ></input>
-                </div>
-                <div>
-                  <div>Price range</div>
-                  <label htmlFor="priceRangeMin"></label>
-                  <input
-                    type="number"
-                    id="priceRangeMin"
-                    name="priceRangeMin"
-                    min="0"
-                    step=".01"
-                    onChange={(e) => {
-                      setNewProductPriceMin(e.target.value);
-                    }}
-                    value={newProductPriceMin}
-                  ></input>
-                  <div>-</div>
-                  <label htmlFor="priceRangeMax"></label>
-                  <input
-                    type="number"
-                    id="priceRangeMax"
-                    name="priceRangeMax"
-                    min="0"
-                    step=".01"
-                    onChange={(e) => {
-                      setNewProductPriceMax(e.target.value);
-                    }}
-                    value={newProductPriceMax}
-                  ></input>
-                  <div>
-                    Buyer prices
-                    {newProductPriceArray.map((buyerPrice) => {
-                      return (
-                        <div key={uniqid()}>
-                          <label htmlFor="productBuyerName">Buyer name</label>
-                          <input type="text" id="productBuyerName" name="productBuyerName" defaultValue={buyerPrice.buyer}></input>
-                          <label htmlFor="productBuyerPrice">Buyer price</label>
-                          <input
-                            type="number"
-                            id="productBuyerPrice"
-                            min="0"
-                            step=".01"
-                            name="productBuyerPrice"
-                            defaultValue={buyerPrice.price}
-                          ></input>
-                        </div>
-                      );
-                    })}
-                    <label htmlFor="productBuyerName">Buyer name</label>
-                    <input
-                      type="text"
-                      id="productBuyerName"
-                      name="productBuyerName"
-                      onChange={(e) => {
-                        setNewProductBuyerName(e.target.value);
-                      }}
-                      value={newProductBuyerName}
-                    ></input>
-                    <label htmlFor="productBuyerPrice">Buyer price</label>
-                    <input
-                      type="number"
-                      id="productBuyerPrice"
-                      min="0"
-                      step=".01"
-                      name="productBuyerPrice"
-                      onChange={(e) => {
-                        setNewProductBuyerPrice(e.target.value);
-                      }}
-                      value={newProductBuyerPrice}
-                    ></input>
-                    <button
-                      onClick={(e) => {
-                        handlePriceArrayAdd(e);
-                      }}
-                    >
-                      Add buyer price to product
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => {
-                    handlePostAction(e);
-                  }}
-                >
-                  {menuStateCreate ? "add product" : "update product"}
-                </button>
-              </form>
-            </div>
-          ) : null}
         </div>
       )}
     </div>

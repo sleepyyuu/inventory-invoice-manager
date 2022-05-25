@@ -378,7 +378,7 @@ export default function Invoices(props) {
                               });
                             }}
                           >
-                            add another product
+                            add product
                           </button>
                         </div>
                       )}
