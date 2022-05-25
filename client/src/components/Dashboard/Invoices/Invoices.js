@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import "./Invoices.css";
 import Header from "../Header/Header";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 export default function Invoices(props) {
   const { setSelectedCategory } = props;
@@ -110,6 +111,28 @@ export default function Invoices(props) {
     setProductsLeft(indexArray);
   };
 
+  const handleAdd = () => {
+    setCustomError(null);
+    setmenuStateCreate(true);
+    setNewInvoiceBuyerId(buyers[0]._id);
+    setNewInvoiceProducts([]);
+    setNewInvoiceDetails("");
+    setNewInvoiceId("");
+    if (invoices.length === 0) {
+      setInvoiceNumber("00000");
+    } else {
+      setInvoiceNumber((invoices[0].invoice_number + 1 + "").padStart(5, "0"));
+    }
+    setNewInvoiceBuyerName(buyers[0].company_name);
+    setShowMenu(true);
+    setNewInvoiceCurrentProduct(0);
+    let indexArray = [];
+    for (let i = 0; i < products.length; i++) {
+      indexArray.push(i);
+    }
+    setProductsLeft(indexArray);
+  };
+
   const handleDelete = async (id) => {
     let originalArray = invoices;
     let filteredArray = invoices.filter((invoice) => {
@@ -126,65 +149,57 @@ export default function Invoices(props) {
 
   return (
     <div>
-      <Header title="Invoices"></Header>
+      <Header title="Invoices" handleAdd={handleAdd}></Header>
       {loading ? (
         <div>loading..</div>
       ) : (
         <div>
-          <div>Invoices</div>
+          <table className="invoiceTable">
+            <thead>
+              <tr>
+                <th>Invoice Number</th>
+                <th>Date</th>
+                <th>Buyer</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.map((invoice) => {
+                let paddedInvoiceString = "" + invoice.invoice_number;
+                paddedInvoiceString = paddedInvoiceString.padStart(5, "0");
+                let invoiceDate = new Date(invoice.date_created);
+                return (
+                  <tr key={uniqid()}>
+                    <td>{paddedInvoiceString}</td>
+                    <td>{invoiceDate.toLocaleDateString()}</td>
+                    <td>{invoice.buyer_name}</td>
+                    <td>amount here</td>
+                    <td>
+                      <div className="actionButtonContainer">
+                        <FaRegEdit
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleEdit(invoice);
+                            setmenuStateCreate(false);
+                          }}
+                        ></FaRegEdit>
+                        <FaRegTrashAlt
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleDelete(invoice._id);
+                          }}
+                        ></FaRegTrashAlt>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           {customError && !showMenu ? <div>{customError}</div> : null}
-          {invoices.map((invoice) => {
-            let paddedInvoiceString = "" + invoice.invoice_number;
-            paddedInvoiceString = paddedInvoiceString.padStart(5, "0");
-            return (
-              <div key={uniqid()}>
-                <div>
-                  Invoice Number: {paddedInvoiceString} ||| Buyer: {invoice.buyer_name} ||| invoice ID : {invoice._id}
-                  <button
-                    onClick={() => {
-                      handleEdit(invoice);
-                      setmenuStateCreate(false);
-                    }}
-                  >
-                    edit
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleDelete(invoice._id);
-                    }}
-                  >
-                    delete
-                  </button>
-                </div>
-                <br></br>
-              </div>
-            );
-          })}
-          <button
-            onClick={() => {
-              setCustomError(null);
-              setmenuStateCreate(true);
-              setNewInvoiceBuyerId(buyers[0]._id);
-              setNewInvoiceProducts([]);
-              setNewInvoiceDetails("");
-              setNewInvoiceId("");
-              if (invoices.length === 0) {
-                setInvoiceNumber("00000");
-              } else {
-                setInvoiceNumber((invoices[0].invoice_number + 1 + "").padStart(5, "0"));
-              }
-              setNewInvoiceBuyerName(buyers[0].company_name);
-              setShowMenu(true);
-              setNewInvoiceCurrentProduct(0);
-              let indexArray = [];
-              for (let i = 0; i < products.length; i++) {
-                indexArray.push(i);
-              }
-              setProductsLeft(indexArray);
-            }}
-          >
-            add a invoice
-          </button>
           {showMenu ? (
             <div>
               <form>

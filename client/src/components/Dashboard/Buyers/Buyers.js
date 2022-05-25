@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import "./Buyers.css";
 import Header from "../Header/Header";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 export default function Buyers(props) {
   const { setSelectedCategory } = props;
@@ -101,7 +102,6 @@ export default function Buyers(props) {
           <table className="buyerTable">
             <thead>
               <tr>
-                <th>Buyer ID</th>
                 <th>Name</th>
                 <th>Phone Number</th>
                 <th>Address</th>
@@ -112,26 +112,27 @@ export default function Buyers(props) {
               {buyers.map((buyer) => {
                 return (
                   <tr key={uniqid()}>
-                    <td>id</td>
                     <td>{buyer.company_name}</td>
                     <td>{buyer.phone_number}</td>
                     <td>{buyer.address}</td>
                     <td>
-                      <button
-                        onClick={() => {
-                          handleEdit(buyer);
-                          setmenuStateCreate(false);
-                        }}
-                      >
-                        edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleDelete(buyer._id);
-                        }}
-                      >
-                        delete
-                      </button>
+                      <div className="actionButtonContainer">
+                        <FaRegEdit
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleEdit(buyer);
+                            setmenuStateCreate(false);
+                          }}
+                        ></FaRegEdit>
+                        <FaRegTrashAlt
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleDelete(buyer._id);
+                          }}
+                        ></FaRegTrashAlt>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -139,9 +140,7 @@ export default function Buyers(props) {
             </tbody>
           </table>
           <div>
-            <div></div>
             {error && !showMenu ? <div>{error}</div> : null}
-
             {showMenu ? (
               <div>
                 <form>

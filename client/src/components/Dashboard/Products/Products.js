@@ -2,6 +2,7 @@ import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointActio
 import { useEffect, useState, useRef } from "react";
 import uniqid from "uniqid";
 import Header from "../Header/Header";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 export default function Products(props) {
   const { setSelectedCategory } = props;
@@ -83,6 +84,17 @@ export default function Products(props) {
     setShowMenu(true);
   };
 
+  const handleAdd = async () => {
+    setCustomError(null);
+    setmenuStateCreate(true);
+    setNewProductName("");
+    setNewProductPriceMin(0);
+    setNewProductPriceMax(0);
+    setNewProductId("");
+    setNewProductPriceArray([]);
+    setShowMenu(true);
+  };
+
   const handleDelete = async (id) => {
     let originalArray = products;
     let filteredArray = products.filter((product) => {
@@ -109,52 +121,52 @@ export default function Products(props) {
 
   return (
     <div>
-      <Header title="Products"></Header>
+      <Header title="Products" handleAdd={handleAdd}></Header>
       {loading ? (
         <div>loading..</div>
       ) : (
         <div>
-          <div>products</div>
+          <table className="productTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => {
+                return (
+                  <tr key={uniqid()}>
+                    <td>{product.name}</td>
+                    <td>{product.quantity}</td>
+                    <td>price here</td>
+                    <td>
+                      <div className="actionButtonContainer">
+                        <FaRegEdit
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleEdit(product);
+                            setmenuStateCreate(false);
+                          }}
+                        ></FaRegEdit>
+                        <FaRegTrashAlt
+                          className="actionButton"
+                          size="18"
+                          onClick={() => {
+                            handleDelete(product._id);
+                          }}
+                        ></FaRegTrashAlt>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           {customError && !showMenu ? <div>{customError}</div> : null}
-          {products.map((product) => {
-            return (
-              <div key={uniqid()}>
-                <div>
-                  Name: {product.name} ||| Quantity: {product.quantity} ||| product ID : {product._id}
-                  <button
-                    onClick={() => {
-                      handleEdit(product);
-                      setmenuStateCreate(false);
-                    }}
-                  >
-                    edit
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleDelete(product._id);
-                    }}
-                  >
-                    delete
-                  </button>
-                </div>
-                <br></br>
-              </div>
-            );
-          })}
-          <button
-            onClick={() => {
-              setCustomError(null);
-              setmenuStateCreate(true);
-              setNewProductName("");
-              setNewProductPriceMin(0);
-              setNewProductPriceMax(0);
-              setNewProductId("");
-              setNewProductPriceArray([]);
-              setShowMenu(true);
-            }}
-          >
-            add a product
-          </button>
           {showMenu ? (
             <div>
               <form>
