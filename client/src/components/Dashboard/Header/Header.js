@@ -1,5 +1,5 @@
 export default function Header(props) {
-  const { title } = props;
+  const { title, handleAdd } = props;
   return (
     <div className="dashboardInfoHeaderContainer">
       <div className="dashboardInfoHeader">
@@ -8,7 +8,14 @@ export default function Header(props) {
           <div className="dashboardButtons"></div>
         ) : (
           <div className="dashboardButtons">
-            <button className="addNewButton">+ New {title.slice(0, title.length - 1)}</button>
+            <button
+              className="addNewButton"
+              onClick={() => {
+                handleAdd();
+              }}
+            >
+              + New {title.slice(0, title.length - 1)}
+            </button>
           </div>
         )}
       </div>

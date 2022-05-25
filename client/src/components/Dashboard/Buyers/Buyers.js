@@ -67,6 +67,16 @@ export default function Buyers(props) {
     setShowMenu(true);
   };
 
+  const handleAdd = async () => {
+    setError(null);
+    setNewBuyerName("");
+    setNewBuyerPhoneNumber("");
+    setNewBuyerAddress("");
+    setNewBuyerId("");
+    setmenuStateCreate(true);
+    setShowMenu(true);
+  };
+
   const handleDelete = async (id) => {
     let originalArray = buyers;
     let filteredArray = buyers.filter((buyer) => {
@@ -83,7 +93,7 @@ export default function Buyers(props) {
 
   return (
     <div>
-      <Header title="Buyers"></Header>
+      <Header title="Buyers" handleAdd={handleAdd}></Header>
       {loading ? (
         <div>loading..</div>
       ) : (
@@ -132,19 +142,6 @@ export default function Buyers(props) {
             <div></div>
             {error && !showMenu ? <div>{error}</div> : null}
 
-            <button
-              onClick={() => {
-                setError(null);
-                setNewBuyerName("");
-                setNewBuyerPhoneNumber("");
-                setNewBuyerAddress("");
-                setNewBuyerId("");
-                setmenuStateCreate(true);
-                setShowMenu(true);
-              }}
-            >
-              add a buyer
-            </button>
             {showMenu ? (
               <div>
                 <form>
