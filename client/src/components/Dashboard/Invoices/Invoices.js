@@ -15,7 +15,7 @@ export default function Invoices(props) {
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [productsLeft, setProductsLeft] = useState([]);
   const [newInvoiceId, setNewInvoiceId] = useState("");
-  const [newInvoiceBuyer, setNewInvoiceBuyer] = useState({});
+  const [newInvoiceBuyerId, setNewInvoiceBuyerId] = useState("");
   const [newInvoiceBuyerName, setNewInvoiceBuyerName] = useState("");
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
@@ -55,7 +55,7 @@ export default function Invoices(props) {
 
   const handlePostAction = async (e) => {
     e.preventDefault();
-    if (newInvoiceBuyer === "") {
+    if (newInvoiceBuyerId === "") {
       setCustomError([{ msg: "A buyer is required" }]);
       return;
     }
@@ -65,16 +65,15 @@ export default function Invoices(props) {
     }
     let response;
     let body = {
-      buyer: newInvoiceBuyer,
+      buyer: newInvoiceBuyerId,
       //array of product id's
       product: newInvoiceProducts,
-      buyer_name: newInvoiceBuyer.company_name,
+      buyer_name: newInvoiceBuyerName,
     };
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
     }
     if (menuStateCreate) {
-      body.buyer = newInvoiceBuyer._id;
       response = await verify("create", route, body);
     } else {
       body.invoiceId = newInvoiceId;
@@ -84,10 +83,11 @@ export default function Invoices(props) {
       getDB();
       setShowMenu(false);
       setCustomError(null);
-      setNewInvoiceBuyer("");
+      setNewInvoiceBuyerId(buyers[0]._id);
       setNewInvoiceProducts([]);
       setNewInvoiceDetails("");
       setNewInvoiceId("");
+      setNewInvoiceBuyerName(buyers[0].company_name);
     } else {
       setCustomError(response);
     }
@@ -96,7 +96,7 @@ export default function Invoices(props) {
   const handleEdit = async (invoice) => {
     setCustomError(null);
     setNewInvoiceId(invoice._id);
-    setNewInvoiceBuyer(invoice.buyer);
+    setNewInvoiceBuyerId(invoice.buyer);
     setNewInvoiceBuyerName(invoice.buyer_name);
     setNewInvoiceDetails(invoice.details);
     setNewInvoiceProducts(invoice.product);
@@ -164,7 +164,7 @@ export default function Invoices(props) {
             onClick={() => {
               setCustomError(null);
               setmenuStateCreate(true);
-              setNewInvoiceBuyer("");
+              setNewInvoiceBuyerId(buyers[0]._id);
               setNewInvoiceProducts([]);
               setNewInvoiceDetails("");
               setNewInvoiceId("");
@@ -173,7 +173,7 @@ export default function Invoices(props) {
               } else {
                 setInvoiceNumber((invoices[0].invoice_number + 1 + "").padStart(5, "0"));
               }
-              setNewInvoiceBuyerName("");
+              setNewInvoiceBuyerName(buyers[0].company_name);
               setShowMenu(true);
               setNewInvoiceCurrentProduct(0);
               let indexArray = [];
@@ -208,10 +208,10 @@ export default function Invoices(props) {
                     name="invoiceBuyer"
                     onChange={(e) => {
                       setNewInvoiceBuyerName(e.target.value);
-                      setNewInvoiceBuyer(
+                      setNewInvoiceBuyerId(
                         buyers.find((element) => {
                           return element.company_name === e.target.value;
-                        })
+                        })._id
                       );
                     }}
                     value={newInvoiceBuyerName}
