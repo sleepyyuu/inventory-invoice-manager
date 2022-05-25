@@ -111,13 +111,13 @@ export default function Invoices(props) {
   };
 
   const handleDelete = async (id) => {
-    let originalArray = products;
-    let filteredArray = products.filter((invoice) => {
+    let originalArray = invoices;
+    let filteredArray = invoices.filter((invoice) => {
       return invoice._id !== id;
     });
-    setInvoices(filteredArray);
     const response = await verify("delete", route + "/" + id, { invoiceId: id });
     if (response.status === 200) {
+      setInvoices(filteredArray);
     } else {
       setInvoices(originalArray);
       setCustomError(response);
