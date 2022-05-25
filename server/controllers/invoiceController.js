@@ -1,7 +1,5 @@
 const Invoice = require("../models/invoice");
-const Buyer = require("../models/buyer");
-const Product = require("../models/product");
-const ProductPrice = require("../models/productPrice");
+const Counter = require("../models/counter");
 const { body, validationResult } = require("express-validator");
 
 //display all invoices
@@ -30,39 +28,46 @@ exports.invoice_detail = function (req, res, next) {
   });
 };
 
-//display product creation form, GET, (not needed since using react as frontend)
-
 //handle product creation, POST
 exports.invoice_create_post = [
   body("details").trim().escape(),
-  (req, res, next) => {
+  async (req, res, next) => {
     //extract validation errors
-    const errors = validationResult(req);
-    Invoice.count({}, function (err, count) {
-      let productArray = JSON.parse(req.body.product_prices);
-      let infoArray = JSON.parse(req.body.product_info);
-      let invoice = new Invoice({
-        invoice_number: count,
-        //buyer is buyer id
-        buyer: req.body.buyer,
-        buyer_name: req.body.buyer_name,
-        //product prices should be an array of productprice objects id
-        product_prices: productArray,
-        product_info: infoArray,
-        details: req.body.details,
+    let counter = await Counter.findOne({ name: "invoice" });
+    let count;
+    if (counter === null) {
+      counter = new Counter({
+        name: "invoice",
+        counter: 0,
       });
-      if (!errors.isEmpty()) {
-        return res.send({ invoice: req.body, errors: errors.array() });
-      } else {
-        invoice.save(function (err) {
-          if (err) {
-            return next(err);
-          }
-          //success
-          res.send(invoice);
-        });
-      }
+      count = 0;
+      await counter.save();
+    } else {
+      counter.counter++;
+      await counter.save();
+      count = counter.counter;
+    }
+    const errors = validationResult(req);
+    let invoice = new Invoice({
+      invoice_number: count,
+      //buyer is buyer id
+      buyer: req.body.buyer,
+      buyer_name: req.body.buyer_name,
+      //product prices should be an array of productprice objects id
+      product: req.body.product,
+      details: req.body.details,
     });
+    if (!errors.isEmpty()) {
+      return res.send({ invoice: req.body, errors: errors.array() });
+    } else {
+      invoice.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        //success
+        res.send(invoice);
+      });
+    }
   },
 ];
 

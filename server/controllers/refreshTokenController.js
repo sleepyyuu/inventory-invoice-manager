@@ -7,25 +7,26 @@ exports.refresh_token_get = async function (req, res) {
     return res.sendStatus(401);
   }
   const refreshToken = cookies.jwt;
+  console.log("searching for " + refreshToken);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
-
   const foundUser = await User.findOne({ refreshToken }).exec();
   //if duplicate refresh token use attempted, ie old refresh token/expired/used
   if (!foundUser) {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-      } else {
-        const hackedUser = await User.findOne({ username: decoded.username }).exec();
-        hackedUser.refreshToken = []; //clear refresh tokens for hacked user
-        await hackedUser.save();
       }
+      // else {
+      //   const hackedUser = await User.findOne({ username: decoded.username }).exec();
+      //   hackedUser.refreshToken = []; //clear refresh tokens for hacked user
+      //   await hackedUser.save();
+      // }
     });
     return res.sendStatus(403);
   }
 
   const newRefreshTokenArray = foundUser.refreshToken.filter((token) => token !== refreshToken);
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+  await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) {
       foundUser.refreshToken = [...newRefreshTokenArray];
       await foundUser.save();
@@ -39,6 +40,9 @@ exports.refresh_token_get = async function (req, res) {
     });
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
     await foundUser.save();
+    console.log("old" + refreshToken);
+    console.log("new" + newRefreshToken);
+    console.log(foundUser);
     res.cookie("jwt", newRefreshToken, {
       httpOnly: true,
       secure: true,
