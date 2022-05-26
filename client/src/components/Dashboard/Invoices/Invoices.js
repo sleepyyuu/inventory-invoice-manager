@@ -24,7 +24,7 @@ export default function Invoices(props) {
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
   const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState(0);
   const [newInvoiceCurrentProductPrice, setNewInvoiceCurrentProductPrice] = useState(0);
-  const [newInvoiceCurrentProductEdit, setNewInvoiceCurrentProductEdit] = useState("");
+  const [newInvoiceCurrentProductEdit, setNewInvoiceCurrentProductEdit] = useState();
   const [newInvoiceCurrentProductNameEdit, setNewInvoiceCurrentProductNameEdit] = useState("");
   const [newInvoiceCurrentProductQuantityEdit, setnewInvoiceCurrentProductQuantityEdit] = useState(0);
   const [newInvoiceCurrentProductPriceEdit, setNewInvoiceCurrentProductPriceEdit] = useState(0);
@@ -108,11 +108,19 @@ export default function Invoices(props) {
     setNewInvoiceProducts(invoice.product);
     setInvoiceNumber((invoice.invoice_number + "").padStart(5, "0"));
     setShowMenu(true);
-    setNewInvoiceCurrentProduct(0);
     let indexArray = [];
     for (let i = 0; i < products.length; i++) {
-      indexArray.push(i);
+      let found = false;
+      for (let j = 0; j < invoice.product.length; j++) {
+        if (products[i].name === invoice.product[j].name) {
+          found = true;
+        }
+      }
+      if (!found) {
+        indexArray.push(i);
+      }
     }
+    setNewInvoiceCurrentProduct(indexArray[0]);
     setProductsLeft(indexArray);
   };
 
@@ -251,8 +259,9 @@ export default function Invoices(props) {
                               <div className="invoiceProductTableHeader">
                                 <div>Product</div>
                                 <div>Quantity</div>
-                                <div>Price</div>
-                                <div>Edit</div>
+                                <div>Unit Price</div>
+                                <div>Total Price</div>
+                                <div>Delete</div>
                               </div>
                               <div className="invoiceProductTableBody">
                                 {newInvoiceProducts.map((product, index) => {
@@ -260,7 +269,30 @@ export default function Invoices(props) {
                                     <div key={index}>
                                       <div>
                                         {product.name === newInvoiceEdit ? (
-                                          <div className="invoiceProductTableEditRow">
+                                          <div
+                                            className="invoiceProductTableEditRow"
+                                            onBlur={(e) => {
+                                              e.preventDefault();
+                                              const newProductObject = {
+                                                product: product._id ? product._id : product.product,
+                                                quantity: newInvoiceCurrentProductQuantityEdit,
+                                                price: newInvoiceCurrentProductPriceEdit,
+                                                name: product.name,
+                                              };
+                                              let newInvoiceProductCopy = [...newInvoiceProducts];
+                                              let index = newInvoiceProducts.findIndex((temp) => {
+                                                return temp.name === product.name;
+                                              });
+                                              newInvoiceProductCopy[index] = newProductObject;
+                                              setNewInvoiceProducts(newInvoiceProductCopy);
+                                              setnewInvoiceCurrentProductQuantity(0);
+                                              setNewInvoiceCurrentProductPrice(0);
+                                              setNewInvoiceEdit("");
+                                              setNewInvoiceCurrentProductEdit();
+                                              setnewInvoiceCurrentProductQuantityEdit(0);
+                                              setNewInvoiceCurrentProductPriceEdit(0);
+                                            }}
+                                          >
                                             <div>{product.name}</div>
                                             <div>
                                               <label htmlFor="invoiceQuantityEdit"></label>
@@ -293,25 +325,9 @@ export default function Invoices(props) {
                                                 }}
                                               ></input>
                                             </div>
-                                            <button
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                const newProductObject = {
-                                                  product: product._id ? product._id : product.product,
-                                                  quantity: newInvoiceCurrentProductQuantityEdit,
-                                                  price: newInvoiceCurrentProductPriceEdit,
-                                                  name: product.name,
-                                                };
-                                                let newInvoiceProductCopy = [...newInvoiceProducts];
-                                                let index = newInvoiceProducts.findIndex((temp) => {
-                                                  return temp.name === product.name;
-                                                });
-                                                newInvoiceProductCopy[index] = newProductObject;
-                                                setNewInvoiceProducts(newInvoiceProductCopy);
-                                              }}
-                                            >
-                                              submit changes
-                                            </button>
+                                            <div>
+                                              {"$" + (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
+                                            </div>
                                           </div>
                                         ) : (
                                           <div
@@ -333,6 +349,7 @@ export default function Invoices(props) {
                                             <div>{product.name}</div>
                                             <div>{product.quantity}</div>
                                             <div>{product.price}</div>
+                                            <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
                                           </div>
                                         )}
                                       </div>
