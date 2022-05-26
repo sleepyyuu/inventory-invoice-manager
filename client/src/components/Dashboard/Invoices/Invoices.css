@@ -1,1 +1,13 @@
+.invoiceProductTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 
+.invoiceProductTableBody {
+}
+
+.invoiceProductTableRow,
+.invoiceProductTableEditRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}

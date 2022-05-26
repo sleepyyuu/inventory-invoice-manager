@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
-import "reactjs-popup/dist/index.css";
 
 export default function Products(props) {
   const { setSelectedCategory } = props;

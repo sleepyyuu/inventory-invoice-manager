@@ -5,7 +5,6 @@ import "./Buyers.css";
 import Header from "../Header/Header";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
-import "reactjs-popup/dist/index.css";
 
 export default function Buyers(props) {
   const { setSelectedCategory } = props;
