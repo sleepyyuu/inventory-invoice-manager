@@ -115,6 +115,11 @@ fieldset > input:focus {
   border-radius: 10px;
 }
 
+.postActionButton:hover {
+  background-color: rgb(82, 91, 182);
+  cursor: pointer;
+}
+
 .invoiceProducts {
   height: 100%;
   width: 100%;

@@ -25,6 +25,7 @@ export default function Invoices(props) {
   const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState(0);
   const [newInvoiceCurrentProductPrice, setNewInvoiceCurrentProductPrice] = useState(0);
   const [newInvoiceCurrentProductEdit, setNewInvoiceCurrentProductEdit] = useState("");
+  const [newInvoiceCurrentProductNameEdit, setNewInvoiceCurrentProductNameEdit] = useState("");
   const [newInvoiceCurrentProductQuantityEdit, setnewInvoiceCurrentProductQuantityEdit] = useState(0);
   const [newInvoiceCurrentProductPriceEdit, setNewInvoiceCurrentProductPriceEdit] = useState(0);
   const [newInvoiceEdit, setNewInvoiceEdit] = useState(null);
@@ -74,6 +75,7 @@ export default function Invoices(props) {
       product: newInvoiceProducts,
       buyer_name: newInvoiceBuyerName,
     };
+    console.log(newInvoiceProducts);
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
     }
@@ -291,30 +293,46 @@ export default function Invoices(props) {
                                                 }}
                                               ></input>
                                             </div>
-                                            <button>submit changes</button>
-                                          </div>
-                                        ) : (
-                                          <div className="invoiceProductTableRow">
-                                            <div>{product.name}</div>
-                                            <div>{product.quantity}</div>
-                                            <div>{product.price}</div>
                                             <button
                                               onClick={(e) => {
                                                 e.preventDefault();
-                                                let index = 0;
-                                                newInvoiceProducts.forEach((temp, i) => {
-                                                  if (temp.name === product.name) {
-                                                    index = i;
-                                                  }
+                                                const newProductObject = {
+                                                  product: product._id ? product._id : product.product,
+                                                  quantity: newInvoiceCurrentProductQuantityEdit,
+                                                  price: newInvoiceCurrentProductPriceEdit,
+                                                  name: product.name,
+                                                };
+                                                let newInvoiceProductCopy = [...newInvoiceProducts];
+                                                let index = newInvoiceProducts.findIndex((temp) => {
+                                                  return temp.name === product.name;
                                                 });
-                                                setNewInvoiceEdit(product.name);
-                                                setNewInvoiceCurrentProductEdit(index);
-                                                setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
-                                                setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
+                                                newInvoiceProductCopy[index] = newProductObject;
+                                                setNewInvoiceProducts(newInvoiceProductCopy);
                                               }}
                                             >
-                                              edit this listing
+                                              submit changes
                                             </button>
+                                          </div>
+                                        ) : (
+                                          <div
+                                            className="invoiceProductTableRow"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              let index = 0;
+                                              newInvoiceProducts.forEach((temp, i) => {
+                                                if (temp.name === product.name) {
+                                                  index = i;
+                                                }
+                                              });
+                                              setNewInvoiceEdit(product.name);
+                                              setNewInvoiceCurrentProductEdit(index);
+                                              setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
+                                              setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
+                                            }}
+                                          >
+                                            <div>{product.name}</div>
+                                            <div>{product.quantity}</div>
+                                            <div>{product.price}</div>
                                           </div>
                                         )}
                                       </div>
@@ -322,7 +340,7 @@ export default function Invoices(props) {
                                   );
                                 })}
                                 {0 === productsLeft.length ? (
-                                  <div>no more products</div>
+                                  <div>No more available products to add</div>
                                 ) : (
                                   <div className="invoiceProductTableEditRow">
                                     <div>
