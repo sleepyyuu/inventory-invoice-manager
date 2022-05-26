@@ -98,9 +98,8 @@ exports.invoice_update_post = [
         }
         return next(err);
       }
-      if (req.body.product_prices) {
-        let productArray = JSON.parse(req.body.product_prices);
-        foundInvoice.product_prices = productArray;
+      if (req.body.product) {
+        foundInvoice.product = req.body.product;
       }
       if (req.body.product_info) {
         let infoArray = JSON.parse(req.body.product_info);
