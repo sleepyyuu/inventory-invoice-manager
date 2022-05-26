@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import "./Invoices.css";
 import Header from "../Header/Header";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegEdit, FaRegTrashAlt, FaPlusSquare } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
 export default function Invoices(props) {
@@ -196,7 +196,7 @@ export default function Invoices(props) {
                     >
                       &times;
                     </button>
-                    <div className="modalHeader"> {menuStateCreate ? "Add invoice" : "Update invoice"} </div>
+                    <div className="modalHeader"> {menuStateCreate ? "Create invoice" : "Update invoice"} </div>
                     <div className="modalContent">
                       <form>
                         <div>
@@ -255,7 +255,7 @@ export default function Invoices(props) {
                           </div>
                           <fieldset className="invoiceProducts">
                             <legend>Items</legend>
-                            <div>
+                            <div className="invoiceProductTableHeaderContainer">
                               <div className="invoiceProductTableHeader">
                                 <div>Product</div>
                                 <div>Quantity</div>
@@ -328,6 +328,9 @@ export default function Invoices(props) {
                                             <div>
                                               {"$" + (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
                                             </div>
+                                            <div>
+                                              <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                            </div>
                                           </div>
                                         ) : (
                                           <div
@@ -350,101 +353,107 @@ export default function Invoices(props) {
                                             <div>{product.quantity}</div>
                                             <div>{product.price}</div>
                                             <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
+                                            <div>
+                                              <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                            </div>
                                           </div>
                                         )}
                                       </div>
                                     </div>
                                   );
                                 })}
-                                {0 === productsLeft.length ? (
-                                  <div>No more available products to add</div>
-                                ) : (
-                                  <div className="invoiceProductTableEditRow">
-                                    <div>
-                                      <label htmlFor="invoiceProduct"></label>
-                                      <select
-                                        id="invoiceProduct"
-                                        name="invoiceProduct"
-                                        onChange={(e) => {
-                                          setNewInvoiceCurrentProduct(e.target.value);
-                                          if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
-                                            setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
-                                          }
-                                        }}
-                                        value={newInvoiceCurrentProduct}
-                                      >
-                                        {productsLeft.map((temp) => {
-                                          return (
-                                            <option value={temp} key={uniqid()}>
-                                              {products[temp].name}
-                                            </option>
-                                          );
-                                        })}
-                                      </select>
-                                    </div>
-                                    <div>
-                                      <label htmlFor="invoiceQuantity"></label>
-                                      <input
-                                        type="number"
-                                        id="invoiceQuantity"
-                                        name="invoiceQuantity"
-                                        max={products[newInvoiceCurrentProduct].quantity}
-                                        onChange={(e) => {
-                                          if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
-                                            setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
-                                          } else {
-                                            setnewInvoiceCurrentProductQuantity(e.target.value);
-                                          }
-                                        }}
-                                        value={newInvoiceCurrentProductQuantity}
-                                      ></input>
-                                    </div>
-                                    <div>
-                                      <label htmlFor="invoicePrice"></label>
-                                      <input
-                                        type="text"
-                                        id="invoicePrice"
-                                        name="invoicePrice"
-                                        value={newInvoiceCurrentProductPrice}
-                                        onChange={(e) => {
-                                          setNewInvoiceCurrentProductPrice(e.target.value);
-                                        }}
-                                      ></input>
-                                    </div>
-                                    <button
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        //an array with object with id, quantity, and price
-                                        const newProductObject = {
-                                          product: products[newInvoiceCurrentProduct]._id,
-                                          quantity: newInvoiceCurrentProductQuantity,
-                                          price: newInvoiceCurrentProductPrice,
-                                          name: products[newInvoiceCurrentProduct].name,
-                                        };
-                                        setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
-                                        setProductsLeft(() => {
-                                          let newProductsLeft = productsLeft.filter((temp) => {
-                                            return products[temp].name !== products[newInvoiceCurrentProduct].name;
-                                          });
-                                          if (newProductsLeft.length === 0) {
-                                            return [];
-                                          } else {
-                                            setNewInvoiceCurrentProduct([newProductsLeft[0]]);
-                                            if (newInvoiceCurrentProductQuantity > products[[newProductsLeft[0]]].quantity) {
-                                              setnewInvoiceCurrentProductQuantity(products[newProductsLeft[0]].quantity);
-                                            }
-                                            return newProductsLeft;
-                                          }
-                                        });
-                                      }}
-                                    >
-                                      add product
-                                    </button>
-                                  </div>
-                                )}
                               </div>
                             </div>
                           </fieldset>
+                          {0 === productsLeft.length ? (
+                            <div>No more available products to add</div>
+                          ) : (
+                            <div className="invoiceProductTableAddRow">
+                              <div>
+                                <label htmlFor="invoiceProduct"></label>
+                                <select
+                                  id="invoiceProduct"
+                                  name="invoiceProduct"
+                                  onChange={(e) => {
+                                    setNewInvoiceCurrentProduct(e.target.value);
+                                    if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
+                                      setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
+                                    }
+                                  }}
+                                  value={newInvoiceCurrentProduct}
+                                >
+                                  {productsLeft.map((temp) => {
+                                    return (
+                                      <option value={temp} key={uniqid()}>
+                                        {products[temp].name}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                              </div>
+                              <div>
+                                <label htmlFor="invoiceQuantity"></label>
+                                <input
+                                  type="number"
+                                  id="invoiceQuantity"
+                                  name="invoiceQuantity"
+                                  max={products[newInvoiceCurrentProduct].quantity}
+                                  onChange={(e) => {
+                                    if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
+                                      setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
+                                    } else {
+                                      setnewInvoiceCurrentProductQuantity(e.target.value);
+                                    }
+                                  }}
+                                  value={newInvoiceCurrentProductQuantity}
+                                ></input>
+                              </div>
+                              <div>
+                                <label htmlFor="invoicePrice"></label>
+                                <input
+                                  type="text"
+                                  id="invoicePrice"
+                                  name="invoicePrice"
+                                  value={newInvoiceCurrentProductPrice}
+                                  onChange={(e) => {
+                                    setNewInvoiceCurrentProductPrice(e.target.value);
+                                  }}
+                                ></input>
+                              </div>
+                              <div>{"$" + (newInvoiceCurrentProductQuantity * newInvoiceCurrentProductPrice).toFixed(2)}</div>
+                              <div className="invoiceProductAddContainer">
+                                <FaPlusSquare
+                                  className="invoiceProductAdd"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    //an array with object with id, quantity, and price
+                                    const newProductObject = {
+                                      product: products[newInvoiceCurrentProduct]._id,
+                                      quantity: newInvoiceCurrentProductQuantity,
+                                      price: newInvoiceCurrentProductPrice,
+                                      name: products[newInvoiceCurrentProduct].name,
+                                    };
+                                    setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
+                                    setProductsLeft(() => {
+                                      let newProductsLeft = productsLeft.filter((temp) => {
+                                        return products[temp].name !== products[newInvoiceCurrentProduct].name;
+                                      });
+                                      if (newProductsLeft.length === 0) {
+                                        return [];
+                                      } else {
+                                        setNewInvoiceCurrentProduct([newProductsLeft[0]]);
+                                        if (newInvoiceCurrentProductQuantity > products[[newProductsLeft[0]]].quantity) {
+                                          setnewInvoiceCurrentProductQuantity(products[newProductsLeft[0]].quantity);
+                                        }
+                                        return newProductsLeft;
+                                      }
+                                    });
+                                  }}
+                                  size="23"
+                                ></FaPlusSquare>
+                              </div>
+                            </div>
+                          )}
                         </div>
                         <button
                           className="postActionButton"
@@ -452,7 +461,7 @@ export default function Invoices(props) {
                             handlePostAction(e);
                           }}
                         >
-                          {menuStateCreate ? "Add invoice" : "Update invoice"}
+                          {menuStateCreate ? "Create invoice" : "Update invoice"}
                         </button>
                       </form>
                     </div>
