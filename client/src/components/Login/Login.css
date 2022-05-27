@@ -12,8 +12,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50%;
-  width: 40%;
+  height: 450px;
+  width: 400px;
   border-radius: 14px;
   background-color: rgb(255, 255, 255);
 }
@@ -43,11 +43,13 @@ h2 {
   background-color: rgb(87, 99, 232);
   border-radius: 15px;
   border: none;
-  margin-top: 10px;
-  font-size: 1.2rem;
+  margin: 20px 0 10px 0;
+  padding: 5px 0;
+  font-size: 1.3rem;
 }
 .submitButton:hover {
   cursor: pointer;
+  background-color: rgb(112, 122, 236);
 }
 
 .loginInput {

@@ -1,13 +1,16 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import uniqid from "uniqid";
 import "./Invoices.css";
-import Header from "../Header/Header";
 import { FaRegEdit, FaRegTrashAlt, FaPlusSquare } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
 export default function Invoices(props) {
   const { setSelectedCategory } = props;
+  const quantityRef = useRef(null);
+  const priceRef = useRef(null);
+  const editRowRef = useRef(null);
+  const [inputFocus, setInputFocus] = useState("");
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
@@ -58,6 +61,15 @@ export default function Invoices(props) {
     getInitialDB();
   }, []);
 
+  useEffect(() => {
+    if (inputFocus === "quantity") {
+      quantityRef.current.focus();
+    } else if (inputFocus === "price") {
+      priceRef.current.focus();
+    }
+    setInputFocus("");
+  }, [inputFocus]);
+
   const handlePostAction = async (e) => {
     e.preventDefault();
     if (newInvoiceBuyerId === "") {
@@ -100,6 +112,12 @@ export default function Invoices(props) {
   };
 
   const handleEdit = async (invoice) => {
+    setnewInvoiceCurrentProductQuantity(0);
+    setNewInvoiceCurrentProductPrice(0);
+    setNewInvoiceEdit("");
+    setNewInvoiceCurrentProductEdit();
+    setnewInvoiceCurrentProductQuantityEdit(0);
+    setNewInvoiceCurrentProductPriceEdit(0);
     setCustomError(null);
     setNewInvoiceId(invoice._id);
     setNewInvoiceBuyerId(invoice.buyer);
@@ -125,6 +143,12 @@ export default function Invoices(props) {
   };
 
   const handleAdd = () => {
+    setnewInvoiceCurrentProductQuantity(0);
+    setNewInvoiceCurrentProductPrice(0);
+    setNewInvoiceEdit("");
+    setNewInvoiceCurrentProductEdit();
+    setnewInvoiceCurrentProductQuantityEdit(0);
+    setNewInvoiceCurrentProductPriceEdit(0);
     setCustomError(null);
     setmenuStateCreate(true);
     setNewInvoiceBuyerId(buyers[0]._id);
@@ -271,12 +295,16 @@ export default function Invoices(props) {
                                         {product.name === newInvoiceEdit ? (
                                           <div
                                             className="invoiceProductTableEditRow"
+                                            ref={editRowRef}
                                             onBlur={(e) => {
+                                              console.log("test");
                                               e.preventDefault();
+                                              let decimalFixedPrice = Number(newInvoiceCurrentProductPriceEdit).toFixed(2);
+                                              let decimalFixedQuantity = Number(newInvoiceCurrentProductQuantityEdit).toFixed(1);
                                               const newProductObject = {
                                                 product: product._id ? product._id : product.product,
-                                                quantity: newInvoiceCurrentProductQuantityEdit,
-                                                price: newInvoiceCurrentProductPriceEdit,
+                                                quantity: decimalFixedQuantity,
+                                                price: decimalFixedPrice,
                                                 name: product.name,
                                               };
                                               let newInvoiceProductCopy = [...newInvoiceProducts];
@@ -300,6 +328,7 @@ export default function Invoices(props) {
                                                 type="number"
                                                 id="invoiceQuantityEdit"
                                                 name="invoiceQuantityEdit"
+                                                ref={quantityRef}
                                                 max={products[newInvoiceCurrentProductEdit].quantity}
                                                 onChange={(e) => {
                                                   if (e.target.value > products[newInvoiceCurrentProductEdit].quantity) {
@@ -316,9 +345,10 @@ export default function Invoices(props) {
                                             <div>
                                               <label htmlFor="invoicePriceEdit"></label>
                                               <input
-                                                type="text"
+                                                type="number"
                                                 id="invoicePriceEdit"
                                                 name="invoicePriceEdit"
+                                                ref={priceRef}
                                                 value={newInvoiceCurrentProductPriceEdit}
                                                 onChange={(e) => {
                                                   setNewInvoiceCurrentProductPriceEdit(e.target.value);
@@ -350,8 +380,21 @@ export default function Invoices(props) {
                                             }}
                                           >
                                             <div>{product.name}</div>
-                                            <div>{product.quantity}</div>
-                                            <div>{product.price}</div>
+                                            <div
+                                              onClick={() => {
+                                                setInputFocus("quantity");
+                                              }}
+                                            >
+                                              {product.quantity}
+                                            </div>
+                                            <div
+                                              onClick={() => {
+                                                console.log("test");
+                                                setInputFocus("price");
+                                              }}
+                                            >
+                                              {product.price}
+                                            </div>
                                             <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
                                             <div>
                                               <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
@@ -405,18 +448,26 @@ export default function Invoices(props) {
                                       setnewInvoiceCurrentProductQuantity(e.target.value);
                                     }
                                   }}
+                                  onBlur={(e) => {
+                                    let decimalFixedQuantity = Number(e.target.value).toFixed(1);
+                                    setnewInvoiceCurrentProductQuantity(decimalFixedQuantity);
+                                  }}
                                   value={newInvoiceCurrentProductQuantity}
                                 ></input>
                               </div>
                               <div>
                                 <label htmlFor="invoicePrice"></label>
                                 <input
-                                  type="text"
+                                  type="number"
                                   id="invoicePrice"
                                   name="invoicePrice"
                                   value={newInvoiceCurrentProductPrice}
                                   onChange={(e) => {
                                     setNewInvoiceCurrentProductPrice(e.target.value);
+                                  }}
+                                  onBlur={(e) => {
+                                    let decimalFixed = Number(e.target.value).toFixed(2);
+                                    setNewInvoiceCurrentProductPrice(decimalFixed);
                                   }}
                                 ></input>
                               </div>
@@ -448,6 +499,12 @@ export default function Invoices(props) {
                                         return newProductsLeft;
                                       }
                                     });
+                                    setnewInvoiceCurrentProductQuantity(0);
+                                    setNewInvoiceCurrentProductPrice(0);
+                                    setNewInvoiceEdit("");
+                                    setNewInvoiceCurrentProductEdit();
+                                    setnewInvoiceCurrentProductQuantityEdit(0);
+                                    setNewInvoiceCurrentProductPriceEdit(0);
                                   }}
                                   size="23"
                                 ></FaPlusSquare>
