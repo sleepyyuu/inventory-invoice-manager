@@ -101,10 +101,6 @@ exports.invoice_update_post = [
       if (req.body.product) {
         foundInvoice.product = req.body.product;
       }
-      if (req.body.product_info) {
-        let infoArray = JSON.parse(req.body.product_info);
-        foundInvoice.product_info = infoArray;
-      }
       if (req.body.buyer) {
         foundInvoice.buyer = req.body.buyer;
         foundInvoice.buyer_name = req.body.buyer_name;
