@@ -70,6 +70,23 @@ export default function Invoices(props) {
     setInputFocus("");
   }, [inputFocus]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (editRowRef.current && !editRowRef.current.contains(e.target)) {
+        setnewInvoiceCurrentProductQuantity(0);
+        setNewInvoiceCurrentProductPrice(0);
+        setNewInvoiceEdit("");
+        setNewInvoiceCurrentProductEdit();
+        setnewInvoiceCurrentProductQuantityEdit(0);
+        setNewInvoiceCurrentProductPriceEdit(0);
+      }
+    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  });
+
   const handlePostAction = async (e) => {
     e.preventDefault();
     if (newInvoiceBuyerId === "") {
@@ -87,7 +104,6 @@ export default function Invoices(props) {
       product: newInvoiceProducts,
       buyer_name: newInvoiceBuyerName,
     };
-    console.log(newInvoiceProducts);
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
     }
@@ -297,8 +313,6 @@ export default function Invoices(props) {
                                             className="invoiceProductTableEditRow"
                                             ref={editRowRef}
                                             onBlur={(e) => {
-                                              console.log("test");
-                                              e.preventDefault();
                                               let decimalFixedPrice = Number(newInvoiceCurrentProductPriceEdit).toFixed(2);
                                               let decimalFixedQuantity = Number(newInvoiceCurrentProductQuantityEdit).toFixed(1);
                                               const newProductObject = {
@@ -313,12 +327,6 @@ export default function Invoices(props) {
                                               });
                                               newInvoiceProductCopy[index] = newProductObject;
                                               setNewInvoiceProducts(newInvoiceProductCopy);
-                                              setnewInvoiceCurrentProductQuantity(0);
-                                              setNewInvoiceCurrentProductPrice(0);
-                                              setNewInvoiceEdit("");
-                                              setNewInvoiceCurrentProductEdit();
-                                              setnewInvoiceCurrentProductQuantityEdit(0);
-                                              setNewInvoiceCurrentProductPriceEdit(0);
                                             }}
                                           >
                                             <div>{product.name}</div>
@@ -389,7 +397,6 @@ export default function Invoices(props) {
                                             </div>
                                             <div
                                               onClick={() => {
-                                                console.log("test");
                                                 setInputFocus("price");
                                               }}
                                             >
