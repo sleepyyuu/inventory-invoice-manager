@@ -74,7 +74,6 @@ export default function Invoices(props) {
     const handleClickOutside = (e) => {
       if (editRowRef.current && !editRowRef.current.contains(e.target)) {
         setnewInvoiceCurrentProductQuantity(0);
-        setNewInvoiceCurrentProductPrice(0);
         setNewInvoiceEdit("");
         setNewInvoiceCurrentProductEdit();
         setnewInvoiceCurrentProductQuantityEdit(0);
@@ -309,116 +308,151 @@ export default function Invoices(props) {
                                 <div>Total Price</div>
                                 <div>Delete</div>
                               </div>
-                              <div className="invoiceProductTableBody">
-                                {newInvoiceProducts.map((product, index) => {
-                                  return (
-                                    <div key={index}>
-                                      <div>
-                                        {product.name === newInvoiceEdit ? (
-                                          <div
-                                            className="invoiceProductTableEditRow"
-                                            ref={editRowRef}
-                                            onBlur={(e) => {
-                                              let decimalFixedPrice = Number(newInvoiceCurrentProductPriceEdit).toFixed(2);
-                                              let decimalFixedQuantity = Number(newInvoiceCurrentProductQuantityEdit).toFixed(1);
-                                              const newProductObject = {
-                                                product: product._id ? product._id : product.product,
-                                                quantity: decimalFixedQuantity,
-                                                price: decimalFixedPrice,
-                                                name: product.name,
-                                              };
-                                              let newInvoiceProductCopy = [...newInvoiceProducts];
-                                              let index = newInvoiceProducts.findIndex((temp) => {
-                                                return temp.name === product.name;
-                                              });
-                                              newInvoiceProductCopy[index] = newProductObject;
-                                              setNewInvoiceProducts(newInvoiceProductCopy);
-                                            }}
-                                          >
-                                            <div>{product.name}</div>
-                                            <div>
-                                              <label htmlFor="invoiceQuantityEdit"></label>
-                                              <input
-                                                type="number"
-                                                id="invoiceQuantityEdit"
-                                                name="invoiceQuantityEdit"
-                                                ref={quantityRef}
-                                                max={products[newInvoiceCurrentProductEdit].quantity}
-                                                onChange={(e) => {
-                                                  if (e.target.value > products[newInvoiceCurrentProductEdit].quantity) {
-                                                    setnewInvoiceCurrentProductQuantityEdit(
-                                                      products[newInvoiceCurrentProductEdit].quantity
-                                                    );
-                                                  } else {
-                                                    setnewInvoiceCurrentProductQuantityEdit(e.target.value);
+                              {newInvoiceProducts.length === 0 ? (
+                                <div className="invoiceProductTableNotice">Add product below</div>
+                              ) : (
+                                <div className="invoiceProductTableBody">
+                                  {newInvoiceProducts.map((product, index) => {
+                                    return (
+                                      <div key={index}>
+                                        <div>
+                                          {product.name === newInvoiceEdit ? (
+                                            <div
+                                              className="invoiceProductTableEditRow"
+                                              ref={editRowRef}
+                                              onBlur={(e) => {
+                                                const newProductObject = {
+                                                  product: product._id ? product._id : product.product,
+                                                  quantity: newInvoiceCurrentProductQuantityEdit ? newInvoiceCurrentProductQuantityEdit : 0,
+                                                  price: newInvoiceCurrentProductPriceEdit ? newInvoiceCurrentProductPriceEdit : 0,
+                                                  name: product.name,
+                                                };
+                                                let newInvoiceProductCopy = [...newInvoiceProducts];
+                                                let index = newInvoiceProducts.findIndex((temp) => {
+                                                  return temp.name === product.name;
+                                                });
+                                                newInvoiceProductCopy[index] = newProductObject;
+                                                setNewInvoiceProducts(newInvoiceProductCopy);
+                                              }}
+                                            >
+                                              <div>{product.name}</div>
+                                              <div>
+                                                <label htmlFor="invoiceQuantityEdit"></label>
+                                                <input
+                                                  type="number"
+                                                  id="invoiceQuantityEdit"
+                                                  name="invoiceQuantityEdit"
+                                                  ref={quantityRef}
+                                                  max={products[newInvoiceCurrentProductEdit].quantity}
+                                                  onChange={(e) => {
+                                                    let eventValue = e.target.valueAsNumber || e.target.value;
+                                                    if (eventValue > products[newInvoiceCurrentProductEdit].quantity) {
+                                                      setnewInvoiceCurrentProductQuantityEdit(
+                                                        products[newInvoiceCurrentProductEdit].quantity
+                                                      );
+                                                    } else {
+                                                      setnewInvoiceCurrentProductQuantityEdit(eventValue);
+                                                    }
+                                                  }}
+                                                  onBlur={(e) => {
+                                                    if (!e.target.value) {
+                                                      setnewInvoiceCurrentProductQuantityEdit(0);
+                                                    } else {
+                                                      setnewInvoiceCurrentProductQuantityEdit(
+                                                        Math.round(newInvoiceCurrentProductQuantityEdit * 10) / 10
+                                                      );
+                                                    }
+                                                  }}
+                                                  onKeyPress={(e) => {
+                                                    if (!/[0-9.]/.test(e.key)) {
+                                                      e.preventDefault();
+                                                    }
+                                                  }}
+                                                  value={newInvoiceCurrentProductQuantityEdit}
+                                                ></input>
+                                              </div>
+                                              <div>
+                                                <label htmlFor="invoicePriceEdit"></label>
+                                                <input
+                                                  type="number"
+                                                  id="invoicePriceEdit"
+                                                  name="invoicePriceEdit"
+                                                  ref={priceRef}
+                                                  value={newInvoiceCurrentProductPriceEdit}
+                                                  onChange={(e) => {
+                                                    let eventValue = e.target.valueAsNumber || e.target.value;
+                                                    setNewInvoiceCurrentProductPriceEdit(eventValue);
+                                                  }}
+                                                  onBlur={(e) => {
+                                                    if (!e.target.value) {
+                                                      setNewInvoiceCurrentProductPriceEdit(0);
+                                                    } else {
+                                                      setNewInvoiceCurrentProductPriceEdit(
+                                                        Math.round(newInvoiceCurrentProductPriceEdit * 100) / 100
+                                                      );
+                                                    }
+                                                  }}
+                                                  onKeyPress={(e) => {
+                                                    if (!/[0-9.]/.test(e.key)) {
+                                                      e.preventDefault();
+                                                    }
+                                                  }}
+                                                ></input>
+                                              </div>
+                                              <div>
+                                                {"$" +
+                                                  (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
+                                              </div>
+                                              <div>
+                                                <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <div
+                                              className="invoiceProductTableRow"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                let index = 0;
+                                                newInvoiceProducts.forEach((temp, i) => {
+                                                  if (temp.name === product.name) {
+                                                    index = i;
                                                   }
-                                                }}
-                                                value={newInvoiceCurrentProductQuantityEdit}
-                                              ></input>
-                                            </div>
-                                            <div>
-                                              <label htmlFor="invoicePriceEdit"></label>
-                                              <input
-                                                type="number"
-                                                id="invoicePriceEdit"
-                                                name="invoicePriceEdit"
-                                                ref={priceRef}
-                                                value={newInvoiceCurrentProductPriceEdit}
-                                                onChange={(e) => {
-                                                  setNewInvoiceCurrentProductPriceEdit(e.target.value);
-                                                }}
-                                              ></input>
-                                            </div>
-                                            <div>
-                                              {"$" + (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
-                                            </div>
-                                            <div>
-                                              <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
-                                            </div>
-                                          </div>
-                                        ) : (
-                                          <div
-                                            className="invoiceProductTableRow"
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                              let index = 0;
-                                              newInvoiceProducts.forEach((temp, i) => {
-                                                if (temp.name === product.name) {
-                                                  index = i;
-                                                }
-                                              });
-                                              setNewInvoiceEdit(product.name);
-                                              setNewInvoiceCurrentProductEdit(index);
-                                              setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
-                                              setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
-                                            }}
-                                          >
-                                            <div>{product.name}</div>
-                                            <div
-                                              onClick={() => {
-                                                setInputFocus("quantity");
+                                                });
+                                                setNewInvoiceEdit(product.name);
+                                                setNewInvoiceCurrentProductEdit(index);
+                                                setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity);
+                                                setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price);
                                               }}
                                             >
-                                              {product.quantity}
+                                              <div>{product.name}</div>
+                                              <div
+                                                onClick={() => {
+                                                  setInputFocus("quantity");
+                                                }}
+                                                className="quantityDisplay"
+                                              >
+                                                {product.quantity.toFixed(1)}
+                                              </div>
+                                              <div
+                                                onClick={() => {
+                                                  setInputFocus("price");
+                                                }}
+                                                className="priceDisplay"
+                                              >
+                                                {product.price.toFixed(2)}
+                                              </div>
+                                              <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
+                                              <div>
+                                                <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                              </div>
                                             </div>
-                                            <div
-                                              onClick={() => {
-                                                setInputFocus("price");
-                                              }}
-                                            >
-                                              {product.price}
-                                            </div>
-                                            <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
-                                            <div>
-                                              <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
-                                            </div>
-                                          </div>
-                                        )}
+                                          )}
+                                        </div>
                                       </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </div>
                           </fieldset>
                           {0 === productsLeft.length ? (
@@ -456,15 +490,24 @@ export default function Invoices(props) {
                                   name="invoiceQuantity"
                                   max={products[newInvoiceCurrentProduct].quantity}
                                   onChange={(e) => {
-                                    if (e.target.value > products[newInvoiceCurrentProduct].quantity) {
+                                    let eventValue = e.target.valueAsNumber || e.target.value;
+                                    if (eventValue > products[newInvoiceCurrentProduct].quantity) {
                                       setnewInvoiceCurrentProductQuantity(products[newInvoiceCurrentProduct].quantity);
                                     } else {
-                                      setnewInvoiceCurrentProductQuantity(e.target.value);
+                                      setnewInvoiceCurrentProductQuantity(eventValue);
                                     }
                                   }}
                                   onBlur={(e) => {
-                                    let decimalFixedQuantity = Number(e.target.value).toFixed(1);
-                                    setnewInvoiceCurrentProductQuantity(decimalFixedQuantity);
+                                    if (!e.target.value) {
+                                      setnewInvoiceCurrentProductQuantity(0);
+                                    } else {
+                                      setnewInvoiceCurrentProductQuantity(Math.round(newInvoiceCurrentProductQuantity * 10) / 10);
+                                    }
+                                  }}
+                                  onKeyPress={(e) => {
+                                    if (!/[0-9.]/.test(e.key)) {
+                                      e.preventDefault();
+                                    }
                                   }}
                                   value={newInvoiceCurrentProductQuantity}
                                 ></input>
@@ -477,11 +520,22 @@ export default function Invoices(props) {
                                   name="invoicePrice"
                                   value={newInvoiceCurrentProductPrice}
                                   onChange={(e) => {
-                                    setNewInvoiceCurrentProductPrice(e.target.value);
+                                    let eventValue = e.target.valueAsNumber || e.target.value;
+                                    setNewInvoiceCurrentProductPrice(eventValue);
+                                    console.log(typeof eventValue);
                                   }}
                                   onBlur={(e) => {
-                                    let decimalFixed = Number(e.target.value).toFixed(2);
-                                    setNewInvoiceCurrentProductPrice(decimalFixed);
+                                    console.log("test");
+                                    if (!e.target.value) {
+                                      setNewInvoiceCurrentProductPrice(0);
+                                    } else {
+                                      setNewInvoiceCurrentProductPrice(Math.round(newInvoiceCurrentProductPrice * 100) / 100);
+                                    }
+                                  }}
+                                  onKeyPress={(e) => {
+                                    if (!/[0-9.]/.test(e.key)) {
+                                      e.preventDefault();
+                                    }
                                   }}
                                 ></input>
                               </div>

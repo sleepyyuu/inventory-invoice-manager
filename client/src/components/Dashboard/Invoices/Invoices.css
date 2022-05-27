@@ -9,13 +9,17 @@
   color: white;
 }
 
+.invoiceProductTableNotice {
+  padding-top: 10px;
+}
+
 .invoiceProductTableRow,
 .invoiceProductTableEditRow,
 .invoiceProductTableAddRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   color: black;
-  padding: 10px 0 5px 0;
+  padding: 5px 0 5px 0;
 }
 
 .invoiceProductTableRow,
@@ -45,6 +49,17 @@
   border: none;
   background-color: rgb(249, 248, 248);
   width: 90%;
+}
+
+.quantityDisplay,
+.priceDisplay {
+  width: 90%;
+  background-color: rgb(227, 227, 227);
+}
+
+.quantityDisplay:hover,
+.priceDisplay:hover {
+  background-color: rgb(206, 206, 206);
 }
 
 #invoiceQuantity,
