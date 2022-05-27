@@ -156,6 +156,11 @@ export default function Invoices(props) {
     }
     setNewInvoiceCurrentProduct(indexArray[0]);
     setProductsLeft(indexArray);
+    if (indexArray.length === 0) {
+      setNewInvoiceCurrentProductPrice(0);
+    } else {
+      setNewInvoiceCurrentProductPrice(products[indexArray[0]].price);
+    }
   };
 
   const handleAdd = () => {
@@ -179,6 +184,7 @@ export default function Invoices(props) {
     setNewInvoiceBuyerName(buyers[0].company_name);
     setShowMenu(true);
     setNewInvoiceCurrentProduct(0);
+    setNewInvoiceCurrentProductPrice(products[0].price);
     let indexArray = [];
     for (let i = 0; i < products.length; i++) {
       indexArray.push(i);
@@ -429,6 +435,7 @@ export default function Invoices(props) {
                                     if (products[e.target.value].quantity < newInvoiceCurrentProductQuantity) {
                                       setnewInvoiceCurrentProductQuantity(products[e.target.value].quantity);
                                     }
+                                    setNewInvoiceCurrentProductPrice(products[e.target.value].price);
                                   }}
                                   value={newInvoiceCurrentProduct}
                                 >
