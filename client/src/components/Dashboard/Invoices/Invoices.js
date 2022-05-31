@@ -205,6 +205,21 @@ export default function Invoices(props) {
     }
   };
 
+  const updateProductList = (product) => {
+    const newProductObject = {
+      product: product._id ? product._id : product.product,
+      quantity: newInvoiceCurrentProductQuantityEdit ? newInvoiceCurrentProductQuantityEdit : 0,
+      price: newInvoiceCurrentProductPriceEdit ? newInvoiceCurrentProductPriceEdit : 0,
+      name: product.name,
+    };
+    let newInvoiceProductCopy = [...newInvoiceProducts];
+    let index = newInvoiceProducts.findIndex((temp) => {
+      return temp.name === product.name;
+    });
+    newInvoiceProductCopy[index] = newProductObject;
+    setNewInvoiceProducts(newInvoiceProductCopy);
+  };
+
   return (
     <div>
       <div className="dashboardInfoHeaderContainer">
@@ -341,6 +356,7 @@ export default function Invoices(props) {
                                                 <input
                                                   type="number"
                                                   id="invoiceQuantityEdit"
+                                                  step="0.01"
                                                   name="invoiceQuantityEdit"
                                                   ref={quantityRef}
                                                   max={products[newInvoiceCurrentProductEdit].quantity}
@@ -359,7 +375,7 @@ export default function Invoices(props) {
                                                       setnewInvoiceCurrentProductQuantityEdit(0);
                                                     } else {
                                                       setnewInvoiceCurrentProductQuantityEdit(
-                                                        Math.round(newInvoiceCurrentProductQuantityEdit * 10) / 10
+                                                        Math.round(newInvoiceCurrentProductQuantityEdit * 10) / 10 + ""
                                                       );
                                                     }
                                                   }}
@@ -375,6 +391,7 @@ export default function Invoices(props) {
                                                 <label htmlFor="invoicePriceEdit"></label>
                                                 <input
                                                   type="number"
+                                                  step="0.01"
                                                   id="invoicePriceEdit"
                                                   name="invoicePriceEdit"
                                                   ref={priceRef}
@@ -388,7 +405,7 @@ export default function Invoices(props) {
                                                       setNewInvoiceCurrentProductPriceEdit(0);
                                                     } else {
                                                       setNewInvoiceCurrentProductPriceEdit(
-                                                        Math.round(newInvoiceCurrentProductPriceEdit * 100) / 100
+                                                        Math.round(newInvoiceCurrentProductPriceEdit * 100) / 100 + ""
                                                       );
                                                     }
                                                   }}
@@ -431,7 +448,7 @@ export default function Invoices(props) {
                                                 }}
                                                 className="quantityDisplay"
                                               >
-                                                {product.quantity.toFixed(1)}
+                                                {Number(product.quantity).toFixed(1)}
                                               </div>
                                               <div
                                                 onClick={() => {
@@ -439,7 +456,7 @@ export default function Invoices(props) {
                                                 }}
                                                 className="priceDisplay"
                                               >
-                                                {product.price.toFixed(2)}
+                                                {Number(product.price).toFixed(2)}
                                               </div>
                                               <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
                                               <div>
@@ -486,6 +503,7 @@ export default function Invoices(props) {
                                 <label htmlFor="invoiceQuantity"></label>
                                 <input
                                   type="number"
+                                  step="0.01"
                                   id="invoiceQuantity"
                                   name="invoiceQuantity"
                                   max={products[newInvoiceCurrentProduct].quantity}
@@ -501,7 +519,7 @@ export default function Invoices(props) {
                                     if (!e.target.value) {
                                       setnewInvoiceCurrentProductQuantity(0);
                                     } else {
-                                      setnewInvoiceCurrentProductQuantity(Math.round(newInvoiceCurrentProductQuantity * 10) / 10);
+                                      setnewInvoiceCurrentProductQuantity(Math.round(newInvoiceCurrentProductQuantity * 10) / 10 + "");
                                     }
                                   }}
                                   onKeyPress={(e) => {
@@ -516,20 +534,19 @@ export default function Invoices(props) {
                                 <label htmlFor="invoicePrice"></label>
                                 <input
                                   type="number"
+                                  step="0.01"
                                   id="invoicePrice"
                                   name="invoicePrice"
                                   value={newInvoiceCurrentProductPrice}
                                   onChange={(e) => {
                                     let eventValue = e.target.valueAsNumber || e.target.value;
                                     setNewInvoiceCurrentProductPrice(eventValue);
-                                    console.log(typeof eventValue);
                                   }}
                                   onBlur={(e) => {
-                                    console.log("test");
                                     if (!e.target.value) {
                                       setNewInvoiceCurrentProductPrice(0);
                                     } else {
-                                      setNewInvoiceCurrentProductPrice(Math.round(newInvoiceCurrentProductPrice * 100) / 100);
+                                      setNewInvoiceCurrentProductPrice(Math.round(newInvoiceCurrentProductPrice * 100) / 100 + "");
                                     }
                                   }}
                                   onKeyPress={(e) => {
