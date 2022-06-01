@@ -10,6 +10,7 @@ const InvoiceSchema = new Schema({
   //hardcode values to save record even if product/buyer deleted
   buyer_name: { type: String, required: true },
   details: { type: String },
+  total: { type: Number },
 });
 
 InvoiceSchema.virtual("padded_invoice_number").get(function () {

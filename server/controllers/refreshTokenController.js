@@ -26,7 +26,7 @@ exports.refresh_token_get = async function (req, res) {
 
   const newRefreshTokenArray = foundUser.refreshToken.filter((token) => token !== refreshToken);
 
-  await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) {
       foundUser.refreshToken = [...newRefreshTokenArray];
       await foundUser.save();

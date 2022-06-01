@@ -56,6 +56,7 @@ exports.invoice_create_post = [
       //product prices should be an array of productprice objects id
       product: req.body.product,
       details: req.body.details,
+      total: req.body.total,
     });
     if (!errors.isEmpty()) {
       return res.send({ invoice: req.body, errors: errors.array() });
@@ -107,6 +108,9 @@ exports.invoice_update_post = [
       }
       if (req.body.details) {
         foundInvoice.details = req.body.details;
+      }
+      if (req.body.total) {
+        foundInvoice.total;
       }
       foundInvoice.save(function (err) {
         if (err) {
