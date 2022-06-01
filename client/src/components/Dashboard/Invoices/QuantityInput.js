@@ -16,10 +16,15 @@ export default function QuantityInput(props) {
         }
       }}
       onBlur={(e) => {
-        if (!e.target.value || Number(e.target.value) === 0) {
+        if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
           setNewInvoiceQuantity("0.0");
         } else {
           setNewInvoiceQuantity(Number(newInvoiceQuantity).toFixed(1));
+        }
+      }}
+      onKeyPress={(e) => {
+        if (!/[0-9.]/.test(e.key)) {
+          e.preventDefault();
         }
       }}
     ></input>

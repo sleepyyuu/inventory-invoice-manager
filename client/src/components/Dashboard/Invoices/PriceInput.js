@@ -11,7 +11,7 @@ export default function PriceInput(props) {
         setNewInvoicePrice(e.target.value);
       }}
       onBlur={(e) => {
-        if (!e.target.value || Number(e.target.value) === 0) {
+        if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
           setNewInvoicePrice("0.00");
         } else {
           setNewInvoicePrice(Number(newInvoicePrice).toFixed(2));
