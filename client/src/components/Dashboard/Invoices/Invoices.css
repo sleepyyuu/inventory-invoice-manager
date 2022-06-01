@@ -47,13 +47,21 @@
 #invoicePrice {
   text-align: center;
   border: none;
-  background-color: rgb(249, 248, 248);
+  background-color: rgb(227, 227, 227);
+  font-size: 1rem;
   width: 90%;
 }
 
+input {
+  padding: 0;
+}
+
 .quantityDisplay,
-.priceDisplay {
+.priceDisplay,
+.invoiceQuantityEditContainer,
+.invoicePriceEditContainer {
   width: 90%;
+  font-size: 1rem;
   background-color: rgb(227, 227, 227);
 }
 
