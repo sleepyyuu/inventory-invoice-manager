@@ -52,6 +52,12 @@
   width: 90%;
 }
 
+#invoicePriceEdit:focus,
+#invoiceQuantityEdit:focus,
+#invoiceQuantity:focus,
+#invoicePrice:focus {
+  background-color: rgb(206, 206, 206);
+}
 input {
   padding: 0;
 }
@@ -82,5 +88,16 @@ input {
 
 .invoiceProductAdd:hover {
   color: rgb(81, 112, 204);
+  cursor: pointer;
+}
+
+.invoiceLink {
+  color: rgb(22, 30, 119);
+  text-decoration: underline;
+  border: none;
+  background-color: transparent;
+}
+
+.invoiceLink:hover {
   cursor: pointer;
 }

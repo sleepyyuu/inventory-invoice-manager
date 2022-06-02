@@ -99,11 +99,16 @@ export default function Invoices(props) {
       return;
     }
     let response;
+    let total = 0;
+    for (let product of newInvoiceProducts) {
+      total += product.price * product.quantity;
+    }
     let body = {
       buyer: newInvoiceBuyerId,
       //array of product id's
       product: newInvoiceProducts,
       buyer_name: newInvoiceBuyerName,
+      total: total,
     };
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
@@ -207,6 +212,27 @@ export default function Invoices(props) {
     }
   };
 
+  const handleProductDelete = (e, index, product) => {
+    e.preventDefault();
+    //an array with object with id, quantity, and price
+    const filteredArray = newInvoiceProducts.filter((temp, filterIndex) => {
+      return filterIndex !== index;
+    });
+    setNewInvoiceProducts(filteredArray);
+    let productIndex = 0;
+    products.forEach((temp, i) => {
+      if (temp.name === product.name) {
+        productIndex = i;
+      }
+    });
+    setProductsLeft(() => [...productsLeft, productIndex]);
+    setNewInvoiceEdit("");
+    setNewInvoiceCurrentProductEdit();
+    setnewInvoiceCurrentProductQuantityEdit("0.0");
+    setNewInvoiceCurrentProduct(productIndex);
+    setNewInvoiceCurrentProductPriceEdit("0.00");
+  };
+
   return (
     <div>
       <div className="dashboardInfoHeaderContainer">
@@ -261,8 +287,8 @@ export default function Invoices(props) {
                           ) : null}
                           <div className="invoiceConstants">
                             <fieldset>
-                              <legend>Invoice Number</legend>
-                              <div className="invoiceConstantValue">{invoiceNumber}</div>
+                              <legend>From</legend>
+                              <div className="invoiceConstantValue">{companyName}</div>
                             </fieldset>
                             <fieldset>
                               <legend>Date</legend>
@@ -294,10 +320,6 @@ export default function Invoices(props) {
                                   );
                                 })}
                               </select>
-                            </fieldset>
-                            <fieldset>
-                              <legend>From</legend>
-                              <div className="invoiceConstantValue">{companyName}</div>
                             </fieldset>
                           </div>
                           <fieldset className="invoiceProducts">
@@ -364,7 +386,12 @@ export default function Invoices(props) {
                                                   (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
                                               </div>
                                               <div>
-                                                <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                                <FaRegTrashAlt
+                                                  className="actionButton"
+                                                  onClick={(e) => {
+                                                    handleProductDelete(e, index, product);
+                                                  }}
+                                                ></FaRegTrashAlt>
                                               </div>
                                             </div>
                                           ) : (
@@ -403,7 +430,12 @@ export default function Invoices(props) {
                                               </div>
                                               <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
                                               <div>
-                                                <FaRegTrashAlt className="actionButton"></FaRegTrashAlt>
+                                                <FaRegTrashAlt
+                                                  className="actionButton"
+                                                  onClick={(e) => {
+                                                    handleProductDelete(e, index, product);
+                                                  }}
+                                                ></FaRegTrashAlt>
                                               </div>
                                             </div>
                                           )}
@@ -542,10 +574,12 @@ export default function Invoices(props) {
                 let invoiceDate = new Date(invoice.date_created);
                 return (
                   <tr key={uniqid()}>
-                    <td>{paddedInvoiceString}</td>
+                    <td>
+                      <button className="invoiceLink">{paddedInvoiceString}</button>
+                    </td>
                     <td>{invoiceDate.toLocaleDateString()}</td>
                     <td>{invoice.buyer_name}</td>
-                    <td>amount here</td>
+                    <td>${invoice.total.toFixed(2)}</td>
                     <td>
                       <div className="actionButtonContainer">
                         <FaRegEdit

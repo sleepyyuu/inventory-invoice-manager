@@ -13,8 +13,8 @@ export default function Products(props) {
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [newProductName, setNewProductName] = useState("");
   const [newProductId, setNewProductId] = useState("");
-  const [newProductPrice, setNewProductPrice] = useState(0);
-  const [newProductQuantity, setNewProductQuantity] = useState(0);
+  const [newProductPrice, setNewProductPrice] = useState("0.00");
+  const [newProductQuantity, setNewProductQuantity] = useState("0.0");
   const [customError, setCustomError] = useState();
   const route = "/products";
   const title = "Products";
@@ -43,7 +43,7 @@ export default function Products(props) {
     let response;
     let body = {
       name: newProductName,
-      price: newProductPrice,
+      price: Number(newProductPrice),
       quantity: newProductQuantity,
     };
     if (menuStateCreate) {
@@ -57,7 +57,8 @@ export default function Products(props) {
       setShowMenu(false);
       setCustomError(null);
       setNewProductName("");
-      setNewProductPrice(0);
+      setNewProductPrice("0.00");
+      setNewProductQuantity("0.0");
       setNewProductId("");
     } else {
       setCustomError(response);
@@ -68,8 +69,8 @@ export default function Products(props) {
     setCustomError(null);
     setNewProductId(product._id);
     setNewProductName(product.name);
-    setNewProductQuantity(product.quantity);
-    setNewProductPrice(product.price);
+    setNewProductQuantity(product.quantity.toFixed(1));
+    setNewProductPrice(product.price.toFixed(2));
     setShowMenu(true);
   };
 
@@ -77,9 +78,9 @@ export default function Products(props) {
     setCustomError(null);
     setmenuStateCreate(true);
     setNewProductName("");
-    setNewProductPrice(0);
+    setNewProductPrice("0.00");
     setNewProductId("");
-    setNewProductQuantity(0);
+    setNewProductQuantity("0.0");
     setShowMenu(true);
   };
 
@@ -168,11 +169,23 @@ export default function Products(props) {
                               <label htmlFor="quantity"></label>
                               <input
                                 required
-                                type="number"
+                                type="text"
                                 id="quantity"
                                 name="quantity"
                                 onChange={(e) => {
                                   setNewProductQuantity(e.target.value);
+                                }}
+                                onBlur={(e) => {
+                                  if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
+                                    setNewProductQuantity("0.0");
+                                  } else {
+                                    setNewProductQuantity(Number(newProductQuantity).toFixed(1));
+                                  }
+                                }}
+                                onKeyPress={(e) => {
+                                  if (!/[0-9.]/.test(e.key)) {
+                                    e.preventDefault();
+                                  }
                                 }}
                                 value={newProductQuantity}
                               ></input>
@@ -181,13 +194,23 @@ export default function Products(props) {
                               <legend>Price</legend>
                               <label htmlFor="price"></label>
                               <input
-                                type="number"
+                                type="text"
                                 id="price"
                                 name="price"
-                                min="0"
-                                step=".01"
                                 onChange={(e) => {
                                   setNewProductPrice(e.target.value);
+                                }}
+                                onBlur={(e) => {
+                                  if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
+                                    setNewProductPrice("0.00");
+                                  } else {
+                                    setNewProductPrice(Number(newProductPrice).toFixed(2));
+                                  }
+                                }}
+                                onKeyPress={(e) => {
+                                  if (!/[0-9.]/.test(e.key)) {
+                                    e.preventDefault();
+                                  }
                                 }}
                                 value={newProductPrice}
                               ></input>
@@ -233,8 +256,8 @@ export default function Products(props) {
                 return (
                   <tr key={uniqid()}>
                     <td>{product.name}</td>
-                    <td>{product.quantity}</td>
-                    <td>{"$" + product.price}</td>
+                    <td>{product.quantity.toFixed(1)}</td>
+                    <td>{"$" + product.price.toFixed(2)}</td>
                     <td>
                       <div className="actionButtonContainer">
                         <FaRegEdit

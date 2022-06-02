@@ -59,13 +59,11 @@ a:hover.navButton {
 
 .actionButton {
   color: rgb(42, 42, 42);
-  transition: transform 250ms;
   padding: 0 15px;
 }
 
 .actionButton:hover {
   color: rgb(81, 112, 204);
-  transform: translateY(-2px);
   cursor: pointer;
 }
 
