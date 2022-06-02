@@ -7,7 +7,7 @@ const BuyerSchema = new Schema({
   address: { type: String },
   city: { type: String },
   state: { type: String },
-  zip: { type: Number },
+  zip: { type: String },
   phone_number: { type: String },
 });
 

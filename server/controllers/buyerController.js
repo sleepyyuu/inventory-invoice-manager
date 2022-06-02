@@ -42,7 +42,7 @@ exports.buyer_create_post = [
       address: req.body.address ? req.body.address : "",
       city: req.body.city ? req.body.city : "",
       state: req.body.state ? req.body.state : "",
-      zip: req.body.zip ? req.body.zip : 00000,
+      zip: req.body.zip ? req.body.zip : "00000",
       phone_number: req.body.phone_number ? req.body.phone_number : "",
     });
     if (!errors.isEmpty()) {

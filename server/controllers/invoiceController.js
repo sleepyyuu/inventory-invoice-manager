@@ -57,6 +57,7 @@ exports.invoice_create_post = [
       product: req.body.product,
       details: req.body.details,
       total: req.body.total,
+      buyer_address: req.body.buyer_address,
     });
     if (!errors.isEmpty()) {
       return res.send({ invoice: req.body, errors: errors.array() });
@@ -111,6 +112,9 @@ exports.invoice_update_post = [
       }
       if (req.body.total) {
         foundInvoice.total = req.body.total;
+      }
+      if (req.body.buyer_address) {
+        foundInvoice.buyer_address = req.body.buyer_address;
       }
       foundInvoice.save(function (err) {
         if (err) {
