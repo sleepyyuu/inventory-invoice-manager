@@ -15,75 +15,10 @@ export default function InvoiceDetail(props) {
     zip: "49204",
     phoneNumber: "424-244-2424",
   };
-  const pageStyle = `#invoice {
-    display: flex;
-    flex-direction: column;
-    padding: 50px 65px;
-    font-size: 1.3rem;
-  }
-  
-  #invoiceTitle {
-    font-family: "Alegreya Sans SC", sans-serif;
-    font-size: 4rem;
-    padding: 0;
-  }
-  
-  .disclaimer {
-    font-weight: bold;
-    padding-bottom: 3px;
-    color: rgb(32, 40, 134);
-  }
-  
-  #invoiceHeader {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  #invoiceMiscDetail {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  #invoiceSmallDetails {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  #invoiceProducts {
-    border-top: 2px solid rgb(32, 40, 134);
-    border-bottom: 2px solid rgb(32, 40, 134);
-    padding: 10px 0;
-    margin: 30px 0 20px;
-    height: 400px;
-  }
-  
-  #printInvoiceHead {
-    border: none;
-  }
-  
-  #printInvoiceHeadtr > th {
-    color: rgb(32, 40, 134);
-  }
-  
-  #printInvoiceBodytr > td {
-    border: none;
-  }
-  
-  @page {
-    size: A4;
-    margin: 0;
-  }
-  @media print {
-    html,
-    body {
-      width: 210mm;
-      height: 297mm;
-    }
-  }`;
+  const pageStyle = ``;
   const { invoiceId } = useParams();
   const printPageRef = useRef();
-  const handlePrint = useReactToPrint({ content: () => printPageRef.current, pageStyle: pageStyle });
+  const handlePrint = useReactToPrint({ content: () => printPageRef.current });
 
   const [invoice, setInvoice] = useState({});
   const [loading, setLoading] = useState(true);
@@ -144,29 +79,50 @@ export default function InvoiceDetail(props) {
           <table>
             <thead id="printInvoiceHead">
               <tr id="printInvoiceHeadtr">
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
+                <th id="itemHeader">Item</th>
+                <th className="priceDescription">Quantity</th>
+                <th className="priceDescription">Unit Cost</th>
+                <th className="priceDescription">Total</th>
               </tr>
             </thead>
             <tbody>
               {invoice.product.map((prod) => {
                 return (
                   <tr key={uniqid()} id="printInvoiceBodytr">
-                    <td>{prod.name}</td>
-                    <td>{prod.quantity.toFixed(1)}</td>
-                    <td>${prod.price.toFixed(2)}</td>
-                    <td>${(prod.quantity * prod.price).toFixed(2)}</td>
+                    <td id="itemDescription">{prod.name}</td>
+                    <td className="priceDescription">{prod.quantity.toFixed(1)}</td>
+                    <td className="priceDescription">${prod.price.toFixed(2)}</td>
+                    <td className="priceDescription">${(prod.quantity * prod.price).toFixed(2)}</td>
                   </tr>
                 );
               })}
+              <tr className="pricingInfo" id="subtotal">
+                <td></td>
+                <td></td>
+                <td className="priceInfoDetail">Subtotal</td>
+                <td className="priceInfoDetail">{invoice.total}</td>
+              </tr>
+              <tr className="pricingInfo">
+                <td></td>
+                <td></td>
+                <td className="priceInfoDetail">Tax (5%)</td>
+                <td className="priceInfoDetail">{invoice.total}</td>
+              </tr>
+              <tr className="pricingInfo">
+                <td></td>
+                <td></td>
+                <td>Adjustments (-15%)</td>
+                <td>{invoice.total}</td>
+              </tr>
+              <tr className="pricingInfo">
+                <td></td>
+                <td></td>
+                <td className="totalInfo priceInfoDetail">Total Due</td>
+                <td className="totalInfo priceInfoDetail">{invoice.total}</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div id="invoicePriceAdjustments"></div>
-        <div id="invoicePriceTotal">total price</div>
-        <div id="invoiceNotes"></div>
       </div>
       <div id="invoiceButtons">
         <div id="printButtonContainer">
