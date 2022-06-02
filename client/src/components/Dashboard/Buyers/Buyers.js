@@ -7,7 +7,6 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
 export default function Buyers(props) {
-  const { setSelectedCategory } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [buyers, setBuyers] = useState([]);
@@ -26,7 +25,6 @@ export default function Buyers(props) {
     setLoading(false);
   };
   useEffect(() => {
-    setSelectedCategory("Buyers");
     getDB();
   }, []);
 

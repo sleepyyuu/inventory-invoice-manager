@@ -6,12 +6,13 @@ import { FaRegEdit, FaRegTrashAlt, FaPlusSquare } from "react-icons/fa";
 import Popup from "reactjs-popup";
 import QuantityInput from "./QuantityInput";
 import PriceInput from "./PriceInput";
+import { useNavigate } from "react-router-dom";
 
 export default function Invoices(props) {
-  const { setSelectedCategory } = props;
   const quantityRef = useRef(null);
   const priceRef = useRef(null);
   const editRowRef = useRef(null);
+  const navigate = useNavigate();
   const [inputFocus, setInputFocus] = useState("");
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
@@ -58,7 +59,6 @@ export default function Invoices(props) {
     setLoading(false);
   };
   useEffect(() => {
-    setSelectedCategory("Invoices");
     getInitialDB();
   }, []);
 
@@ -575,7 +575,14 @@ export default function Invoices(props) {
                 return (
                   <tr key={uniqid()}>
                     <td>
-                      <button className="invoiceLink">{paddedInvoiceString}</button>
+                      <button
+                        className="invoiceLink"
+                        onClick={() => {
+                          navigate(invoice._id);
+                        }}
+                      >
+                        {paddedInvoiceString}
+                      </button>
                     </td>
                     <td>{invoiceDate.toLocaleDateString()}</td>
                     <td>{invoice.buyer_name}</td>

@@ -5,7 +5,6 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
 export default function Products(props) {
-  const { setSelectedCategory } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -30,7 +29,6 @@ export default function Products(props) {
     setLoading(false);
   };
   useEffect(() => {
-    setSelectedCategory("Products");
     getInitialDB();
   }, []);
 

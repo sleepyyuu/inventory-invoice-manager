@@ -10,7 +10,6 @@ import { FaFileInvoiceDollar, FaHome, FaStore, FaProductHunt, FaSignOutAlt } fro
 export default function Dashboard(props) {
   const { auth } = useAuth();
   const logout = useLogout();
-  const { selectedCategory, setSelectedCategory } = props;
 
   return auth.accessToken ? (
     <div className="dashboardPage">
@@ -23,13 +22,7 @@ export default function Dashboard(props) {
             className={({ isActive }) => (isActive ? "active navButton" : "inactive navButton")}
             id="navBuyersButton"
           >
-            <FaHome
-              className="sidebarIcon"
-              size={30}
-              onClick={() => {
-                setSelectedCategory("Overview");
-              }}
-            ></FaHome>
+            <FaHome className="sidebarIcon" size={30}></FaHome>
           </NavLink>
           <NavLink
             to="/dashboard/products"
