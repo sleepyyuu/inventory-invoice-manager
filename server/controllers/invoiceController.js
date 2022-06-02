@@ -110,7 +110,7 @@ exports.invoice_update_post = [
         foundInvoice.details = req.body.details;
       }
       if (req.body.total) {
-        foundInvoice.total;
+        foundInvoice.total = req.body.total;
       }
       foundInvoice.save(function (err) {
         if (err) {

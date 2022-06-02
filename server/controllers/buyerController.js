@@ -40,6 +40,9 @@ exports.buyer_create_post = [
     let buyer = new Buyer({
       company_name: req.body.company_name,
       address: req.body.address ? req.body.address : "",
+      city: req.body.city ? req.body.city : "",
+      state: req.body.state ? req.body.state : "",
+      zip: req.body.zip ? req.body.zip : 00000,
       phone_number: req.body.phone_number ? req.body.phone_number : "",
     });
     if (!errors.isEmpty()) {
@@ -57,28 +60,6 @@ exports.buyer_create_post = [
   },
 ];
 
-//display product delete form, GET (do you need this?)
-
-//this handles deleting all associated buyer prices, make super confirmation page for this
-// exports.buyer_delete_del = function (req, res, next) {
-//     async.parallel(
-//       {
-//         buyer: function (callback) {
-//           Buyer.findByIdAndRemove(req.params.buyerId, callback);
-//         },
-//         productPrice: function (callback) {
-//           ProductPrice.deleteMany({ buyer: req.params.buyerId }).exec(callback);
-//         },
-//       },
-//       function (err, results) {
-//         if (err) {
-//           return next(err);
-//         } else {
-//           res.sendStatus(204);
-//         }
-//       }
-//     );
-//   };
 //handle product delete, DEL
 exports.buyer_delete_del = async function (req, res, next) {
   const buyer = await Buyer.findOne({ _id: req.params.buyerId }).exec();
@@ -106,9 +87,24 @@ exports.buyer_update_post = [
         }
         return next(err);
       }
-      foundBuyer.company_name = req.body.company_name ? req.body.company_name : foundBuyer.company_name;
-      foundBuyer.address = req.body.address ? req.body.address : foundBuyer.address;
-      foundBuyer.phone_number = req.body.phone_number ? req.body.phone_number : foundBuyer.phone_number;
+      if (req.body.company_name) {
+        foundBuyer.company_name = req.body.company_name;
+      }
+      if (req.body.address) {
+        foundBuyer.address = req.body.address;
+      }
+      if (req.body.city) {
+        foundBuyer.city = req.body.city;
+      }
+      if (req.body.state) {
+        foundBuyer.state = req.body.state;
+      }
+      if (req.body.zip) {
+        foundBuyer.zip = req.body.zip;
+      }
+      if (req.body.phone_number) {
+        foundBuyer.phone_number = req.body.phone_number;
+      }
       foundBuyer.save(function (err) {
         if (err) {
           next(err);
