@@ -70,6 +70,7 @@ fieldset {
   height: 2.5rem;
   color: rgb(109, 109, 109);
   margin-bottom: 20px;
+  padding-bottom: 3px;
 }
 
 fieldset:focus-within {
@@ -91,7 +92,7 @@ fieldset > input {
 fieldset > select {
   margin: 0;
   width: 95%;
-  height: 80%;
+  height: 90%;
   border: none;
   text-align: center;
   font-size: 1.1rem;

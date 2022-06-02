@@ -56,8 +56,10 @@ export default function InvoiceDetail(props) {
             </div>
             <div id="customerName">{invoice.buyer_name}</div>
             <div id="customerAddress">
-              <div className="address">{companyInfo.address}</div>
-              <div className="city">{companyInfo.city + ", " + companyInfo.state + " " + companyInfo.zip}</div>
+              <div className="address">{invoice.buyer_address.address}</div>
+              <div className="city">
+                {invoice.buyer_address.city + ", " + invoice.buyer_address.state + " " + invoice.buyer_address.zip}
+              </div>
             </div>
           </div>
           <div id="invoiceSmallDetails">

@@ -16,6 +16,9 @@ export default function Buyers(props) {
   const [newBuyerId, setNewBuyerId] = useState("");
   const [newBuyerPhoneNumber, setNewBuyerPhoneNumber] = useState("");
   const [newBuyerAddress, setNewBuyerAddress] = useState("");
+  const [newBuyerCity, setNewBuyerCity] = useState("");
+  const [newBuyerState, setNewBuyerState] = useState("");
+  const [newBuyerZip, setNewBuyerZip] = useState("");
   const [error, setError] = useState();
   const title = "Buyers";
   const route = "/buyers";
@@ -38,6 +41,9 @@ export default function Buyers(props) {
     const body = {
       company_name: newBuyerName,
       address: newBuyerAddress,
+      city: newBuyerCity,
+      state: newBuyerState,
+      zip: newBuyerZip,
       phone_number: newBuyerPhoneNumber,
     };
     if (menuStateCreate) {
@@ -65,6 +71,9 @@ export default function Buyers(props) {
     setNewBuyerName(buyer.company_name);
     setNewBuyerPhoneNumber(buyer.phone_number);
     setNewBuyerAddress(buyer.address);
+    setNewBuyerCity(buyer.city);
+    setNewBuyerState(buyer.state);
+    setNewBuyerZip(buyer.zip);
     setShowMenu(true);
   };
 
@@ -183,6 +192,105 @@ export default function Buyers(props) {
                                 setNewBuyerAddress(e.target.value);
                               }}
                               value={newBuyerAddress}
+                            ></input>
+                          </fieldset>
+                          <fieldset>
+                            <legend>City</legend>
+                            <label htmlFor="city"></label>
+                            <input
+                              required
+                              type="text"
+                              id="city"
+                              name="city"
+                              onChange={(e) => {
+                                setNewBuyerCity(e.target.value);
+                              }}
+                              value={newBuyerCity}
+                            ></input>
+                          </fieldset>
+                          <fieldset>
+                            <legend>State</legend>
+                            <label htmlFor="address"></label>
+                            <select
+                              id="address"
+                              name="address"
+                              onChange={(e) => {
+                                setNewBuyerState(e.target.value);
+                              }}
+                              value={newBuyerState}
+                            >
+                              <option value="AL">AL</option>
+                              <option value="AK">AK</option>
+                              <option value="AR">AR</option>
+                              <option value="AZ">AZ</option>
+                              <option value="CA">CA</option>
+                              <option value="CO">CO</option>
+                              <option value="CT">CT</option>
+                              <option value="DC">DC</option>
+                              <option value="DE">DE</option>
+                              <option value="FL">FL</option>
+                              <option value="GA">GA</option>
+                              <option value="HI">HI</option>
+                              <option value="IA">IA</option>
+                              <option value="ID">ID</option>
+                              <option value="IL">IL</option>
+                              <option value="IN">IN</option>
+                              <option value="KS">KS</option>
+                              <option value="KY">KY</option>
+                              <option value="LA">LA</option>
+                              <option value="MA">MA</option>
+                              <option value="MD">MD</option>
+                              <option value="ME">ME</option>
+                              <option value="MI">MI</option>
+                              <option value="MN">MN</option>
+                              <option value="MO">MO</option>
+                              <option value="MS">MS</option>
+                              <option value="MT">MT</option>
+                              <option value="NC">NC</option>
+                              <option value="NE">NE</option>
+                              <option value="NH">NH</option>
+                              <option value="NJ">NJ</option>
+                              <option value="NM">NM</option>
+                              <option value="NV">NV</option>
+                              <option value="NY">NY</option>
+                              <option value="ND">ND</option>
+                              <option value="OH">OH</option>
+                              <option value="OK">OK</option>
+                              <option value="OR">OR</option>
+                              <option value="PA">PA</option>
+                              <option value="RI">RI</option>
+                              <option value="SC">SC</option>
+                              <option value="SD">SD</option>
+                              <option value="TN">TN</option>
+                              <option value="TX">TX</option>
+                              <option value="UT">UT</option>
+                              <option value="VT">VT</option>
+                              <option value="VA">VA</option>
+                              <option value="WA">WA</option>
+                              <option value="WI">WI</option>
+                              <option value="WV">WV</option>
+                              <option value="WY">WY</option>
+                            </select>
+                          </fieldset>
+                          <fieldset>
+                            <legend>Zip Code</legend>
+                            <label htmlFor="zip"></label>
+                            <input
+                              required
+                              type="text"
+                              id="zip"
+                              name="zip"
+                              placeholder="00000"
+                              maxLength="5"
+                              onChange={(e) => {
+                                setNewBuyerZip(e.target.value);
+                              }}
+                              value={newBuyerZip}
+                              onKeyPress={(e) => {
+                                if (!/[0-9]/.test(e.key)) {
+                                  e.preventDefault();
+                                }
+                              }}
                             ></input>
                           </fieldset>
                         </div>
