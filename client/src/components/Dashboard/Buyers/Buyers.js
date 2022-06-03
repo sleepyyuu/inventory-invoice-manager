@@ -2,11 +2,11 @@ import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointActio
 import { useEffect, useState } from "react";
 import uniqid from "uniqid";
 import "./Buyers.css";
-import Header from "../Header/Header";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
 export default function Buyers(props) {
+  const { finishedLoading } = props;
   const verify = useVerifyForEndpointAction();
   const [loading, setLoading] = useState(true);
   const [buyers, setBuyers] = useState([]);
@@ -25,6 +25,7 @@ export default function Buyers(props) {
   const getDB = async () => {
     const responseBuyers = await verify("readAll", route);
     setBuyers(responseBuyers);
+    finishedLoading();
     setLoading(false);
   };
   useEffect(() => {
@@ -83,6 +84,9 @@ export default function Buyers(props) {
     setNewBuyerPhoneNumber("");
     setNewBuyerAddress("");
     setNewBuyerId("");
+    setNewBuyerCity("");
+    setNewBuyerState("");
+    setNewBuyerZip("");
     setmenuStateCreate(true);
     setShowMenu(true);
   };
@@ -316,7 +320,7 @@ export default function Buyers(props) {
         </div>
       </div>
       {loading ? (
-        <div>loading..</div>
+        <div>loading</div>
       ) : (
         <div>
           <table className="buyerTable">

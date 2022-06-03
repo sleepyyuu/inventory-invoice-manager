@@ -6,6 +6,7 @@ import uniqid from "uniqid";
 import "./InvoiceDetail.css";
 
 export default function InvoiceDetail(props) {
+  const { finishedLoading } = props;
   const verify = useVerifyForEndpointAction();
   const companyInfo = {
     name: "test company name",
@@ -28,6 +29,7 @@ export default function InvoiceDetail(props) {
     console.log(responseInvoice);
     setInvoice(responseInvoice);
     setLoading(false);
+    finishedLoading();
   };
 
   useEffect(() => {

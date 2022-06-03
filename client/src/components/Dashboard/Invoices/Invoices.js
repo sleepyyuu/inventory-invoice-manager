@@ -9,6 +9,7 @@ import PriceInput from "./PriceInput";
 import { useNavigate } from "react-router-dom";
 
 export default function Invoices(props) {
+  const { finishedLoading } = props;
   const quantityRef = useRef(null);
   const priceRef = useRef(null);
   const editRowRef = useRef(null);
@@ -56,6 +57,7 @@ export default function Invoices(props) {
     const responseInvoices = await verify("readAll", route);
     setInvoices(responseInvoices);
     setLoading(false);
+    finishedLoading();
   };
   useEffect(() => {
     getInitialDB();
