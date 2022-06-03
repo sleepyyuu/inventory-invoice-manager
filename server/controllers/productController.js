@@ -87,7 +87,7 @@ exports.product_delete_del = async function (req, res, next) {
 //handle product update, POST
 exports.product_update_post = [
   (req, res, next) => {
-    Product.findOne({ _id: req.body.productId }, function (err, foundProduct) {
+    Product.findOne({ _id: req.params.productId }, function (err, foundProduct) {
       if (err) {
         if (foundProduct == null) {
           return res.status(404).send("Product not found");
@@ -95,8 +95,8 @@ exports.product_update_post = [
         return next(err);
       }
       foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
-      foundProduct.price = req.body.price ? req.body.price : foundProduct.price;
-      foundProduct.quantity = req.body.quantity ? req.body.quantity : foundProduct.quantity;
+      foundProduct.price = req.body.price == 0 || req.body.price ? req.body.price : foundProduct.price;
+      foundProduct.quantity = req.body.quantity == 0 || req.body.quantity ? req.body.quantity : foundProduct.quantity;
       foundProduct.save(function (err) {
         if (err) {
           next(err);
