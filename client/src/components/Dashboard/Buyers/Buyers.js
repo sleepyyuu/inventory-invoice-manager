@@ -127,6 +127,7 @@ export default function Buyers(props) {
               closeOnDocumentClick
               onClose={() => {
                 setShowMenu(false);
+                setError(null);
               }}
             >
               {(close) => {

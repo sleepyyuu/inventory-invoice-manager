@@ -119,6 +119,7 @@ export default function Products(props) {
               open={showMenu}
               closeOnDocumentClick
               onClose={() => {
+                setCustomError(null);
                 setShowMenu(false);
               }}
             >

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import uniqid from "uniqid";
+import { FaPrint } from "react-icons/fa";
 import "./InvoiceDetail.css";
 
 export default function InvoiceDetail(props) {
@@ -26,7 +27,6 @@ export default function InvoiceDetail(props) {
 
   const getInitialDB = async () => {
     const responseInvoice = await verify("readAll", "/invoices/" + invoiceId);
-    console.log(responseInvoice);
     setInvoice(responseInvoice);
     setLoading(false);
     finishedLoading();
@@ -38,6 +38,11 @@ export default function InvoiceDetail(props) {
 
   return loading ? null : (
     <div id="page">
+      <div id="invoiceButtons">
+        <div id="printButtonContainer">
+          <FaPrint onClick={handlePrint} id="printButton" size="40"></FaPrint>
+        </div>
+      </div>
       <div id="invoice" ref={printPageRef}>
         <div id="invoiceHeader">
           <h3 id="invoiceTitle">Invoice</h3>
@@ -124,13 +129,6 @@ export default function InvoiceDetail(props) {
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-      <div id="invoiceButtons">
-        <div id="printButtonContainer">
-          <button id="printButton" onClick={handlePrint}>
-            print/save
-          </button>
         </div>
       </div>
     </div>

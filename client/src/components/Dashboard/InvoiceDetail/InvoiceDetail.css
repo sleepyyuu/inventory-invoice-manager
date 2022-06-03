@@ -87,6 +87,22 @@ td.priceInfoDetail {
   border-top: 2px solid rgb(44, 53, 155);
 }
 
+#invoiceButtons {
+  position: sticky;
+  top: 5px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+}
+
+#printButton {
+  color: rgb(75, 89, 190);
+}
+
+#printButton:hover {
+  color: rgb(31, 42, 122);
+}
+
 @page {
   size: A4;
   margin: 0;
