@@ -546,9 +546,7 @@ export default function Invoices(props) {
           <input type="text" name="searchBar" id="searchBar" placeholder={`Search ${title}`}></input>
         </div>
       </div>
-      {loading ? (
-        <div>loading..</div>
-      ) : (
+      {loading ? null : (
         <div>
           <table className="invoiceTable">
             <thead>

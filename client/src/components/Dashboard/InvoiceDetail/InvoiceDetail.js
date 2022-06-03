@@ -36,9 +36,7 @@ export default function InvoiceDetail(props) {
     getInitialDB();
   }, []);
 
-  return loading ? (
-    <div>loading...</div>
-  ) : (
+  return loading ? null : (
     <div id="page">
       <div id="invoice" ref={printPageRef}>
         <div id="invoiceHeader">

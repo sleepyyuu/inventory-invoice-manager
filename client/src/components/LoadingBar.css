@@ -5,4 +5,5 @@
   background-color: rgb(221, 155, 33);
   height: 3px;
   z-index: 999;
+  transition: all 600ms ease 0s;
 }
