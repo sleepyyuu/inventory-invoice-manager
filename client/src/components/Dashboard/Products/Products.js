@@ -49,7 +49,6 @@ export default function Products(props) {
     if (menuStateCreate) {
       response = await verify("create", route, body);
     } else {
-      body.productId = newProductId;
       response = await verify("update", route + "/" + newProductId, body);
     }
     if (response.status === 200) {

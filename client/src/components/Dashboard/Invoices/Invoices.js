@@ -26,6 +26,8 @@ export default function Invoices(props) {
   const [newInvoiceId, setNewInvoiceId] = useState("");
   const [newInvoiceBuyerId, setNewInvoiceBuyerId] = useState("");
   const [newInvoiceBuyerName, setNewInvoiceBuyerName] = useState("");
+  const [editInvoiceQuantityMax, setEditInvoiceQuantityMax] = useState();
+  const [editInvoice, setEditInvoice] = useState();
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
   const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
@@ -120,8 +122,32 @@ export default function Invoices(props) {
     }
     if (menuStateCreate) {
       response = await verify("create", route, body);
+      for (let product of newInvoiceProducts) {
+        let currentProduct = products.find((prod) => prod.name === product.name);
+        let productBody = {
+          quantity: currentProduct.quantity - product.quantity,
+        };
+        await verify("update", "/products/" + currentProduct._id, productBody);
+      }
     } else {
       response = await verify("update", route + "/" + newInvoiceId, body);
+      for (let product of newInvoiceProducts) {
+        let currentProduct = products.find((prod) => prod.name === product.name);
+        if (!currentProduct) {
+          continue;
+        }
+        let oldInvoiceProduct = editInvoice["product"].find((prod) => prod.name === product.name);
+        let quantityDifference;
+        if (!oldInvoiceProduct) {
+          quantityDifference = -product.quantity;
+        } else {
+          quantityDifference = oldInvoiceProduct.quantity - product.quantity;
+        }
+        let productBody = {
+          quantity: currentProduct.quantity + quantityDifference,
+        };
+        await verify("update", "/products/" + currentProduct._id, productBody);
+      }
     }
     if (response.status === 200) {
       getDB();
@@ -145,11 +171,26 @@ export default function Invoices(props) {
     setnewInvoiceCurrentProductQuantityEdit("0.0");
     setNewInvoiceCurrentProductPriceEdit("0.00");
     setCustomError(null);
+    setEditInvoice(invoice);
     setNewInvoiceId(invoice._id);
     setNewInvoiceBuyerId(invoice.buyer);
     setNewInvoiceBuyerName(invoice.buyer_name);
     setNewInvoiceDetails(invoice.details);
     setNewInvoiceProducts(invoice.product);
+    let productQuantityMax = {};
+    for (let prod of products) {
+      let invoiceQuantity = 0;
+      let productMatch = invoice.product.find((temp) => {
+        return temp.name === prod.name;
+      });
+      if (productMatch) {
+        invoiceQuantity = productMatch.quantity;
+      } else {
+      }
+      let quantity = prod.quantity + invoiceQuantity;
+      productQuantityMax[prod.name] = quantity;
+    }
+    setEditInvoiceQuantityMax(productQuantityMax);
     setShowMenu(true);
     let indexArray = [];
     for (let i = 0; i < products.length; i++) {
@@ -188,6 +229,11 @@ export default function Invoices(props) {
     setNewInvoiceBuyerName(buyers[0].company_name);
     setShowMenu(true);
     setNewInvoiceCurrentProduct(0);
+    let productQuantityMax = {};
+    for (let prod of products) {
+      productQuantityMax[prod.name] = prod.quantity;
+    }
+    setEditInvoiceQuantityMax(productQuantityMax);
     setNewInvoiceCurrentProductPrice(products[0].price.toFixed(2));
     let indexArray = [];
     for (let i = 0; i < products.length; i++) {
@@ -362,7 +408,7 @@ export default function Invoices(props) {
                                                   identifier="invoiceQuantityEdit"
                                                   newInvoiceQuantity={newInvoiceCurrentProductQuantityEdit}
                                                   setNewInvoiceQuantity={setnewInvoiceCurrentProductQuantityEdit}
-                                                  quantityStock={products[newInvoiceCurrentProductEdit].quantity}
+                                                  quantityStock={editInvoiceQuantityMax[product["name"]]}
                                                 ></QuantityInput>
                                               </div>
                                               <div className="invoicePriceEditContainer">
@@ -473,7 +519,7 @@ export default function Invoices(props) {
                                   identifier="invoiceQuantity"
                                   newInvoiceQuantity={newInvoiceCurrentProductQuantity}
                                   setNewInvoiceQuantity={setnewInvoiceCurrentProductQuantity}
-                                  quantityStock={products[newInvoiceCurrentProduct].quantity}
+                                  quantityStock={editInvoiceQuantityMax[products[newInvoiceCurrentProduct]["name"]]}
                                 ></QuantityInput>
                               </div>
                               <div>
