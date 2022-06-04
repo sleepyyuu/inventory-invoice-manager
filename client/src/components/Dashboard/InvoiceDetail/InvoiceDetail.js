@@ -89,6 +89,7 @@ export default function InvoiceDetail(props) {
                 <th id="itemHeader">Item</th>
                 <th className="priceDescription">Quantity</th>
                 <th className="priceDescription">Unit Cost</th>
+                <th className="priceDescription">Unit Discount</th>
                 <th className="priceDescription">Total</th>
               </tr>
             </thead>
@@ -99,33 +100,38 @@ export default function InvoiceDetail(props) {
                     <td id="itemDescription">{prod.name}</td>
                     <td className="priceDescription">{prod.quantity.toFixed(1)}</td>
                     <td className="priceDescription">${prod.price.toFixed(2)}</td>
-                    <td className="priceDescription">${(prod.quantity * prod.price).toFixed(2)}</td>
+                    <td className="priceDescription">-${prod.discountPerUnit.toFixed(2)}</td>
+                    <td className="priceDescription">${(prod.quantity * prod.price - prod.quantity * prod.discountPerUnit).toFixed(2)}</td>
                   </tr>
                 );
               })}
               <tr className="pricingInfo" id="subtotal">
                 <td></td>
                 <td></td>
+                <td></td>
                 <td className="priceInfoDetail">Subtotal</td>
-                <td className="priceInfoDetail">{invoice.total}</td>
+                <td className="priceInfoDetail">${invoice.total.toFixed(2)}</td>
               </tr>
               <tr className="pricingInfo">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td className="priceInfoDetail">Tax (5%)</td>
-                <td className="priceInfoDetail">{invoice.total}</td>
+                <td className="priceInfoDetail">${invoice.total}</td>
               </tr>
               <tr className="pricingInfo">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td>Adjustments (-15%)</td>
-                <td>{invoice.total}</td>
+                <td>${invoice.total}</td>
               </tr>
               <tr className="pricingInfo">
                 <td></td>
                 <td></td>
+                <td></td>
                 <td className="totalInfo priceInfoDetail">Total Due</td>
-                <td className="totalInfo priceInfoDetail">{invoice.total}</td>
+                <td className="totalInfo priceInfoDetail">${invoice.total}</td>
               </tr>
             </tbody>
           </table>

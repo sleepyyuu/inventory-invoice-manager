@@ -60,6 +60,10 @@
   color: black;
 }
 
+#invoiceTaxRate {
+  width: 3rem;
+}
+
 fieldset {
   padding: 0;
   margin: 0;
@@ -87,6 +91,7 @@ fieldset > input {
   width: 95%;
   height: 80%;
   border: none;
+  text-align: center;
 }
 
 fieldset > select {

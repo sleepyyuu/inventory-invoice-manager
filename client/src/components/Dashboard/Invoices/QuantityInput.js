@@ -5,7 +5,6 @@ export default function QuantityInput(props) {
       type="text"
       id={identifier}
       name={identifier}
-      pattern="[0-9.]"
       ref={quantityRef ? quantityRef : null}
       value={newInvoiceQuantity}
       onChange={(e) => {

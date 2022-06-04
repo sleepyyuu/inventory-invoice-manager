@@ -15,6 +15,7 @@ export default function Invoices(props) {
   const priceRef = useRef(null);
   const discountRef = useRef(null);
   const editRowRef = useRef(null);
+  const defaultTaxRate = "7.25";
   const navigate = useNavigate();
   const [inputFocus, setInputFocus] = useState("");
   const verify = useVerifyForEndpointAction();
@@ -24,6 +25,7 @@ export default function Invoices(props) {
   const [products, setProducts] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
+  const [taxRate, setTaxRate] = useState(defaultTaxRate);
   const [productsLeft, setProductsLeft] = useState([]);
   const [newInvoiceId, setNewInvoiceId] = useState("");
   const [newInvoiceBuyerId, setNewInvoiceBuyerId] = useState("");
@@ -74,6 +76,8 @@ export default function Invoices(props) {
       quantityRef.current.focus();
     } else if (inputFocus === "price") {
       priceRef.current.focus();
+    } else if (inputFocus === "discount") {
+      discountRef.current.focus();
     }
     setInputFocus("");
   }, [inputFocus]);
@@ -108,8 +112,9 @@ export default function Invoices(props) {
     let response;
     let total = 0;
     for (let product of newInvoiceProducts) {
-      total += product.price * product.quantity;
+      total += product.price * product.quantity - product.quantity * product.discountPerUnit;
     }
+    total = Math.round(total * 100) / 100;
     let matchBuyer = buyers.find((element) => {
       return element.company_name === newInvoiceBuyerName;
     });
@@ -168,6 +173,7 @@ export default function Invoices(props) {
   };
 
   const handleEdit = async (invoice) => {
+    setTaxRate(defaultTaxRate);
     setnewInvoiceCurrentProductQuantity("0.0");
     setNewInvoiceCurrentProductPrice("0.00");
     setNewInvoiceEdit("");
@@ -220,6 +226,7 @@ export default function Invoices(props) {
   };
 
   const handleAdd = () => {
+    setTaxRate(defaultTaxRate);
     setnewInvoiceCurrentProductQuantity("0.0");
     setNewInvoiceCurrentProductPrice("0.00");
     setNewInvoiceEdit("");
@@ -369,6 +376,32 @@ export default function Invoices(props) {
                                 })}
                               </select>
                             </fieldset>
+                            <fieldset>
+                              <legend>Tax Rate</legend>
+                              <label htmlFor="invoiceTaxRate"></label>
+                              <input
+                                type="text"
+                                id="invoiceTaxRate"
+                                name="invoiceTaxRate"
+                                value={taxRate}
+                                onChange={(e) => {
+                                  setTaxRate(e.target.value);
+                                }}
+                                onBlur={(e) => {
+                                  if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
+                                    setTaxRate(defaultTaxRate);
+                                  } else {
+                                    setTaxRate(Number(taxRate).toFixed(2));
+                                  }
+                                }}
+                                onKeyPress={(e) => {
+                                  if (!/[0-9.]/.test(e.key)) {
+                                    e.preventDefault();
+                                  }
+                                }}
+                              ></input>
+                              <div>%</div>
+                            </fieldset>
                           </div>
                           <fieldset className="invoiceProducts">
                             <legend>Items</legend>
@@ -413,7 +446,7 @@ export default function Invoices(props) {
                                                 setNewInvoiceProducts(newInvoiceProductCopy);
                                               }}
                                             >
-                                              <div>{product.name}</div>
+                                              <div id="productName">{product.name}</div>
                                               <div className="invoiceQuantityEditContainer">
                                                 <label htmlFor="invoiceQuantityEdit"></label>
                                                 <QuantityInput
@@ -479,7 +512,7 @@ export default function Invoices(props) {
                                                 );
                                               }}
                                             >
-                                              <div>{product.name}</div>
+                                              <div id="productName">{product.name}</div>
                                               <div
                                                 onClick={() => {
                                                   setInputFocus("quantity");
@@ -496,7 +529,15 @@ export default function Invoices(props) {
                                               >
                                                 {product.price.toFixed(2)}
                                               </div>
-                                              <div className="discountDisplay"> {product.discountPerUnit.toFixed(2)}</div>
+                                              <div
+                                                onClick={() => {
+                                                  setInputFocus("discount");
+                                                }}
+                                                className="discountDisplay"
+                                              >
+                                                {" "}
+                                                {product.discountPerUnit.toFixed(2)}
+                                              </div>
                                               <div>
                                                 {"$" +
                                                   (product.quantity * product.price - product.quantity * product.discountPerUnit).toFixed(
@@ -525,7 +566,7 @@ export default function Invoices(props) {
                             <div>No more available products to add</div>
                           ) : (
                             <div className="invoiceProductTableAddRow">
-                              <div>
+                              <div id="invoiceProductContainer">
                                 <label htmlFor="invoiceProduct"></label>
                                 <select
                                   id="invoiceProduct"
@@ -548,7 +589,7 @@ export default function Invoices(props) {
                                   })}
                                 </select>
                               </div>
-                              <div>
+                              <div className="invoiceQuantityEditContainer">
                                 <label htmlFor="invoiceQuantity"></label>
                                 <QuantityInput
                                   identifier="invoiceQuantity"
@@ -557,7 +598,7 @@ export default function Invoices(props) {
                                   quantityStock={editInvoiceQuantityMax[products[newInvoiceCurrentProduct]["name"]]}
                                 ></QuantityInput>
                               </div>
-                              <div>
+                              <div className="invoicePriceEditContainer">
                                 <label htmlFor="invoicePrice"></label>
                                 <PriceInput
                                   identifier="invoicePrice"
@@ -565,7 +606,7 @@ export default function Invoices(props) {
                                   setNewInvoicePrice={setNewInvoiceCurrentProductPrice}
                                 ></PriceInput>
                               </div>
-                              <div>
+                              <div className="invoiceDiscountEditContainer">
                                 <label htmlFor="invoiceDiscount"></label>
                                 <DiscountInput
                                   identifier="invoiceDiscount"
