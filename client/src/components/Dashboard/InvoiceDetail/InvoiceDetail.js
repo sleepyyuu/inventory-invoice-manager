@@ -106,7 +106,16 @@ export default function InvoiceDetail(props) {
                 );
               })}
               <tr className="pricingInfo" id="subtotal">
-                <td></td>
+                <td>
+                  {invoice.details === "" ? null : (
+                    <div id="notesContainer">
+                      <div id="notes">
+                        <b>Notes: &nbsp;</b>
+                        {invoice.details}
+                      </div>
+                    </div>
+                  )}
+                </td>
                 <td></td>
                 <td></td>
                 <td className="priceInfoDetail">Subtotal</td>

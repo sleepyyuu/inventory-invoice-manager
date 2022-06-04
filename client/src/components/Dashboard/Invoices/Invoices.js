@@ -26,6 +26,7 @@ export default function Invoices(props) {
   const [products, setProducts] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
+  const [details, setDetails] = useState("");
   const [taxRate, setTaxRate] = useState(defaultTaxRate);
   const [otherDiscount, setOtherDiscount] = useState("0.00");
   const [productsLeft, setProductsLeft] = useState([]);
@@ -35,7 +36,6 @@ export default function Invoices(props) {
   const [editInvoiceQuantityMax, setEditInvoiceQuantityMax] = useState();
   const [editInvoice, setEditInvoice] = useState();
   const [newInvoiceProducts, setNewInvoiceProducts] = useState([]);
-  const [newInvoiceDetails, setNewInvoiceDetails] = useState("");
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
   const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState("0.0");
   const [newInvoiceCurrentProductPrice, setNewInvoiceCurrentProductPrice] = useState("0.00");
@@ -128,11 +128,9 @@ export default function Invoices(props) {
       buyer_address: { address: matchBuyer.address, city: matchBuyer.city, state: matchBuyer.state, zip: matchBuyer.zip },
       total: total,
       tax_rate: Number(taxRate),
+      details: details,
       other_discount: Number(otherDiscount),
     };
-    if (newInvoiceDetails !== "") {
-      body.details = newInvoiceDetails;
-    }
     if (menuStateCreate) {
       response = await verify("create", route, body);
       for (let product of newInvoiceProducts) {
@@ -168,7 +166,6 @@ export default function Invoices(props) {
       setCustomError(null);
       setNewInvoiceBuyerId(buyers[0]._id);
       setNewInvoiceProducts([]);
-      setNewInvoiceDetails("");
       setNewInvoiceId("");
       setNewInvoiceBuyerName(buyers[0].company_name);
     } else {
@@ -187,12 +184,12 @@ export default function Invoices(props) {
     setNewInvoiceCurrentProductDiscount("0.00");
     setNewInvoiceCurrentProductDiscountEdit("0.00");
     setOtherDiscount(invoice.other_discount.toFixed(2));
+    setDetails(invoice.details);
     setCustomError(null);
     setEditInvoice(invoice);
     setNewInvoiceId(invoice._id);
     setNewInvoiceBuyerId(invoice.buyer);
     setNewInvoiceBuyerName(invoice.buyer_name);
-    setNewInvoiceDetails(invoice.details);
     setNewInvoiceProducts(invoice.product);
     let productQuantityMax = {};
     for (let prod of products) {
@@ -233,6 +230,7 @@ export default function Invoices(props) {
   const handleAdd = () => {
     setTaxRate(defaultTaxRate);
     setOtherDiscount("0.00");
+    setDetails("");
     setnewInvoiceCurrentProductQuantity("0.0");
     setNewInvoiceCurrentProductPrice("0.00");
     setNewInvoiceEdit("");
@@ -245,7 +243,6 @@ export default function Invoices(props) {
     setmenuStateCreate(true);
     setNewInvoiceBuyerId(buyers[0]._id);
     setNewInvoiceProducts([]);
-    setNewInvoiceDetails("");
     setNewInvoiceId("");
     setNewInvoiceBuyerName(buyers[0].company_name);
     setShowMenu(true);
@@ -352,17 +349,17 @@ export default function Invoices(props) {
                             </div>
                           ) : null}
                           <div className="invoiceConstants">
-                            <fieldset>
+                            <fieldset className="invoiceFieldset">
                               <legend>From</legend>
                               <div className="invoiceConstantValue">{companyName}</div>
                             </fieldset>
-                            <fieldset>
+                            <fieldset className="invoiceFieldset">
                               <legend>Date</legend>
                               <div className="invoiceConstantValue">{new Date().toLocaleDateString()}</div>
                             </fieldset>
                           </div>
                           <div className="invoiceToFrom">
-                            <fieldset>
+                            <fieldset className="invoiceFieldset">
                               <legend>To:</legend>
                               <label htmlFor="invoiceBuyer"></label>
                               <select
@@ -382,7 +379,7 @@ export default function Invoices(props) {
                                 })}
                               </select>
                             </fieldset>
-                            <fieldset>
+                            <fieldset className="invoiceFieldset">
                               <legend>Tax Rate</legend>
                               <label htmlFor="invoiceTaxRate"></label>
                               <input
@@ -409,7 +406,7 @@ export default function Invoices(props) {
                               <div>%</div>
                             </fieldset>
                           </div>
-                          <fieldset id="discountFieldset">
+                          <fieldset id="discountFieldset" className="invoiceFieldset">
                             <legend>Other Discount</legend>
                             <label htmlFor="invoiceDiscountInput"></label>
                             <div>-$</div>
@@ -432,6 +429,19 @@ export default function Invoices(props) {
                                 if (!/[0-9.]/.test(e.key)) {
                                   e.preventDefault();
                                 }
+                              }}
+                            ></input>
+                          </fieldset>
+                          <fieldset id="detailsFieldset" className="invoiceFieldset">
+                            <legend>Notes</legend>
+                            <label htmlFor="detailsInput"></label>
+                            <input
+                              type="text"
+                              id="detailsInput"
+                              name="detailsInput"
+                              value={details}
+                              onChange={(e) => {
+                                setDetails(e.target.value);
                               }}
                             ></input>
                           </fieldset>

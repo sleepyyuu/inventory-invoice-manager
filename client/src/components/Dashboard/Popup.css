@@ -3,7 +3,7 @@
 }
 
 .invoice-popup-content {
-  width: 80%;
+  width: 60%;
 }
 
 .modal {
@@ -47,12 +47,18 @@
   gap: 60px;
 }
 
+.buyerInputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
 .invoiceConstants,
 .invoiceToFrom {
   margin-top: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  gap: 120px;
 }
 
 #discountFieldset {
@@ -87,6 +93,10 @@ fieldset {
   color: rgb(109, 109, 109);
   margin-bottom: 20px;
   padding-bottom: 3px;
+}
+
+.invoiceFieldset {
+  margin-bottom: 8px;
 }
 
 fieldset:focus-within {
