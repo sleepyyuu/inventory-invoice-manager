@@ -15,6 +15,7 @@ export default function Invoices(props) {
   const priceRef = useRef(null);
   const discountRef = useRef(null);
   const editRowRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const defaultTaxRate = "7.25";
   const navigate = useNavigate();
   const [inputFocus, setInputFocus] = useState("");
@@ -26,6 +27,7 @@ export default function Invoices(props) {
   const [showMenu, setShowMenu] = useState(false);
   const [menuStateCreate, setmenuStateCreate] = useState(false);
   const [taxRate, setTaxRate] = useState(defaultTaxRate);
+  const [otherDiscount, setOtherDiscount] = useState("0.00");
   const [productsLeft, setProductsLeft] = useState([]);
   const [newInvoiceId, setNewInvoiceId] = useState("");
   const [newInvoiceBuyerId, setNewInvoiceBuyerId] = useState("");
@@ -125,6 +127,8 @@ export default function Invoices(props) {
       buyer_name: newInvoiceBuyerName,
       buyer_address: { address: matchBuyer.address, city: matchBuyer.city, state: matchBuyer.state, zip: matchBuyer.zip },
       total: total,
+      tax_rate: Number(taxRate),
+      other_discount: Number(otherDiscount),
     };
     if (newInvoiceDetails !== "") {
       body.details = newInvoiceDetails;
@@ -173,7 +177,7 @@ export default function Invoices(props) {
   };
 
   const handleEdit = async (invoice) => {
-    setTaxRate(defaultTaxRate);
+    setTaxRate(invoice.tax_rate.toFixed(2));
     setnewInvoiceCurrentProductQuantity("0.0");
     setNewInvoiceCurrentProductPrice("0.00");
     setNewInvoiceEdit("");
@@ -182,6 +186,7 @@ export default function Invoices(props) {
     setNewInvoiceCurrentProductPriceEdit("0.00");
     setNewInvoiceCurrentProductDiscount("0.00");
     setNewInvoiceCurrentProductDiscountEdit("0.00");
+    setOtherDiscount(invoice.other_discount.toFixed(2));
     setCustomError(null);
     setEditInvoice(invoice);
     setNewInvoiceId(invoice._id);
@@ -227,6 +232,7 @@ export default function Invoices(props) {
 
   const handleAdd = () => {
     setTaxRate(defaultTaxRate);
+    setOtherDiscount("0.00");
     setnewInvoiceCurrentProductQuantity("0.0");
     setNewInvoiceCurrentProductPrice("0.00");
     setNewInvoiceEdit("");
@@ -403,6 +409,32 @@ export default function Invoices(props) {
                               <div>%</div>
                             </fieldset>
                           </div>
+                          <fieldset id="discountFieldset">
+                            <legend>Other Discount</legend>
+                            <label htmlFor="invoiceDiscountInput"></label>
+                            <div>-$</div>
+                            <input
+                              type="text"
+                              id="invoiceDiscountInput"
+                              name="invoiceDiscountInput"
+                              value={otherDiscount}
+                              onChange={(e) => {
+                                setOtherDiscount(e.target.value);
+                              }}
+                              onBlur={(e) => {
+                                if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
+                                  setOtherDiscount("0.00");
+                                } else {
+                                  setOtherDiscount(Number(otherDiscount).toFixed(2));
+                                }
+                              }}
+                              onKeyPress={(e) => {
+                                if (!/[0-9.]/.test(e.key)) {
+                                  e.preventDefault();
+                                }
+                              }}
+                            ></input>
+                          </fieldset>
                           <fieldset className="invoiceProducts">
                             <legend>Items</legend>
                             <div className="invoiceProductTableHeaderContainer">
@@ -683,7 +715,16 @@ export default function Invoices(props) {
         </div>
         <div className="searchbar">
           <label htmlFor="searchBar"></label>
-          <input type="text" name="searchBar" id="searchBar" placeholder={`Search ${title}`}></input>
+          <input
+            type="text"
+            name="searchBar"
+            id="searchBar"
+            placeholder={`Search ${title}`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
+            value={searchTerm}
+          ></input>
         </div>
       </div>
       {loading ? null : (
@@ -700,45 +741,49 @@ export default function Invoices(props) {
             </thead>
             <tbody>
               {invoices.map((invoice) => {
-                let paddedInvoiceString = "" + invoice.invoice_number;
-                paddedInvoiceString = paddedInvoiceString.padStart(5, "0");
-                let invoiceDate = new Date(invoice.date_created);
-                return (
-                  <tr key={uniqid()}>
-                    <td>
-                      <button
-                        className="invoiceLink"
-                        onClick={() => {
-                          navigate(invoice._id);
-                        }}
-                      >
-                        {paddedInvoiceString}
-                      </button>
-                    </td>
-                    <td>{invoiceDate.toLocaleDateString()}</td>
-                    <td>{invoice.buyer_name}</td>
-                    <td>${invoice.total.toFixed(2)}</td>
-                    <td>
-                      <div className="actionButtonContainer">
-                        <FaRegEdit
-                          className="actionButton"
-                          size="18"
+                if (searchTerm === "" || invoice.buyer_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  let paddedInvoiceString = "" + invoice.invoice_number;
+                  paddedInvoiceString = paddedInvoiceString.padStart(5, "0");
+                  let invoiceDate = new Date(invoice.date_created);
+                  return (
+                    <tr key={uniqid()}>
+                      <td>
+                        <button
+                          className="invoiceLink"
                           onClick={() => {
-                            handleEdit(invoice);
-                            setmenuStateCreate(false);
+                            navigate(invoice._id);
                           }}
-                        ></FaRegEdit>
-                        <FaRegTrashAlt
-                          className="actionButton"
-                          size="18"
-                          onClick={() => {
-                            handleDelete(invoice._id);
-                          }}
-                        ></FaRegTrashAlt>
-                      </div>
-                    </td>
-                  </tr>
-                );
+                        >
+                          {paddedInvoiceString}
+                        </button>
+                      </td>
+                      <td>{invoiceDate.toLocaleDateString()}</td>
+                      <td>{invoice.buyer_name}</td>
+                      <td>${invoice.total.toFixed(2)}</td>
+                      <td>
+                        <div className="actionButtonContainer">
+                          <FaRegEdit
+                            className="actionButton"
+                            size="18"
+                            onClick={() => {
+                              handleEdit(invoice);
+                              setmenuStateCreate(false);
+                            }}
+                          ></FaRegEdit>
+                          <FaRegTrashAlt
+                            className="actionButton"
+                            size="18"
+                            onClick={() => {
+                              handleDelete(invoice._id);
+                            }}
+                          ></FaRegTrashAlt>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                } else {
+                  return null;
+                }
               })}
             </tbody>
           </table>

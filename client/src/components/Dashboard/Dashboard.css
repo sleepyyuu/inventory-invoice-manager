@@ -5,6 +5,10 @@
   background-color: rgb(239, 239, 239);
 }
 
+table {
+  table-layout: fixed;
+}
+
 .sidebarContainer {
   display: flex;
   flex-direction: column;
@@ -175,4 +179,8 @@ td {
 
 tbody > tr:hover {
   background-color: whitesmoke;
+}
+
+input#searchBar {
+  text-indent: 10px;
 }

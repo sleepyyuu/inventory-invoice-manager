@@ -8,6 +8,7 @@ import Popup from "reactjs-popup";
 export default function Buyers(props) {
   const { finishedLoading } = props;
   const verify = useVerifyForEndpointAction();
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [buyers, setBuyers] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
@@ -317,7 +318,16 @@ export default function Buyers(props) {
         </div>
         <div className="searchbar">
           <label htmlFor="searchBar"></label>
-          <input type="text" name="searchBar" id="searchBar" placeholder={`Search ${title}`}></input>
+          <input
+            type="text"
+            name="searchBar"
+            id="searchBar"
+            placeholder={`Search ${title}`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
+            value={searchTerm}
+          ></input>
         </div>
       </div>
       {loading ? null : (
@@ -333,32 +343,36 @@ export default function Buyers(props) {
             </thead>
             <tbody>
               {buyers.map((buyer) => {
-                return (
-                  <tr key={uniqid()}>
-                    <td>{buyer.company_name}</td>
-                    <td>{buyer.phone_number}</td>
-                    <td>{buyer.address}</td>
-                    <td>
-                      <div className="actionButtonContainer">
-                        <FaRegEdit
-                          className="actionButton"
-                          size="18"
-                          onClick={() => {
-                            handleEdit(buyer);
-                            setmenuStateCreate(false);
-                          }}
-                        ></FaRegEdit>
-                        <FaRegTrashAlt
-                          className="actionButton"
-                          size="18"
-                          onClick={() => {
-                            handleDelete(buyer._id);
-                          }}
-                        ></FaRegTrashAlt>
-                      </div>
-                    </td>
-                  </tr>
-                );
+                if (searchTerm === "" || buyer.company_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  return (
+                    <tr key={uniqid()}>
+                      <td>{buyer.company_name}</td>
+                      <td>{buyer.phone_number}</td>
+                      <td>{buyer.address}</td>
+                      <td>
+                        <div className="actionButtonContainer">
+                          <FaRegEdit
+                            className="actionButton"
+                            size="18"
+                            onClick={() => {
+                              handleEdit(buyer);
+                              setmenuStateCreate(false);
+                            }}
+                          ></FaRegEdit>
+                          <FaRegTrashAlt
+                            className="actionButton"
+                            size="18"
+                            onClick={() => {
+                              handleDelete(buyer._id);
+                            }}
+                          ></FaRegTrashAlt>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                } else {
+                  return null;
+                }
               })}
             </tbody>
           </table>

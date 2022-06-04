@@ -116,22 +116,24 @@ export default function InvoiceDetail(props) {
                 <td></td>
                 <td></td>
                 <td></td>
-                <td className="priceInfoDetail">Tax (5%)</td>
-                <td className="priceInfoDetail">${invoice.total}</td>
+                <td className="priceInfoDetail">Tax ({invoice.tax_rate}%)</td>
+                <td className="priceInfoDetail">+${((invoice.total * invoice.tax_rate) / 100).toFixed(2)}</td>
               </tr>
               <tr className="pricingInfo">
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>Adjustments (-15%)</td>
-                <td>${invoice.total}</td>
+                <td>Other discounts</td>
+                <td>-${invoice.other_discount.toFixed(2)}</td>
               </tr>
               <tr className="pricingInfo">
                 <td></td>
                 <td></td>
                 <td></td>
                 <td className="totalInfo priceInfoDetail">Total Due</td>
-                <td className="totalInfo priceInfoDetail">${invoice.total}</td>
+                <td className="totalInfo priceInfoDetail">
+                  ${(invoice.total - invoice.other_discount + (invoice.total * invoice.tax_rate) / 100).toFixed(2)}
+                </td>
               </tr>
             </tbody>
           </table>
