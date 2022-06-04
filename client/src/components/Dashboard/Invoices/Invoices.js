@@ -6,12 +6,14 @@ import { FaRegEdit, FaRegTrashAlt, FaPlusSquare } from "react-icons/fa";
 import Popup from "reactjs-popup";
 import QuantityInput from "./QuantityInput";
 import PriceInput from "./PriceInput";
+import DiscountInput from "./DiscountInput";
 import { useNavigate } from "react-router-dom";
 
 export default function Invoices(props) {
   const { finishedLoading } = props;
   const quantityRef = useRef(null);
   const priceRef = useRef(null);
+  const discountRef = useRef(null);
   const editRowRef = useRef(null);
   const navigate = useNavigate();
   const [inputFocus, setInputFocus] = useState("");
@@ -33,9 +35,11 @@ export default function Invoices(props) {
   const [newInvoiceCurrentProduct, setNewInvoiceCurrentProduct] = useState("");
   const [newInvoiceCurrentProductQuantity, setnewInvoiceCurrentProductQuantity] = useState("0.0");
   const [newInvoiceCurrentProductPrice, setNewInvoiceCurrentProductPrice] = useState("0.00");
+  const [newInvoiceCurrentProductDiscount, setNewInvoiceCurrentProductDiscount] = useState("0.00");
   const [newInvoiceCurrentProductEdit, setNewInvoiceCurrentProductEdit] = useState();
   const [newInvoiceCurrentProductQuantityEdit, setnewInvoiceCurrentProductQuantityEdit] = useState("0.0");
   const [newInvoiceCurrentProductPriceEdit, setNewInvoiceCurrentProductPriceEdit] = useState("0.00");
+  const [newInvoiceCurrentProductDiscountEdit, setNewInvoiceCurrentProductDiscountEdit] = useState("0.00");
   const [newInvoiceEdit, setNewInvoiceEdit] = useState(null);
   const [customError, setCustomError] = useState();
   const title = "Invoices";
@@ -170,6 +174,8 @@ export default function Invoices(props) {
     setNewInvoiceCurrentProductEdit();
     setnewInvoiceCurrentProductQuantityEdit("0.0");
     setNewInvoiceCurrentProductPriceEdit("0.00");
+    setNewInvoiceCurrentProductDiscount("0.00");
+    setNewInvoiceCurrentProductDiscountEdit("0.00");
     setCustomError(null);
     setEditInvoice(invoice);
     setNewInvoiceId(invoice._id);
@@ -220,6 +226,8 @@ export default function Invoices(props) {
     setNewInvoiceCurrentProductEdit();
     setnewInvoiceCurrentProductQuantityEdit("0.0");
     setNewInvoiceCurrentProductPriceEdit("0.00");
+    setNewInvoiceCurrentProductDiscount("0.00");
+    setNewInvoiceCurrentProductDiscountEdit("0.00");
     setCustomError(null);
     setmenuStateCreate(true);
     setNewInvoiceBuyerId(buyers[0]._id);
@@ -275,6 +283,7 @@ export default function Invoices(props) {
     setnewInvoiceCurrentProductQuantityEdit("0.0");
     setNewInvoiceCurrentProduct(productIndex);
     setNewInvoiceCurrentProductPriceEdit("0.00");
+    setNewInvoiceCurrentProductDiscountEdit("0.00");
   };
 
   return (
@@ -368,6 +377,7 @@ export default function Invoices(props) {
                                 <div>Product</div>
                                 <div>Quantity</div>
                                 <div>Unit Price</div>
+                                <div>Unit Discount</div>
                                 <div>Total Price</div>
                                 <div>Delete</div>
                               </div>
@@ -390,6 +400,9 @@ export default function Invoices(props) {
                                                     ? Number(newInvoiceCurrentProductQuantityEdit)
                                                     : 0,
                                                   price: newInvoiceCurrentProductPriceEdit ? Number(newInvoiceCurrentProductPriceEdit) : 0,
+                                                  discountPerUnit: newInvoiceCurrentProductDiscountEdit
+                                                    ? Number(newInvoiceCurrentProductDiscountEdit)
+                                                    : 0,
                                                   name: product.name,
                                                 };
                                                 let newInvoiceProductCopy = [...newInvoiceProducts];
@@ -420,9 +433,22 @@ export default function Invoices(props) {
                                                   setNewInvoicePrice={setNewInvoiceCurrentProductPriceEdit}
                                                 ></PriceInput>
                                               </div>
+                                              <div className="invoiceDiscountEditContainer">
+                                                <label htmlFor="invoiceDiscountEdit"></label>
+                                                <DiscountInput
+                                                  discountRef={discountRef}
+                                                  identifier="invoiceDiscountEdit"
+                                                  newInvoiceDiscount={newInvoiceCurrentProductDiscountEdit}
+                                                  setNewInvoiceDiscount={setNewInvoiceCurrentProductDiscountEdit}
+                                                  discountMax={newInvoiceCurrentProductPriceEdit}
+                                                ></DiscountInput>
+                                              </div>
                                               <div>
                                                 {"$" +
-                                                  (newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit).toFixed(2)}
+                                                  (
+                                                    newInvoiceCurrentProductPriceEdit * newInvoiceCurrentProductQuantityEdit -
+                                                    newInvoiceCurrentProductQuantityEdit * newInvoiceCurrentProductDiscountEdit
+                                                  ).toFixed(2)}
                                               </div>
                                               <div>
                                                 <FaRegTrashAlt
@@ -448,6 +474,9 @@ export default function Invoices(props) {
                                                 setNewInvoiceCurrentProductEdit(index);
                                                 setnewInvoiceCurrentProductQuantityEdit(newInvoiceProducts[index].quantity.toFixed(1));
                                                 setNewInvoiceCurrentProductPriceEdit(newInvoiceProducts[index].price.toFixed(2));
+                                                setNewInvoiceCurrentProductDiscountEdit(
+                                                  newInvoiceProducts[index].discountPerUnit.toFixed(2)
+                                                );
                                               }}
                                             >
                                               <div>{product.name}</div>
@@ -467,7 +496,13 @@ export default function Invoices(props) {
                                               >
                                                 {product.price.toFixed(2)}
                                               </div>
-                                              <div>{"$" + (product.quantity * product.price).toFixed(2)}</div>
+                                              <div className="discountDisplay"> {product.discountPerUnit.toFixed(2)}</div>
+                                              <div>
+                                                {"$" +
+                                                  (product.quantity * product.price - product.quantity * product.discountPerUnit).toFixed(
+                                                    2
+                                                  )}
+                                              </div>
                                               <div>
                                                 <FaRegTrashAlt
                                                   className="actionButton"
@@ -530,7 +565,22 @@ export default function Invoices(props) {
                                   setNewInvoicePrice={setNewInvoiceCurrentProductPrice}
                                 ></PriceInput>
                               </div>
-                              <div>{"$" + (newInvoiceCurrentProductQuantity * newInvoiceCurrentProductPrice).toFixed(2)}</div>
+                              <div>
+                                <label htmlFor="invoiceDiscount"></label>
+                                <DiscountInput
+                                  identifier="invoiceDiscount"
+                                  newInvoiceDiscount={newInvoiceCurrentProductDiscount}
+                                  setNewInvoiceDiscount={setNewInvoiceCurrentProductDiscount}
+                                  discountMax={newInvoiceCurrentProductPrice}
+                                ></DiscountInput>
+                              </div>
+                              <div>
+                                {"$" +
+                                  (
+                                    newInvoiceCurrentProductQuantity * newInvoiceCurrentProductPrice -
+                                    newInvoiceCurrentProductQuantity * newInvoiceCurrentProductDiscount
+                                  ).toFixed(2)}
+                              </div>
                               <div className="invoiceProductAddContainer">
                                 <FaPlusSquare
                                   className="invoiceProductAdd"
@@ -542,6 +592,7 @@ export default function Invoices(props) {
                                       quantity: Number(newInvoiceCurrentProductQuantity),
                                       price: Number(newInvoiceCurrentProductPrice),
                                       name: products[newInvoiceCurrentProduct].name,
+                                      discountPerUnit: Number(newInvoiceCurrentProductDiscount),
                                     };
                                     setNewInvoiceProducts([...newInvoiceProducts, newProductObject]);
                                     setProductsLeft(() => {
@@ -564,6 +615,8 @@ export default function Invoices(props) {
                                     setNewInvoiceCurrentProductEdit();
                                     setnewInvoiceCurrentProductQuantityEdit("0.0");
                                     setNewInvoiceCurrentProductPriceEdit("0.00");
+                                    setNewInvoiceCurrentProductDiscount("0.00");
+                                    setNewInvoiceCurrentProductDiscountEdit("0.00");
                                   }}
                                   size="23"
                                 ></FaPlusSquare>

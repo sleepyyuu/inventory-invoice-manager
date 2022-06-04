@@ -4,7 +4,7 @@
 
 .invoiceProductTableHeader {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   background-color: rgb(32, 40, 134);
   color: white;
 }
@@ -17,7 +17,7 @@
 .invoiceProductTableEditRow,
 .invoiceProductTableAddRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   color: black;
   padding: 5px 0 5px 0;
 }
@@ -44,7 +44,9 @@
 #invoicePriceEdit,
 #invoiceQuantityEdit,
 #invoiceQuantity,
-#invoicePrice {
+#invoicePrice,
+#invoiceDiscount,
+#invoiceDiscountEdit {
   text-align: center;
   border: none;
   background-color: rgb(227, 227, 227);
@@ -55,16 +57,20 @@
 #invoicePriceEdit:focus,
 #invoiceQuantityEdit:focus,
 #invoiceQuantity:focus,
-#invoicePrice:focus {
+#invoicePrice:focus,
+#invoiceDiscount:focus,
+#invoiceDiscountEdit:focus {
   background-color: rgb(206, 206, 206);
 }
+
 input {
   padding: 0;
 }
 
 .quantityDisplay,
 .priceDisplay,
-.invoiceQuantityEditContainer,
+.discountDisplay,
+.invoiceDiscountEditContainer .invoiceQuantityEditContainer,
 .invoicePriceEditContainer {
   width: 90%;
   font-size: 1rem;
@@ -72,12 +78,17 @@ input {
 }
 
 .quantityDisplay:hover,
-.priceDisplay:hover {
+.priceDisplay:hover,
+.discountDisplay:hover,
+#invoiceQuantity:hover,
+#invoicePrice:hover,
+#invoiceDiscount:hover {
   background-color: rgb(206, 206, 206);
 }
 
 #invoiceQuantity,
-#invoicePrice {
+#invoicePrice,
+#invoiceDiscount {
   background-color: white;
 }
 
