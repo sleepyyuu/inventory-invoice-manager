@@ -1,12 +1,11 @@
 import "./Summary.css";
-import "./VerticalChart";
+import PieChart from "./PieChart";
 import { useEffect, useState } from "react";
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import VerticalChart from "./VerticalChart";
 
 export default function Summary(props) {
   const verify = useVerifyForEndpointAction();
-  const [invoices, setInvoices] = useState([]);
   const [monthArray, setMonthArray] = useState([
     "January",
     "February",
@@ -23,11 +22,11 @@ export default function Summary(props) {
   ]);
   const [pastSixMonthArray, setPastSixMonthArray] = useState([]);
   const [monthlySales, setMonthlySales] = useState([]);
+  const [productSaleQuantityList, setProductSaleQuantityList] = useState({});
 
   useEffect(() => {
     const getDB = async () => {
       const responseInvoices = await verify("readAll", "/invoices");
-      setInvoices(responseInvoices);
       getSixMonthData(responseInvoices);
     };
 
@@ -35,7 +34,8 @@ export default function Summary(props) {
       let currentMonth = new Date().getMonth();
       const pastSixMonths = [];
       const yearMonths = {};
-      const monthlySales = [0, 0, 0, 0, 0, 0];
+      const monthlySalesTemp = [0, 0, 0, 0, 0, 0];
+      let productSoldList = {};
       let year = new Date().getFullYear();
       currentMonth -= 5;
       if (currentMonth < 0) {
@@ -61,12 +61,20 @@ export default function Summary(props) {
           let foundIndex = pastSixMonths.findIndex((month) => {
             return month === invoiceCreatedMonth;
           });
-          monthlySales[foundIndex] = monthlySales[foundIndex] + invoice.total;
+          monthlySalesTemp[foundIndex] = monthlySalesTemp[foundIndex] + invoice.total;
+          for (let product of invoice.product) {
+            if (!productSoldList[product.name]) {
+              productSoldList[product.name] = product.quantity;
+            } else {
+              productSoldList[product.name] += product.quantity;
+            }
+          }
         } else {
           break;
         }
       }
-      setMonthlySales(monthlySales);
+      setProductSaleQuantityList(productSoldList);
+      setMonthlySales(monthlySalesTemp);
     };
     getDB();
   }, []);
@@ -85,7 +93,9 @@ export default function Summary(props) {
             <div>
               <VerticalChart pastSixMonthArray={pastSixMonthArray} monthlySales={monthlySales} />
             </div>
-            <div>pie chart product sold</div>
+            <div>
+              <PieChart productSaleQuantityList={productSaleQuantityList}></PieChart>
+            </div>
           </div>
         </div>
       </div>
