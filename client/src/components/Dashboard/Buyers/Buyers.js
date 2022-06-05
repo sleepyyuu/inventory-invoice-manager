@@ -337,7 +337,7 @@ export default function Buyers(props) {
         </div>
       </div>
       {loading ? null : (
-        <div>
+        <div className="tablePadding">
           <table className="buyerTable">
             <thead>
               <tr>

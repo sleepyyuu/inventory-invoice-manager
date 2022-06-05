@@ -122,6 +122,9 @@ h3.infoPageTitle {
   padding: 5px 20px 5px 20px;
 }
 
+.tablePadding {
+}
+
 .searchbar {
   padding: 9px 5px 9px 5px;
   border-bottom: 3px solid #edf0f1;

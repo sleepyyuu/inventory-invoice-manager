@@ -249,7 +249,7 @@ export default function Products(props) {
         </div>
       </div>
       {loading ? null : (
-        <div>
+        <div className="tablePadding">
           <table className="productTable">
             <thead>
               <tr>

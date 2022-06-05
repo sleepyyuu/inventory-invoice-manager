@@ -348,7 +348,7 @@ export default function Invoices(props) {
                               })}
                             </div>
                           ) : null}
-                          <div className="invoiceConstants">
+                          <div className="invoiceDetailRow">
                             <fieldset className="invoiceFieldset">
                               <legend>From</legend>
                               <div className="invoiceConstantValue">{companyName}</div>
@@ -358,7 +358,7 @@ export default function Invoices(props) {
                               <div className="invoiceConstantValue">{new Date().toLocaleDateString()}</div>
                             </fieldset>
                           </div>
-                          <div className="invoiceToFrom">
+                          <div className="invoiceDetailRow">
                             <fieldset className="invoiceFieldset">
                               <legend>To:</legend>
                               <label htmlFor="invoiceBuyer"></label>
@@ -406,32 +406,35 @@ export default function Invoices(props) {
                               <div>%</div>
                             </fieldset>
                           </div>
-                          <fieldset id="discountFieldset" className="invoiceFieldset">
-                            <legend>Other Discount</legend>
-                            <label htmlFor="invoiceDiscountInput"></label>
-                            <div>-$</div>
-                            <input
-                              type="text"
-                              id="invoiceDiscountInput"
-                              name="invoiceDiscountInput"
-                              value={otherDiscount}
-                              onChange={(e) => {
-                                setOtherDiscount(e.target.value);
-                              }}
-                              onBlur={(e) => {
-                                if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
-                                  setOtherDiscount("0.00");
-                                } else {
-                                  setOtherDiscount(Number(otherDiscount).toFixed(2));
-                                }
-                              }}
-                              onKeyPress={(e) => {
-                                if (!/[0-9.]/.test(e.key)) {
-                                  e.preventDefault();
-                                }
-                              }}
-                            ></input>
-                          </fieldset>
+                          <div className="invoiceDetailRow">
+                            <div></div>
+                            <fieldset id="discountFieldset" className="invoiceFieldset">
+                              <legend>Other Discount</legend>
+                              <label htmlFor="invoiceDiscountInput"></label>
+                              <div>-$</div>
+                              <input
+                                type="text"
+                                id="invoiceDiscountInput"
+                                name="invoiceDiscountInput"
+                                value={otherDiscount}
+                                onChange={(e) => {
+                                  setOtherDiscount(e.target.value);
+                                }}
+                                onBlur={(e) => {
+                                  if (!e.target.value || Number(e.target.value) === 0 || isNaN(Number(e.target.value))) {
+                                    setOtherDiscount("0.00");
+                                  } else {
+                                    setOtherDiscount(Number(otherDiscount).toFixed(2));
+                                  }
+                                }}
+                                onKeyPress={(e) => {
+                                  if (!/[0-9.]/.test(e.key)) {
+                                    e.preventDefault();
+                                  }
+                                }}
+                              ></input>
+                            </fieldset>
+                          </div>
                           <fieldset id="detailsFieldset" className="invoiceFieldset">
                             <legend>Notes</legend>
                             <label htmlFor="detailsInput"></label>
@@ -738,7 +741,7 @@ export default function Invoices(props) {
         </div>
       </div>
       {loading ? null : (
-        <div>
+        <div className="tablePadding">
           <table className="invoiceTable">
             <thead>
               <tr>

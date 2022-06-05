@@ -37,7 +37,8 @@
 #invoiceProduct {
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.8rem;
+  width: 4.5rem;
 }
 
 #invoiceProductContainer {
