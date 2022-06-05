@@ -10,11 +10,26 @@ export default function PieChart(props) {
     productNameArray.push(productName);
     productQuantitySoldArray.push(productSaleQuantityList[productName]);
   }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Products sold",
+      },
+    },
+  };
+
   const data = {
     labels: productNameArray,
     datasets: [
       {
-        label: "# of Votes",
+        label: "# of Products Sold",
         data: productQuantitySoldArray,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -36,5 +51,5 @@ export default function PieChart(props) {
       },
     ],
   };
-  return <Pie data={data} />;
+  return <Pie data={data} options={options} />;
 }

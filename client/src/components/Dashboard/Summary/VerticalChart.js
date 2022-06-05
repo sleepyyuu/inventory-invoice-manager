@@ -7,6 +7,7 @@ export default function VerticalChart(props) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",

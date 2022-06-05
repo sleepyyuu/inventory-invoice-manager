@@ -23,14 +23,15 @@ export default function Summary(props) {
   const [pastSixMonthArray, setPastSixMonthArray] = useState([]);
   const [monthlySales, setMonthlySales] = useState([]);
   const [productSaleQuantityList, setProductSaleQuantityList] = useState({});
+  const [selectedMonthFrame, setSelectedMonthFrame] = useState(6);
 
   useEffect(() => {
     const getDB = async () => {
       const responseInvoices = await verify("readAll", "/invoices");
-      getSixMonthData(responseInvoices);
+      getPastMonthData(responseInvoices);
     };
 
-    const getSixMonthData = (responseInvoices) => {
+    const getPastMonthData = (responseInvoices) => {
       let currentMonth = new Date().getMonth();
       const pastSixMonths = [];
       const yearMonths = {};
@@ -88,13 +89,42 @@ export default function Summary(props) {
       <div className="tablePadding">
         {" "}
         <div id="dashboardInfo">
-          <div id="overviewTitle">Overview</div>
-          <div id="chartContainer">
-            <div>
-              <VerticalChart pastSixMonthArray={pastSixMonthArray} monthlySales={monthlySales} />
+          <div>
+            <div id="timeframeButtonContainer">
+              <div id="timeframeTitle">Timeframe Dashboard</div>
+              <div
+                className={selectedMonthFrame === 6 ? "timeframeButton selectedtimeframeButton" : "timeframeButton"}
+                onClick={() => {
+                  setSelectedMonthFrame(6);
+                }}
+              >
+                6 month
+              </div>
+              <div
+                className={selectedMonthFrame === 3 ? "timeframeButton selectedtimeframeButton" : "timeframeButton"}
+                onClick={() => {
+                  setSelectedMonthFrame(3);
+                }}
+              >
+                3 month
+              </div>
+              <div
+                className={selectedMonthFrame === 1 ? "timeframeButton selectedtimeframeButton" : "timeframeButton"}
+                onClick={() => {
+                  setSelectedMonthFrame(1);
+                }}
+              >
+                1 month
+              </div>
             </div>
-            <div>
+          </div>
+
+          <div id="chartContainer">
+            <div className="chartCard">
               <PieChart productSaleQuantityList={productSaleQuantityList}></PieChart>
+            </div>
+            <div className="chartCard">
+              <VerticalChart pastSixMonthArray={pastSixMonthArray} monthlySales={monthlySales} />
             </div>
           </div>
         </div>
