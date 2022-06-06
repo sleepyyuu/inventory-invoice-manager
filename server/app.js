@@ -12,6 +12,7 @@ const buyerRouter = require("./routes/buyer");
 const productPriceRouter = require("./routes/productPrice");
 const invoiceRouter = require("./routes/invoice");
 const authRouter = require("./routes/auth");
+const userInfoRouter = require("./routes/userInfo");
 const refreshRouter = require("./routes/refresh");
 const verifyToken = require("./middleware/verifyToken");
 
@@ -68,6 +69,7 @@ app.use(passport.initialize());
 app.use("/api/auth", authRouter);
 app.use("/api/refresh", refreshRouter);
 app.use(verifyToken);
+app.use("/api/user", userInfoRouter);
 app.use("/api/products", productRouter);
 app.use("/api/buyers", buyerRouter);
 app.use("/api/productprices", productPriceRouter);

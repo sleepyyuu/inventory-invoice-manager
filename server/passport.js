@@ -24,6 +24,7 @@ passport.use(
         let user = new User({
           username: username,
           password: hashedPass,
+          info: {},
         });
         user.save(function (err) {
           if (err) {

@@ -31,10 +31,32 @@ exports.login_post = function (req, res, next) {
         sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
       });
-      return res.status(200).send({ username: dbUser.username, accessToken });
+      return res.status(200).send({ username: dbUser.username, accessToken, info: dbUser.info });
     });
   })(req, res, next);
 };
+
+exports.updateInfo_post = [
+  (req, res, next) => {
+    User.findOne({ username: req.body.username }, function (err, foundUser) {
+      if (err) {
+        if (foundUser == null) {
+          return res.status(404).send("User not found");
+        }
+        return next(err);
+      }
+      if (req.body.info) {
+        foundUser.info = req.body.info;
+      }
+      foundUser.save(function (err) {
+        if (err) {
+          next(err);
+        }
+        res.status(200).send("Success");
+      });
+    });
+  },
+];
 
 exports.signup_post = function (req, res, next) {
   passport.authenticate("signup", { session: false }, function (err, user, info) {

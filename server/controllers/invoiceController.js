@@ -58,6 +58,8 @@ exports.invoice_create_post = [
       details: req.body.details,
       total: req.body.total,
       buyer_address: req.body.buyer_address,
+      tax_rate: req.body.tax_rate,
+      other_discount: req.body.other_discount,
     });
     if (!errors.isEmpty()) {
       return res.send({ invoice: req.body, errors: errors.array() });
@@ -115,6 +117,12 @@ exports.invoice_update_post = [
       }
       if (req.body.buyer_address) {
         foundInvoice.buyer_address = req.body.buyer_address;
+      }
+      if (req.body.tax_rate) {
+        foundInvoice.tax_rate = req.body.tax_rate;
+      }
+      if (req.body.other_discount) {
+        foundInvoice.other_discount = req.body.other_discount;
       }
       foundInvoice.save(function (err) {
         if (err) {
