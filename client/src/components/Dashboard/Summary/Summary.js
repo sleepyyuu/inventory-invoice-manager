@@ -20,6 +20,7 @@ export default function Summary(props) {
     "November",
     "December",
   ]);
+  const [invoices, setInvoices] = useState([]);
   const [pastSixMonthArray, setPastSixMonthArray] = useState([]);
   const [monthlySales, setMonthlySales] = useState([]);
   const [productSaleQuantityList, setProductSaleQuantityList] = useState({});
@@ -28,22 +29,26 @@ export default function Summary(props) {
   useEffect(() => {
     const getDB = async () => {
       const responseInvoices = await verify("readAll", "/invoices");
-      getPastMonthData(responseInvoices);
+      setInvoices(responseInvoices);
     };
 
-    const getPastMonthData = (responseInvoices) => {
+    getDB();
+  }, []);
+
+  useEffect(() => {
+    const getPastMonthData = (responseInvoices, pastMonths) => {
       let currentMonth = new Date().getMonth();
       const pastSixMonths = [];
       const yearMonths = {};
-      const monthlySalesTemp = [0, 0, 0, 0, 0, 0];
+      const monthlySalesTemp = Array(pastMonths).fill(0);
       let productSoldList = {};
       let year = new Date().getFullYear();
-      currentMonth -= 5;
+      currentMonth -= pastMonths - 1;
       if (currentMonth < 0) {
         year--;
         currentMonth = 12 + currentMonth;
       }
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < pastMonths; i++) {
         pastSixMonths.push(monthArray[currentMonth]);
         yearMonths[monthArray[currentMonth]] = year;
         if (currentMonth === 11) {
@@ -77,8 +82,8 @@ export default function Summary(props) {
       setProductSaleQuantityList(productSoldList);
       setMonthlySales(monthlySalesTemp);
     };
-    getDB();
-  }, []);
+    getPastMonthData(invoices, selectedMonthFrame);
+  }, [selectedMonthFrame, invoices]);
   return (
     <div>
       <div className="dashboardInfoHeaderContainer">
