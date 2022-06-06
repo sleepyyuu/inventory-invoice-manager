@@ -3,6 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { userRequest } from "../../api/api";
 import "./Login.css";
+
 export default function Login(props) {
   const { setAuth, auth } = useAuth();
   const [username, setUsername] = useState("");
@@ -59,7 +60,14 @@ export default function Login(props) {
           ></input>
           <input type="submit" value="Login" className="submitButton"></input>
         </form>
-        <div className="signupLink">Need an account? Sign up</div>
+        <div
+          className="signupLink"
+          onClick={() => {
+            navigate("/signup");
+          }}
+        >
+          Need an account? Sign up
+        </div>
       </div>
     </div>
   );
