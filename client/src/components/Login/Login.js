@@ -28,6 +28,23 @@ export default function Login(props) {
     }
   };
 
+  const loginDemo = async (e) => {
+    e.preventDefault();
+    const response = await userRequest("usertest", "passtest", "/auth/login");
+    if (response.error != null) {
+      //error so do something
+      setError(response.error);
+    } else {
+      setError(null);
+      //not error, setstate to success, router link to dashboard
+      const username = response.response.data.username;
+      const accessToken = response.response.data.accessToken;
+      const info = response.response.data.info;
+      setAuth({ username, accessToken, info });
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <div className="loginPage">
       <div className="loginContainer">
@@ -60,6 +77,15 @@ export default function Login(props) {
           ></input>
           <input type="submit" value="Login" className="submitButton"></input>
         </form>
+        <button
+          className="submitButton"
+          id="demoButton"
+          onClick={(e) => {
+            loginDemo(e);
+          }}
+        >
+          Demo/Guest Login
+        </button>
         <div
           className="signupLink"
           onClick={() => {

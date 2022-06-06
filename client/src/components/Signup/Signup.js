@@ -60,7 +60,15 @@ export default function Signup() {
         >
           Have an account? Log in
         </div> */}
-        Signupform is currently disabled
+        Signup form is currently disabled
+        <div
+          className="loginLink"
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Have an account? Log in
+        </div>
       </div>
     </div>
   );

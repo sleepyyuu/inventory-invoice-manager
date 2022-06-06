@@ -62,3 +62,7 @@ h2 {
 .loginLink:hover {
   cursor: pointer;
 }
+
+.loginLink {
+  padding: 40px 0;
+}
