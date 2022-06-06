@@ -195,3 +195,8 @@ tbody > tr:hover {
 input#searchBar {
   text-indent: 10px;
 }
+
+#infoWarning {
+  font-size: 0.8rem;
+  color: rgb(248, 63, 63);
+}

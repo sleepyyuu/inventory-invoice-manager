@@ -11,6 +11,8 @@ import RequireAuth from "./components/RequireAuth";
 import PersistAuth from "./components/PersistAuth";
 import InvoiceDetail from "./components/Dashboard/InvoiceDetail/InvoiceDetail";
 import LoadingBar from "./components/LoadingBar";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 //useeffect check localstorage for jwt, validate token. if valid then render dashboard, otherwise show login page
 function App() {
@@ -18,6 +20,11 @@ function App() {
   const finishedLoading = () => {
     setLoadingProgress(100);
   };
+
+  useEffect(() => {
+    AOS.init();
+    AOS.refresh();
+  }, []);
 
   return (
     <BrowserRouter>

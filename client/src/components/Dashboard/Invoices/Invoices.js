@@ -300,7 +300,9 @@ export default function Invoices(props) {
     <div>
       <div className="dashboardInfoHeaderContainer">
         <div className="dashboardInfoHeader">
-          <h3 className="infoPageTitle">{title}</h3>
+          <h3 className="infoPageTitle" data-aos="fade-down">
+            {title}
+          </h3>
           <div className="dashboardButtons">
             <button
               className="addNewButton"
@@ -752,7 +754,7 @@ export default function Invoices(props) {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-aos="fade-left">
               {invoices.map((invoice) => {
                 if (searchTerm === "" || invoice.buyer_name.toLowerCase().includes(searchTerm.toLowerCase())) {
                   let paddedInvoiceString = "" + invoice.invoice_number;

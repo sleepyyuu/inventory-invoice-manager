@@ -109,7 +109,9 @@ export default function Buyers(props) {
     <div>
       <div className="dashboardInfoHeaderContainer">
         <div className="dashboardInfoHeader">
-          <h3 className="infoPageTitle">{title}</h3>
+          <h3 className="infoPageTitle" data-aos="fade-down">
+            {title}
+          </h3>
           <div className="dashboardButtons">
             <button
               className="addNewButton"
@@ -346,7 +348,7 @@ export default function Buyers(props) {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-aos="fade-left">
               {buyers.map((buyer) => {
                 if (searchTerm === "" || buyer.company_name.toLowerCase().includes(searchTerm.toLowerCase())) {
                   return (

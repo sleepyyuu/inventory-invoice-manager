@@ -127,7 +127,10 @@ export default function Dashboard(props) {
               >
                 &times;
               </button>
-              <div className="modalHeader">Company info (Warning: Any info changed here will affect past invoice info as well)</div>
+              <div className="modalHeader">
+                Company info <br></br>
+                <div id="infoWarning">(Warning: Changes here will affect ALL invoices)</div>
+              </div>
               <div className="modalContent">
                 <form>
                   <div>

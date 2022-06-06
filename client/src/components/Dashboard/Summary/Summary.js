@@ -3,8 +3,10 @@ import PieChart from "./PieChart";
 import { useEffect, useState } from "react";
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import VerticalChart from "./VerticalChart";
+import useAuth from "../../../hooks/useAuth";
 
 export default function Summary(props) {
+  const { auth } = useAuth();
   const verify = useVerifyForEndpointAction();
   const [monthArray, setMonthArray] = useState([
     "January",
@@ -31,7 +33,6 @@ export default function Summary(props) {
       const responseInvoices = await verify("readAll", "/invoices");
       setInvoices(responseInvoices);
     };
-
     getDB();
   }, []);
 
@@ -88,14 +89,16 @@ export default function Summary(props) {
     <div>
       <div className="dashboardInfoHeaderContainer">
         <div className="dashboardInfoHeader">
-          <h3 className="infoPageTitle">Welcome back, user</h3>
+          <h3 className="infoPageTitle" data-aos="fade-down">
+            Welcome back, {auth.info.company_name}
+          </h3>
         </div>
       </div>
       <div className="tablePadding">
         {" "}
         <div id="dashboardInfo">
           <div>
-            <div id="timeframeButtonContainer">
+            <div id="timeframeButtonContainer" data-aos="fade-left">
               <div id="timeframeTitle">Timeframe Dashboard</div>
               <div
                 className={selectedMonthFrame === 6 ? "timeframeButton selectedtimeframeButton" : "timeframeButton"}
