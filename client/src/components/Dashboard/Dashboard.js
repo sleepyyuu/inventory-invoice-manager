@@ -1,23 +1,52 @@
 import useAuth from "../../hooks/useAuth";
 import useLogout from "../../hooks/useLogout";
 import { NavLink, Outlet } from "react-router-dom";
+import useVerifyForEndpointAction from "./../../hooks/useVerifyForEndpointAction";
 import "./Dashboard.css";
 import "reactjs-popup/dist/index.css";
 import "./Popup.css";
 import { useEffect, useState } from "react";
+import uniqid from "uniqid";
 import Popup from "reactjs-popup";
 import { FaFileInvoiceDollar, FaHome, FaStore, FaProductHunt, FaSignOutAlt, FaUserCircle, FaUser } from "react-icons/fa";
 
 export default function Dashboard(props) {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const logout = useLogout();
+  const verify = useVerifyForEndpointAction();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [userCompanyName, setUserCompanyName] = useState("");
-  const [userAddress, setUserAddress] = useState("");
-  const [userPhoneNumber, setUserPhoneNumber] = useState("");
-  const [userCity, setUserCity] = useState("");
-  const [userState, setUserState] = useState("");
-  const [userZip, setUserZip] = useState("");
+  const [userCompanyName, setUserCompanyName] = useState(auth.info.company_name);
+  const [userAddress, setUserAddress] = useState(auth.info.address);
+  const [userPhoneNumber, setUserPhoneNumber] = useState(auth.info.phone_number);
+  const [userCity, setUserCity] = useState(auth.info.city);
+  const [userState, setUserState] = useState(auth.info.state);
+  const [userZip, setUserZip] = useState(auth.info.zip);
+  const [customError, setCustomError] = useState();
+
+  const handlePostAction = async (e) => {
+    e.preventDefault();
+    let newInfo = {
+      company_name: userCompanyName,
+      address: userAddress,
+      city: userCity,
+      state: userState,
+      zip: userZip,
+      phone_number: userPhoneNumber,
+    };
+    let body = {
+      username: auth.username,
+      info: newInfo,
+    };
+    let response;
+    response = await verify("update", "/user/update", body);
+    if (response.status === 200) {
+      setShowUserMenu(false);
+      setCustomError(null);
+      setAuth({ ...auth, info: newInfo });
+    } else {
+      setCustomError(response);
+    }
+  };
 
   return auth.accessToken ? (
     <div className="dashboardPage">
@@ -83,6 +112,7 @@ export default function Dashboard(props) {
         open={showUserMenu}
         closeOnDocumentClick
         onClose={() => {
+          setCustomError(null);
           setShowUserMenu(false);
         }}
       >
@@ -97,10 +127,22 @@ export default function Dashboard(props) {
               >
                 &times;
               </button>
-              <div className="modalHeader">Company info</div>
+              <div className="modalHeader">Company info (Warning: Any info changed here will affect past invoice info as well)</div>
               <div className="modalContent">
                 <form>
                   <div>
+                    {customError ? (
+                      <div>
+                        {customError.map((err) => {
+                          return (
+                            <div key={uniqid()}>
+                              <div>{err.msg}</div>
+                              <br></br>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : null}
                     <div className="buyerInputRow">
                       <fieldset>
                         <legend>Company Name</legend>
@@ -249,8 +291,13 @@ export default function Dashboard(props) {
                       </fieldset>
                     </div>
                   </div>
-                  <button className="postActionButton" onClick={(e) => {}}>
-                    {"Update Info"}
+                  <button
+                    className="postActionButton"
+                    onClick={(e) => {
+                      handlePostAction(e);
+                    }}
+                  >
+                    Update Info
                   </button>
                 </form>
               </div>

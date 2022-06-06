@@ -2,21 +2,16 @@ import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointActio
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
+import useAuth from "../../../hooks/useAuth";
 import uniqid from "uniqid";
 import { FaPrint } from "react-icons/fa";
 import "./InvoiceDetail.css";
 
 export default function InvoiceDetail(props) {
+  const { auth } = useAuth();
   const { finishedLoading } = props;
   const verify = useVerifyForEndpointAction();
-  const companyInfo = {
-    name: "test company name",
-    address: "13255 Etc Rd",
-    city: "San Diego",
-    state: "CA",
-    zip: "49204",
-    phoneNumber: "424-244-2424",
-  };
+  const companyInfo = auth.info;
   const pageStyle = ``;
   const { invoiceId } = useParams();
   const printPageRef = useRef();
@@ -47,7 +42,7 @@ export default function InvoiceDetail(props) {
         <div id="invoiceHeader">
           <h3 id="invoiceTitle">Invoice</h3>
           <div id="sellerInfo">
-            <div id="sellerName">{companyInfo.name}</div>
+            <div id="sellerName">{companyInfo.company_name}</div>
             <div id="sellerAddress">
               <div className="address">{companyInfo.address}</div>
               <div className="city">{companyInfo.city + ", " + companyInfo.state + " " + companyInfo.zip}</div>

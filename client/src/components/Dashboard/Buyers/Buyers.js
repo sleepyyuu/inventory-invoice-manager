@@ -1,7 +1,6 @@
 import useVerifyForEndpointAction from "../../../hooks/useVerifyForEndpointAction";
 import { useEffect, useState } from "react";
 import uniqid from "uniqid";
-import "./Buyers.css";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Popup from "reactjs-popup";
 
