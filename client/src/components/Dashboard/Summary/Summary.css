@@ -19,7 +19,10 @@
   text-align: center;
   padding: 10px 25px 0px 25px;
   font-size: 1.4rem;
-  color: rgb(61, 70, 165);
+}
+
+#infoPageCompanyName {
+  color: rgb(49, 82, 171);
 }
 
 .timeframeButton {

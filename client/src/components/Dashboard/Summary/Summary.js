@@ -90,7 +90,7 @@ export default function Summary(props) {
       <div className="dashboardInfoHeaderContainer">
         <div className="dashboardInfoHeader">
           <h3 className="infoPageTitle" data-aos="fade-down">
-            Welcome back, {auth.info.company_name}
+            Welcome back, <div id="infoPageCompanyName">{auth.info.company_name}</div>
           </h3>
         </div>
       </div>
