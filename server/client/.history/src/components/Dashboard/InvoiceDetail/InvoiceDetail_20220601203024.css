@@ -1,0 +1,12 @@
+#invoice {
+  display: flex;
+  flex-direction: column;
+}
+
+#invoiceTitle {
+  font-size: 4rem;
+}
+
+#invoiceHeader {
+  display: flex;
+}

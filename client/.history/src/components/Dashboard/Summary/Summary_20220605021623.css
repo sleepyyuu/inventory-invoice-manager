@@ -1,0 +1,15 @@
+#dashboardInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+#overviewTitle {
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  display: flex;
+}
+
+#chartContainer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

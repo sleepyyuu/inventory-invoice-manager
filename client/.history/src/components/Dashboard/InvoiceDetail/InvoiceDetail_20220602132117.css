@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@400&display=swap");
+#invoice {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 65px;
+  font-size: 1.3rem;
+}
+
+#invoiceTitle {
+  font-family: "Alegreya Sans SC", sans-serif;
+  font-size: 4.4rem;
+  margin: -5px;
+}
+
+.disclaimer {
+  font-weight: bold;
+  padding-bottom: 3px;
+  color: rgb(32, 40, 134);
+}
+
+#invoiceHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  height: 150px;
+}
+
+#sellerInfo {
+  padding-top: 10px;
+}
+
+#invoiceMiscDetail {
+  display: flex;
+  justify-content: space-between;
+}
+
+#invoiceSmallDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#invoiceProducts {
+  border-top: 2px solid rgb(32, 40, 134);
+  border-bottom: 2px solid rgb(32, 40, 134);
+  padding: 10px 0;
+  margin: 30px 0 20px;
+  height: 400px;
+}
+
+#printInvoiceHead {
+  border: none;
+}
+
+#printInvoiceHeadtr > th {
+  color: rgb(32, 40, 134);
+}
+
+#printInvoiceBodytr > td {
+  border-top: none;
+  border-bottom: 1px solid rgb(94, 94, 94);
+}
+
+#itemDescription {
+  text-align: left;
+}
+
+.priceDescription {
+  text-align: right;
+}
+
+#invoicePriceTotal {
+  text-align: right;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+  }
+}

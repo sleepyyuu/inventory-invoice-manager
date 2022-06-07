@@ -1,0 +1,44 @@
+#invoice {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 60px;
+  font-size: 2rem;
+}
+
+#invoiceTitle {
+  font-size: 3rem;
+  padding: 0;
+}
+
+.disclaimer {
+  font-weight: bold;
+  padding-bottom: 3px;
+}
+
+#invoiceHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+#invoiceMiscDetail {
+  display: flex;
+  justify-content: space-between;
+}
+
+#invoiceSmallDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+  }
+}

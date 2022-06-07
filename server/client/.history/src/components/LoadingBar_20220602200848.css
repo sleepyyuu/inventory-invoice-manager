@@ -1,0 +1,9 @@
+#loadingBar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgb(221, 155, 33);
+  height: 3px;
+  z-index: 999;
+  transition: all 700ms ease 0s;
+}

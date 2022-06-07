@@ -1,0 +1,52 @@
+.popup-content {
+  border-radius: 10px;
+}
+
+.modal {
+}
+
+.modalClose {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.modalHeader {
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 10px;
+}
+
+.modalContent {
+  text-align: center;
+}
+
+fieldset {
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  border-color: rgb(163, 168, 224);
+  display: flex;
+  justify-content: center;
+  height: 2.5rem;
+}
+
+legend {
+  width: 100%;
+  margin-right: 0%;
+}
+
+fieldset > input {
+  margin: 0;
+  width: 95%;
+  height: 80%;
+  border: none;
+}

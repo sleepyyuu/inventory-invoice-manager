@@ -1,0 +1,9 @@
+#dashboardInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+#overviewTitle {
+  padding: 10px 30px;
+  font-size: 1.3rem;
+}

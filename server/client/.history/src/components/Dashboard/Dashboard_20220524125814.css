@@ -1,0 +1,40 @@
+.dashboardPage {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(32, 40, 134);
+  padding-top: 50px;
+  padding-left: 10px;
+  gap: 5px;
+}
+
+.navButton {
+  height: 30px;
+  font-size: 1.4rem;
+  padding: 5px;
+  font-style: none;
+}
+
+a:link.navButton {
+  color: rgb(255, 255, 255);
+}
+
+a:visited.navButton {
+  color: rgb(255, 255, 255);
+}
+
+.navInvoicesButton {
+}
+
+.active {
+  background-color: rgb(182, 185, 225);
+}
+
+.inactive {
+  background-color: rgb(32, 40, 134);
+}

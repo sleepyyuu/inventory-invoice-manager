@@ -1,0 +1,28 @@
+import useAuth from "../../hooks/useAuth";
+import useLogout from "../../hooks/useLogout";
+import Invoice from "./Invoices/Invoices";
+import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+export default function Dashboard(props) {
+  const { auth } = useAuth();
+  const logout = useLogout();
+  const navigate = useNavigate();
+  const [currentView, setCurrentView] = useState({});
+
+  return auth.accessToken ? (
+    <div>
+      <div>login success</div>
+      <div>user : {auth.username}</div>
+      <div>accesstoken : {auth.accessToken}</div>
+      <button onClick={logout}>Logout</button>
+
+      <Link to="/products">products</Link>
+      <Link to="/buyers">buyers</Link>
+      <Link to="/productprices">productprices</Link>
+      <Link to="/invoices">invoices</Link>
+    </div>
+  ) : (
+    <div>please login</div>
+  );
+}

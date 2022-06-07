@@ -1,0 +1,46 @@
+.invoiceProductTableHeaderContainer {
+  width: 100%;
+}
+
+.invoiceProductTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background-color: rgb(32, 40, 134);
+  color: white;
+}
+
+.invoiceProductTableRow,
+.invoiceProductTableEditRow,
+.invoiceProductTableAddRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  color: black;
+  padding: 5px;
+}
+
+.invoiceProductTableAddRow {
+  background-color: rgba(222, 240, 247, 0.755);
+  padding: 10px 0px;
+  margin-bottom: 20px;
+}
+
+#invoiceProduct {
+  border: none;
+  text-align: center;
+  font-size: 1rem;
+}
+
+#invoicePriceEdit,
+#invoiceQuantityEdit,
+#invoiceQuantity,
+#invoicePrice {
+  text-align: center;
+  border: none;
+  background-color: rgb(249, 248, 248);
+  width: 90%;
+}
+
+#invoiceQuantity,
+#invoicePrice {
+  background-color: white;
+}

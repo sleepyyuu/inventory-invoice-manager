@@ -1,0 +1,8 @@
+#loadingBar {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: black;
+  width: 100vw;
+  height: 2px;
+}

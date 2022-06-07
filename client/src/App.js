@@ -30,7 +30,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoadingBar loadingProgress={loadingProgress} setLoadingProgress={setLoadingProgress}></LoadingBar>}>
-          <Route path="/login" element={<Login></Login>}></Route>
+        <Route path="/" element={<Login></Login>}></Route>
           <Route path="/signup" element={<Signup></Signup>}></Route>
           <Route element={<PersistAuth></PersistAuth>}>
             <Route element={<RequireAuth></RequireAuth>}>
