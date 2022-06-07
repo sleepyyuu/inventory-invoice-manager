@@ -1,5 +1,5 @@
 # Link [here](https://cool-tarsier-b3e5ef.netlify.app/)
-
+https://user-images.githubusercontent.com/96076501/172351196-13608555-fb71-4975-bd79-0e86f8dd3ba4.mp4
 # I&I(Inventory and Invoice manager)
 Fullstack business product inventory manager and invoice generator.
 
