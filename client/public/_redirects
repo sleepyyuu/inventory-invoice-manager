@@ -1,0 +1,2 @@
+/api/* https://demo-inventory-invoice.herokuapp.com/:splat 200
+/* /index.html 200
