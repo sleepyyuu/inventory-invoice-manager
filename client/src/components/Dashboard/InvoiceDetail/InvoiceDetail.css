@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@400&display=swap");
 
+#invoiceDetailPageContainer {
+  display: flex;
+  justify-content: center;
+}
+
+#invoiceDetailPage {
+  max-width: 1500px;
+}
+
 #invoiceProducts > table {
   table-layout: fixed;
 }

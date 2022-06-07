@@ -318,7 +318,6 @@ export default function Invoices(props) {
               modal
               open={showMenu}
               closeOnDocumentClick
-              className="invoice-popup"
               onClose={() => {
                 setShowMenu(false);
               }}
