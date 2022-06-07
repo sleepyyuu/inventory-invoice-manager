@@ -27,7 +27,10 @@ export default function LoadingBar(props) {
   }, [location]);
   return (
     <div>
-      <div id="loadingBar" style={{ width: `${loadingProgress}vw`, opacity: `${active ? "1" : "0"}` }}></div>
+      <div
+        id="loadingBar"
+        style={{ width: `${loadingProgress}vw`, opacity: `${active ? "1" : "0"}`, visibility: `${active ? "visible" : "hidden"}` }}
+      ></div>
       <Outlet></Outlet>
     </div>
   );
