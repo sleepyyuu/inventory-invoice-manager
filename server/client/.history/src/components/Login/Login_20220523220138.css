@@ -1,0 +1,25 @@
+.loginPage {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 30%;
+  width: 80%;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  color: blue;
+}

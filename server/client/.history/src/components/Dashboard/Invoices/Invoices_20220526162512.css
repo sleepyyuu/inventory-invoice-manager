@@ -1,0 +1,32 @@
+.invoiceProductTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background-color: rgb(32, 40, 134);
+  color: white;
+}
+
+.invoiceProductTableBody {
+}
+
+.invoiceProductTableRow,
+.invoiceProductTableEditRow,
+.invoiceProductTableAddRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  color: black;
+  padding: 5px;
+}
+
+.invoiceProductTableAddRow {
+  background-color: rgb(188, 213, 221);
+}
+
+#invoicePriceEdit,
+#invoiceQuantityEdit,
+#invoiceQuantity,
+#invoicePrice {
+  text-align: center;
+  border: none;
+  background-color: rgb(231, 231, 231);
+  width: 90%;
+}

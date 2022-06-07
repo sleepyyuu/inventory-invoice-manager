@@ -1,0 +1,16 @@
+.dashboardPage {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(87, 99, 232);
+  gap: 5px;
+}
+
+.navButton {
+  height: 10px;
+}

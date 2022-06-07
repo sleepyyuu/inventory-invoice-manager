@@ -1,0 +1,32 @@
+#dashboardInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+#overviewTitle {
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  display: flex;
+}
+
+.timeframeButton {
+  border-radius: 6px;
+  background-color: grey;
+  color: white;
+}
+
+#chartContainer {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+  flex-wrap: wrap;
+}
+
+.chartCard {
+  background-color: white;
+  width: 45%;
+  height: 20rem;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 2px 2px 10px 1px rgb(170, 170, 170);
+}

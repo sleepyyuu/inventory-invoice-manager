@@ -1,0 +1,17 @@
+.invoiceProductTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  background-color: rgb(32, 40, 134)
+  color: white;
+}
+
+.invoiceProductTableBody {
+}
+
+.invoiceProductTableRow,
+.invoiceProductTableEditRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  color: black;
+  padding: 5px;
+}

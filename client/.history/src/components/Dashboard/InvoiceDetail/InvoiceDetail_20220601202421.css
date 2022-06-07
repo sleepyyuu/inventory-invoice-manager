@@ -1,0 +1,8 @@
+#invoice {
+  display: flex;
+  flex-direction: column;
+}
+
+#invoiceHeader {
+  display: flex;
+}
