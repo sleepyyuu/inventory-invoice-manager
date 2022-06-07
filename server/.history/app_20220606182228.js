@@ -38,9 +38,7 @@ app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Credentials", true);
-  }
+  res.header("Access-Control-Allow-Credentials", true);
   next();
 });
 app.use(
@@ -76,6 +74,11 @@ app.use("/api/products", productRouter);
 app.use("/api/buyers", buyerRouter);
 app.use("/api/productprices", productPriceRouter);
 app.use("/api/invoices", invoiceRouter);
+
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

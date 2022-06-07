@@ -5,7 +5,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const passport = require("passport");
-require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/product");
@@ -18,12 +17,12 @@ const refreshRouter = require("./routes/refresh");
 const verifyToken = require("./middleware/verifyToken");
 
 var app = express();
-const allowedOrigins = ["http://localhost:" + process.env.PORT];
+const allowedOrigins = ["http://localhost:4000", "http://localhost:3000"];
 
 //mongoose connection
+require("dotenv").config();
 const mongoose = require("mongoose");
 const { buildCheckFunction } = require("express-validator");
-const { env } = require("process");
 const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -91,6 +90,11 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
 module.exports = app;

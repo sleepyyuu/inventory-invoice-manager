@@ -18,7 +18,7 @@ const refreshRouter = require("./routes/refresh");
 const verifyToken = require("./middleware/verifyToken");
 
 var app = express();
-const allowedOrigins = ["http://localhost:" + process.env.PORT];
+const allowedOrigins = ["http://localhost:" + env.process.PORT];
 
 //mongoose connection
 const mongoose = require("mongoose");
@@ -76,6 +76,11 @@ app.use("/api/products", productRouter);
 app.use("/api/buyers", buyerRouter);
 app.use("/api/productprices", productPriceRouter);
 app.use("/api/invoices", invoiceRouter);
+
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

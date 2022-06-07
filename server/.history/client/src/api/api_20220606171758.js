@@ -1,6 +1,6 @@
 import axios from "axios";
-const port = process.env.PORT;
-const url = "http://localhost:" + port + "/api";
+
+const url = "http://localhost:4000/api";
 axios.defaults.baseURL = url;
 axios.defaults.withCredentials = true;
 export const axiosPrivate = axios.create({

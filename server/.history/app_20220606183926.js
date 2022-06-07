@@ -77,6 +77,11 @@ app.use("/api/buyers", buyerRouter);
 app.use("/api/productprices", productPriceRouter);
 app.use("/api/invoices", invoiceRouter);
 
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolive(__dirname, "./client/build", "index.html"));
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
