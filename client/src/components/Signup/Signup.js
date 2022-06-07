@@ -27,7 +27,7 @@ export default function Signup() {
         {" "}
         <h2>Signup</h2>
         {error ? <div>{error}</div> : <div></div>}
-        {/* <form className="signupForm" onSubmit={signupUser}>
+        <form className="signupForm" onSubmit={signupUser}>
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -59,8 +59,7 @@ export default function Signup() {
           }}
         >
           Have an account? Log in
-        </div> */}
-        Signup form is currently disabled
+        </div>
         <div
           className="loginLink"
           onClick={() => {
