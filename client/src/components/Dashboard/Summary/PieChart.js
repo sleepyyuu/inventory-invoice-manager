@@ -2,7 +2,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
 export default function PieChart(props) {
-  const { productSaleQuantityList } = props;
+  const { productSaleQuantityList, selectedMonthFrame } = props;
   ChartJS.register(ArcElement, Tooltip, Legend);
   let productNameArray = [];
   let productQuantitySoldArray = [];
@@ -20,7 +20,14 @@ export default function PieChart(props) {
       },
       title: {
         display: true,
-        text: "Products sold",
+        text: "Share of products sold in past " + selectedMonthFrame + " months",
+      },
+      tooltip: {
+        callbacks: {
+          label: function (element) {
+            return element.label + " sales: $" + element.formattedValue;
+          },
+        },
       },
     },
   };

@@ -71,9 +71,9 @@ export default function Summary(props) {
           monthlySalesTemp[foundIndex] = monthlySalesTemp[foundIndex] + invoice.total;
           for (let product of invoice.product) {
             if (!productSoldList[product.name]) {
-              productSoldList[product.name] = product.quantity;
+              productSoldList[product.name] = product.quantity * product.price;
             } else {
-              productSoldList[product.name] += product.quantity;
+              productSoldList[product.name] += product.quantity * product.price;
             }
           }
         } else {
@@ -129,7 +129,7 @@ export default function Summary(props) {
 
           <div id="chartContainer">
             <div className="chartCard">
-              <PieChart productSaleQuantityList={productSaleQuantityList}></PieChart>
+              <PieChart productSaleQuantityList={productSaleQuantityList} selectedMonthFrame={selectedMonthFrame}></PieChart>
             </div>
             <div className="chartCard">
               <VerticalChart pastSixMonthArray={pastSixMonthArray} monthlySales={monthlySales} />
