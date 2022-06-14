@@ -1,9 +1,0 @@
-.invoiceProductTableHeader {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-
-.invoiceProductTableBody {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
