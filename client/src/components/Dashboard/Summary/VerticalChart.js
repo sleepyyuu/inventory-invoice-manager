@@ -14,7 +14,7 @@ export default function VerticalChart(props) {
       },
       title: {
         display: true,
-        text: "Monthly sales",
+        text: "Monthly sales (Dollars)",
       },
       tooltip: {
         callbacks: {
@@ -40,7 +40,7 @@ export default function VerticalChart(props) {
     labels: pastSixMonthArray,
     datasets: [
       {
-        label: "Monthly sales (Dollars)",
+        label: "Monthly sales",
         data: monthlySales,
         backgroundColor: ["rgba(255, 159, 64, 0.2)"],
         borderColor: ["rgb(255, 159, 64)"],

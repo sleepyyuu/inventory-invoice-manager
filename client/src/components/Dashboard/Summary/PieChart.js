@@ -20,7 +20,7 @@ export default function PieChart(props) {
       },
       title: {
         display: true,
-        text: "Share of products sold in past " + selectedMonthFrame + " months",
+        text: "Share of products sold in past " + selectedMonthFrame + " months (Dollars)",
       },
       tooltip: {
         callbacks: {
