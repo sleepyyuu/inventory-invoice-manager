@@ -1,8 +1,7 @@
 import axios from "axios";
 
 //"http://localhost:5000/api"
-//"https://demo-inventory-invoice.herokuapp.com/api"
-const url = "https://demo-inventory-invoice.herokuapp.com/api";
+const url = process.env.APIADDRESS
 axios.defaults.baseURL = url;
 axios.defaults.withCredentials = true;
 export const axiosPrivate = axios.create({
